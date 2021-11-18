@@ -33,3 +33,4 @@ RUN set -xe; \
     docker-php-ext-install -j$(nproc) imap
 RUN pecl install xdebug \
   && docker-php-ext-enable xdebug
+COPY --from=composer /usr/bin/composer /usr/bin/composer

@@ -34,3 +34,4 @@ config.inc.php
 .vscode
 docker-compose.override.yml
 .env
+docker/elasticsearch/data

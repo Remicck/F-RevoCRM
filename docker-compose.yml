@@ -4,7 +4,6 @@ services:
     build:
         context: '.'
         dockerfile: ./docker/php/Dockerfile
-    restart: always
     volumes:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
       - ./:/var/www/html:cached
@@ -23,11 +22,12 @@ services:
       # Xdebugの設定を有効にしたい場合は、mode=debug に変更してください
       XDEBUG_CONFIG: "mode=off client_host=host.docker.internal client_port=9003 start_with_request=yes"
       TZ: "Asia/Tokyo"
+    networks:
+      - net
   db:
     build:
       context: "."
       dockerfile: ./docker/mysql/Dockerfile
-    restart: always
     volumes:
       - db-store:/var/lib/mysql
       - db-log-store:/var/log/mysql
@@ -39,7 +39,37 @@ services:
       TZ: "Asia/Tokyo"
     ports:
       - 3306:3306
+    networks:
+      - net
+  elasticsearch:
+    build: ./docker/elasticsearch
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - 9200:9200
+    volumes:
+      - ./docker/elasticsearch/data:/usr/share/elasticsearch/data
+    networks:
+      - net
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.4.2
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    networks:
+      - net
 volumes:
   db-store:
   db-log-store:
   app-ignore-1:
+networks:
+  net:
