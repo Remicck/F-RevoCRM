@@ -21,11 +21,11 @@ jobs:
       run: composer install -n --prefer-dist
     - name: Execute php-cs-fixer
       run: |
-        ./vendor/bin/php-cs-fixer fix --using-cache=no
+        ./vendor/bin/php-cs-fixer fix --using-cache=no ./
     - name: Commit and push
       uses: stefanzweifel/git-auto-commit-action@v4.2.0
       with:
-        commit_message: pxp-cs-fixer by Github Actions
+        commit_message: php-cs-fixer by Github Actions
     - name: Run if changes have been detected
       if: steps.auto-commit-action.outputs.changes_detected == 'true'
       run: echo "Changes!"
