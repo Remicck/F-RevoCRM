@@ -8,12 +8,12 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Assets_Detail_View extends Vtiger_Detail_View {
-
-	function preProcess(Vtiger_Request $request) {
-		$viewer = $this->getViewer($request);
-		$viewer->assign('NO_SUMMARY', true);
-		parent::preProcess($request);
-	}
-
+class Assets_Detail_View extends Vtiger_Detail_View
+{
+    public function preProcess(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $viewer->assign('NO_SUMMARY', true);
+        parent::preProcess($request);
+    }
 }

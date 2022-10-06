@@ -8,23 +8,26 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Percentage_UIType extends Vtiger_Base_UIType {
+class Vtiger_Percentage_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Percentage.tpl';
+    }
 
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Percentage.tpl';
-	}
+    public function getDisplayValue($value, $record = false, $recordInstance = false)
+    {
+        $fldvalue = str_replace(",", ".", $value);
+        $value = (is_numeric($fldvalue)) ? $fldvalue : null;
+        return CurrencyField::convertToUserFormat($value, null, true);
+    }
 
-	public function getDisplayValue($value, $record = false, $recordInstance = false) {
-		$fldvalue = str_replace(",", ".", $value);
-		$value = (is_numeric($fldvalue)) ? $fldvalue : null;
-		return CurrencyField::convertToUserFormat($value, null, true);
-	}
-
-	public function getEditViewDisplayValue($value) {
-		return $this->getDisplayValue($value);
-	}
+    public function getEditViewDisplayValue($value)
+    {
+        return $this->getDisplayValue($value);
+    }
 }

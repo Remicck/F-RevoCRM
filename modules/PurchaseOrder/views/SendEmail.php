@@ -8,8 +8,6 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class PurchaseOrder_SendEmail_View extends Inventory_SendEmail_View {
-
+class PurchaseOrder_SendEmail_View extends Inventory_SendEmail_View
+{
 }
-
-?>

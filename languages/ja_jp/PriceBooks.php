@@ -8,20 +8,20 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	// Basic Strings
-	'PriceBooks' => '価格表',
-	'SINGLE_PriceBooks' => '価格表',
-	'LBL_ADD_RECORD' => '価格表の追加',
-	'LBL_RECORDS_LIST' => '価格表リスト',
+    // Basic Strings
+    'PriceBooks' => '価格表',
+    'SINGLE_PriceBooks' => '価格表',
+    'LBL_ADD_RECORD' => '価格表の追加',
+    'LBL_RECORDS_LIST' => '価格表リスト',
 
-	// Blocks
-	'LBL_PRICEBOOK_INFORMATION' => '基本情報',
-	'LBL_EDIT_LIST_PRICE' => '価格表の編集',
+    // Blocks
+    'LBL_PRICEBOOK_INFORMATION' => '基本情報',
+    'LBL_EDIT_LIST_PRICE' => '価格表の編集',
 
-	//Field Labels
-	'Price Book Name' => '価格表名',
-	'PriceBook No' => '価格表番号',
+    //Field Labels
+    'Price Book Name' => '価格表名',
+    'PriceBook No' => '価格表番号',
 
-	'LBL_UNIT_PRICE' => '単価',
-	'LBL_ADD_TO' => '追加',
+    'LBL_UNIT_PRICE' => '単価',
+    'LBL_ADD_TO' => '追加',
 );

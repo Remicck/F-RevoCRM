@@ -8,42 +8,48 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class ConfigReader {
+class ConfigReader
+{
+    protected $properties = array();
+    protected $name;
 
-	protected $properties = array();
-	protected $name;
+    public static $propertiesCache = array();
 
-	static $propertiesCache = array();
+    //TODO - Instead of path to file, we may have to support sending the array/map directly
+    // which might be fetched from database or some other source. In that case, we will check
+    // for the type of $source/$path and act accordingly.
+    public function __construct($path, $name, $force = false)
+    {
+        $this->load($path, $name, $force);
+    }
 
-	//TODO - Instead of path to file, we may have to support sending the array/map directly
-	// which might be fetched from database or some other source. In that case, we will check
-	// for the type of $source/$path and act accordingly.
-	function  __construct($path, $name, $force = false) {
-		$this->load($path, $name, $force);
-	}
+    public function load($path, $name, $force = false)
+    {
+        $this->name = $path;
+        if (!$force && self::$propertiesCache[$path]) {
+            $this->properties = self::$propertiesCache[$path];
+            return;
+        }
+        require $path;
+        $this->properties = $$name;
+        self::$propertiesCache[$path] = $this->properties;
+    }
 
-	function load($path, $name, $force = false) {
-		$this->name = $path;
-		if(!$force && self::$propertiesCache[$path]) {
-			$this->properties = self::$propertiesCache[$path];
-			return;
-		}
-		require $path;
-		$this->properties = $$name;
-		self::$propertiesCache[$path] = $this->properties;
-	}
+    public function setConfig($key, $value)
+    {
+        if (empty($key)) {
+            return;
+        }
+        $this->properties[$key] = $value;
+        //not neccessary for php5.x versions
+        self::$propertiesCache[$this->name] = $this->properties;
+    }
 
-	function setConfig($key, $value) {
-		if(empty($key)) return;
-		$this->properties[$key] = $value;
-		//not neccessary for php5.x versions
-		self::$propertiesCache[$this->name] = $this->properties;
-	}
-
-	function getConfig($key) {
-		if(empty($key)) return '';
-		return $this->properties[$key];
-	}
+    public function getConfig($key)
+    {
+        if (empty($key)) {
+            return '';
+        }
+        return $this->properties[$key];
+    }
 }
-
-?>

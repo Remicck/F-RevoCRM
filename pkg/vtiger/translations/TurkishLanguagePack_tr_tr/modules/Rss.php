@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'Rss Kaynakları',
     'LBL_ADD_FEED_SOURCE' => 'Besleme Kaynak Ekle',
@@ -16,19 +16,16 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Varsayılan olarak ayarla',
     'LBL_SENDER' => 'verici',
     'LBL_FEED_SOURCE' => 'besleme Kaynağı',
-    'LBL_ENTER_FEED_SOURCE' => 'Besleme Kaynağı girin',  
+    'LBL_ENTER_FEED_SOURCE' => 'Besleme Kaynağı girin',
     'SINGLE_Rss' => 'RSS beslemesine',
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'Başarıyla kaydedildi RSS',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'Başarıyla kaydedildi RSS',
     'JS_INVALID_RSS_URL' => 'Geçersiz Rss Url',
     'JS_RSS_MADE_AS_DEFAULT' => 'Varsayılan olarak yapılmıştır rss',
-    
+
 
   'JS_NO_RECORDS' => 'Kayıt',
 
 );
-
-
-?>

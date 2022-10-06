@@ -10,14 +10,14 @@
 
 require_once 'includes/http/Response.php';
 
-class MailManager_Response extends Vtiger_Response {
-
-	/**
-	 * Emit response wrapper as JSONString
-	 */
-	protected function emitJSON() {
-		require_once 'include/Zend/Json/Encoder.php';
-		echo Zend_Json_Encoder::encode($this->prepareResponse(), false);
-	}
-
+class MailManager_Response extends Vtiger_Response
+{
+    /**
+     * Emit response wrapper as JSONString
+     */
+    protected function emitJSON()
+    {
+        require_once 'include/Zend/Json/Encoder.php';
+        echo Zend_Json_Encoder::encode($this->prepareResponse(), false);
+    }
 }

@@ -8,32 +8,33 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class ModTracker_ListAjax_View extends Vtiger_IndexAjax_View {
-	
-	public function process(Vtiger_Request $request) {
-		$parentRecordId = $request->get('parent_id');
-		$pageNumber = $request->get('page');
-		$limit = $request->get('limit');
-		$moduleName = $request->getModule();
-		
-		if(empty($pageNumber)) {
-			$pageNumber = 1;
-		}
+class ModTracker_ListAjax_View extends Vtiger_IndexAjax_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $parentRecordId = $request->get('parent_id');
+        $pageNumber = $request->get('page');
+        $limit = $request->get('limit');
+        $moduleName = $request->getModule();
 
-		$pagingModel = new Vtiger_Paging_Model();
-		$pagingModel->set('page', $pageNumber);
-		if(!empty($limit)) {
-			$pagingModel->set('limit', $limit);
-		}
+        if (empty($pageNumber)) {
+            $pageNumber = 1;
+        }
 
-		$recentActivities = ModTracker_Record_Model::getRecentActivities($parentRecordId, $pagingModel);
-		$pagingModel->calculatePageRange($recentActivities);
-		
-		$viewer = $this->getViewer($request);
-		$viewer->assign('RECENT_ACTIVITIES', $recentActivities);
-		$viewer->assign('MODULE_NAME', $moduleName);
-		$viewer->assign('PAGING_MODEL', $pagingModel);
+        $pagingModel = new Vtiger_Paging_Model();
+        $pagingModel->set('page', $pageNumber);
+        if (!empty($limit)) {
+            $pagingModel->set('limit', $limit);
+        }
 
-		echo $viewer->view('RecentActivities.tpl', $moduleName, 'true');
-	}
+        $recentActivities = ModTracker_Record_Model::getRecentActivities($parentRecordId, $pagingModel);
+        $pagingModel->calculatePageRange($recentActivities);
+
+        $viewer = $this->getViewer($request);
+        $viewer->assign('RECENT_ACTIVITIES', $recentActivities);
+        $viewer->assign('MODULE_NAME', $moduleName);
+        $viewer->assign('PAGING_MODEL', $pagingModel);
+
+        echo $viewer->view('RecentActivities.tpl', $moduleName, 'true');
+    }
 }

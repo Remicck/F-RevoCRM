@@ -15,8 +15,8 @@
 * @package Smarty
 * @subpackage Compiler
 */
-class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase
+{
     /**
     * Attribute definition: Overwrites base class.
     *
@@ -90,7 +90,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             if ($_match[8] != 'hide' || isset($template->block_data[$_name])) {        // replace {$smarty.block.child}
                 // do we have {$smart.block.child} in nested {block} tags?
                 if (0 != preg_match_all("!({$_ldl}{$al}block\s+)(name=)?(\w+|'.*'|\".*\")([\s\S]*?{$_rdl})([\s\S]*?)({$_ldl}{$al}\\\$smarty\.block\.child{$_rdl})([\s\S]*?{$_ldl}{$al}/block{$_rdl})!", $block_content, $_match2)) {
-                    foreach($_match2[3] as $name) {
+                    foreach ($_match2[3] as $name) {
                         // get it's replacement
                         $_name2 = trim($name, '\'"');
                         if (isset($template->block_data[$_name2])) {
@@ -101,7 +101,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
                         // replace {$smarty.block.child} tag
                         $search = array("%({$_ldl}{$al}block[\s\S]*?{$name}[\s\S]*?{$_rdl})([\s\S]*?)({$_ldl}{$al}\\\$smarty\.block\.child{$_rdl})([\s\S]*?{$_ldl}{$al}/block{$_rdl})%","/§§§child§§§/");
                         $replace = array('\2§§§child§§§', $replacement);
-                        $block_content = preg_replace($search, $replace , $block_content);
+                        $block_content = preg_replace($search, $replace, $block_content);
                     }
                 }
                 // do we have not nested {$smart.block.child}
@@ -154,7 +154,7 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
             $stack_count = count($compiler->_tag_stack);
             while (--$stack_count >= 0) {
                 if ($compiler->_tag_stack[$stack_count][0] == 'block') {
-                    $_name = trim($compiler->_tag_stack[$stack_count][1][0]['name'] ,"'\"");
+                    $_name = trim($compiler->_tag_stack[$stack_count][1][0]['name'], "'\"");
                     break;
                 }
             }
@@ -168,8 +168,15 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
         if (!isset($compiler->template->block_data[$_name]['source'])) {
             return '';
         }
-        $_tpl = new Smarty_Internal_template ('string:' . $compiler->template->block_data[$_name]['source'], $compiler->smarty, $compiler->template, $compiler->template->cache_id,
-        $compiler->template->compile_id = null, $compiler->template->caching, $compiler->template->cache_lifetime);
+        $_tpl = new Smarty_Internal_template(
+            'string:' . $compiler->template->block_data[$_name]['source'],
+            $compiler->smarty,
+            $compiler->template,
+            $compiler->template->cache_id,
+            $compiler->template->compile_id = null,
+            $compiler->template->caching,
+            $compiler->template->cache_lifetime
+        );
         $_tpl->variable_filters = $compiler->template->variable_filters;
         $_tpl->properties['nocache_hash'] = $compiler->template->properties['nocache_hash'];
         $_tpl->source->filepath = $compiler->template->block_data[$_name]['file'];
@@ -198,9 +205,9 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
         if ($_tpl->has_nocache_code) {
             $compiler->template->has_nocache_code = true;
         }
-        foreach($_tpl->required_plugins as $code => $tmp1) {
-            foreach($tmp1 as $name => $tmp) {
-                foreach($tmp as $type => $data) {
+        foreach ($_tpl->required_plugins as $code => $tmp1) {
+            foreach ($tmp1 as $name => $tmp) {
+                foreach ($tmp as $type => $data) {
                     $compiler->template->required_plugins[$code][$name][$type] = $data;
                 }
             }
@@ -208,7 +215,6 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
         unset($_tpl);
         return $_output;
     }
-
 }
 
 /**
@@ -217,8 +223,8 @@ class Smarty_Internal_Compile_Block extends Smarty_Internal_CompileBase {
 * @package Smarty
 * @subpackage Compiler
 */
-class Smarty_Internal_Compile_Blockclose extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Blockclose extends Smarty_Internal_CompileBase
+{
     /**
     * Compiles code for the {/block} tag
     *
@@ -246,7 +252,7 @@ class Smarty_Internal_Compile_Blockclose extends Smarty_Internal_CompileBase {
             } else {
                 $_output = $compiler->parser->current_buffer->to_smarty_php();
             }
-            unset ($compiler->template->block_data[$_name]['compiled']);
+            unset($compiler->template->block_data[$_name]['compiled']);
         }
         // reset flags
         $compiler->parser->current_buffer = $saved_data[1];
@@ -258,7 +264,4 @@ class Smarty_Internal_Compile_Blockclose extends Smarty_Internal_CompileBase {
         $compiler->suppressNocacheProcessing = true;
         return $_output;
     }
-
 }
-
-?>

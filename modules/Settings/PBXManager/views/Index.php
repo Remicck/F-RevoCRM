@@ -8,21 +8,24 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_PBXManager_Index_View extends Settings_Vtiger_Index_View{
-    
-    function __construct() {
+class Settings_PBXManager_Index_View extends Settings_Vtiger_Index_View
+{
+    public function __construct()
+    {
         $this->exposeMethod('gatewayInfo');
     }
 
-    public function process(Vtiger_Request $request) {
+    public function process(Vtiger_Request $request)
+    {
         $this->gatewayInfo($request);
     }
-    
-    public function gatewayInfo(Vtiger_Request $request){
+
+    public function gatewayInfo(Vtiger_Request $request)
+    {
         $recordModel = Settings_PBXManager_Record_Model::getInstance();
         $moduleModel = Settings_PBXManager_Module_Model::getCleanInstance();
-        $viewer = $this->getViewer($request);  
-        
+        $viewer = $this->getViewer($request);
+
         $viewer->assign('RECORD_ID', $recordModel->get('id'));
         $viewer->assign('MODULE_MODEL', $moduleModel);
         $viewer->assign('MODULE', $request->getModule(false));
@@ -30,6 +33,4 @@ class Settings_PBXManager_Index_View extends Settings_Vtiger_Index_View{
         $viewer->assign('RECORD_MODEL', $recordModel);
         $viewer->view('index.tpl', $request->getModule(false));
     }
-
-
 }

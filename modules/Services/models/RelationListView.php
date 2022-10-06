@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Services_RelationListView_Model extends Products_RelationListView_Model {
+class Services_RelationListView_Model extends Products_RelationListView_Model
+{
 }

@@ -38,9 +38,8 @@ require_once 'Zend/Crypt/Rsa/Key/Public.php';
  */
 class Zend_Crypt_Rsa
 {
-
-    const BINARY = 'binary';
-    const BASE64 = 'base64';
+    public const BINARY = 'binary';
+    public const BASE64 = 'base64';
 
     protected $_privateKey;
 
@@ -134,7 +133,8 @@ class Zend_Crypt_Rsa
             $opensslKeyResource = $this->_privateKey->getOpensslKeyResource();
         }
         $result = openssl_sign(
-            $data, $signature,
+            $data,
+            $signature,
             $opensslKeyResource,
             $this->getHashAlgorithm()
         );
@@ -155,9 +155,12 @@ class Zend_Crypt_Rsa
         if ($format == self::BASE64) {
             $signature = base64_decode($signature);
         }
-        $result = openssl_verify($data, $signature,
+        $result = openssl_verify(
+            $data,
+            $signature,
             $this->getPublicKey()->getOpensslKeyResource(),
-            $this->getHashAlgorithm());
+            $this->getHashAlgorithm()
+        );
         return $result;
     }
 
@@ -203,9 +206,9 @@ class Zend_Crypt_Rsa
 
     /**
      * @param  array $configargs
-     * 
+     *
      * @throws Zend_Crypt_Rsa_Exception
-     * 
+     *
      * @return ArrayObject
      */
     public function generateKeys(array $configargs = null)
@@ -334,5 +337,4 @@ class Zend_Crypt_Rsa
         }
         return null;
     }
-
 }

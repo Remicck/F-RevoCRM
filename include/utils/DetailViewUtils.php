@@ -25,4 +25,3 @@ require_once('include/ComboUtil.php'); //new
 require_once('include/utils/CommonUtils.php'); //new
 require_once('vtlib/Vtiger/Language.php');
 require_once('modules/PickList/PickListUtils.php');
-

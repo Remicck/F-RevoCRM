@@ -20,4 +20,3 @@ $languageStrings = array(
   'LBL_CHANGE_PASSWORD_FAILURE' => 'Nu se poate schimba parola',
 
 );
-

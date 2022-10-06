@@ -8,6 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Quotes_ProductsPopupAjax_View extends Inventory_ProductsPopupAjax_View {
-
+class Quotes_ProductsPopupAjax_View extends Inventory_ProductsPopupAjax_View
+{
 }

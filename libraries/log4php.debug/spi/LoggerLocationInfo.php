@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,22 +12,24 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  * @subpackage spi
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+}
 
 /**
  * When location information is not available the constant
  * <i>NA</i> is returned. Current value of this string
- * constant is <b>?</b>.  
+ * constant is <b>?</b>.
  */
-define('LOG4PHP_LOGGER_LOCATION_INFO_NA',  'NA');
+define('LOG4PHP_LOGGER_LOCATION_INFO_NA', 'NA');
 
 /**
  * The internal representation of caller location information.
@@ -38,32 +40,32 @@ define('LOG4PHP_LOGGER_LOCATION_INFO_NA',  'NA');
  * @subpackage spi
  * @since 0.3
  */
-class LoggerLocationInfo {
-
+class LoggerLocationInfo
+{
     /**
     * @var string Caller's line number.
     */
-    var $lineNumber = null;
-    
+    public $lineNumber = null;
+
     /**
     * @var string Caller's file name.
     */
-    var $fileName = null;
-    
+    public $fileName = null;
+
     /**
     * @var string Caller's fully qualified class name.
     */
-    var $className = null;
-    
+    public $className = null;
+
     /**
     * @var string Caller's method name.
     */
-    var $methodName = null;
-    
+    public $methodName = null;
+
     /**
-    * @var string 
+    * @var string
     */
-    var $fullInfo = null;
+    public $fullInfo = null;
 
     /**
      * Instantiate location information based on a {@link PHP_MANUAL#debug_backtrace}.
@@ -71,46 +73,45 @@ class LoggerLocationInfo {
      * @param array $trace
      * @param mixed $caller
      */
-    function LoggerLocationInfo($trace, $fqcn = null)
+    public function LoggerLocationInfo($trace, $fqcn = null)
     {
         $this->lineNumber   = isset($trace['line']) ? $trace['line'] : null;
         $this->fileName     = isset($trace['file']) ? $trace['file'] : null;
         $this->className    = isset($trace['class']) ? $trace['class'] : null;
         $this->methodName   = isset($trace['function']) ? $trace['function'] : null;
-        
-        $this->fullInfo = $this->getClassName() . '.' . $this->getMethodName() . 
+
+        $this->fullInfo = $this->getClassName() . '.' . $this->getMethodName() .
                           '(' . $this->getFileName() . ':' . $this->getLineNumber() . ')';
     }
 
-    function getClassName()
+    public function getClassName()
     {
-        return ($this->className === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->className; 
+        return ($this->className === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->className;
     }
 
     /**
      *  Return the file name of the caller.
      *  <p>This information is not always available.
      */
-    function getFileName()
+    public function getFileName()
     {
-        return ($this->fileName === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->fileName; 
+        return ($this->fileName === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->fileName;
     }
 
     /**
      *  Returns the line number of the caller.
      *  <p>This information is not always available.
      */
-    function getLineNumber()
+    public function getLineNumber()
     {
-        return ($this->lineNumber === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->lineNumber; 
+        return ($this->lineNumber === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->lineNumber;
     }
 
     /**
      *  Returns the method name of the caller.
      */
-    function getMethodName()
+    public function getMethodName()
     {
-        return ($this->methodName === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->methodName; 
+        return ($this->methodName === null) ? LOG4PHP_LOGGER_LOCATION_INFO_NA : $this->methodName;
     }
 }
-?>

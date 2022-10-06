@@ -9,33 +9,34 @@
  ************************************************************************************/
 include_once 'include/Webservices/Delete.php';
 
-class Mobile_WS_DeleteRecords extends Mobile_WS_Controller {
-	
-	function process(Mobile_API_Request $request) {
-		global $current_user;
-		
-		$current_user = $this->getActiveUser();
-		$records = $request->get('records');
-		if (empty($records)) {
-			$records = array($request->get('record'));
-		} else {
-			$records = Zend_Json::decode($records);
-		}
-		$deleted = array();
-		foreach($records as $record) {
-			try {
-				$recordModel = Vtiger_Record_Model::getInstanceById($record);
-				$recordModel->delete();
-				$result = true;
-			} catch(Exception $e) {
-				$result = false;
-			}
-			$deleted[$record] = $result;
-		}
-		
-		$response = new Mobile_API_Response();
-		$response->setResult(array('deleted' => $deleted));
-		
-		return $response;
-	}
+class Mobile_WS_DeleteRecords extends Mobile_WS_Controller
+{
+    public function process(Mobile_API_Request $request)
+    {
+        global $current_user;
+
+        $current_user = $this->getActiveUser();
+        $records = $request->get('records');
+        if (empty($records)) {
+            $records = array($request->get('record'));
+        } else {
+            $records = Zend_Json::decode($records);
+        }
+        $deleted = array();
+        foreach ($records as $record) {
+            try {
+                $recordModel = Vtiger_Record_Model::getInstanceById($record);
+                $recordModel->delete();
+                $result = true;
+            } catch(Exception $e) {
+                $result = false;
+            }
+            $deleted[$record] = $result;
+        }
+
+        $response = new Mobile_API_Response();
+        $response->setResult(array('deleted' => $deleted));
+
+        return $response;
+    }
 }

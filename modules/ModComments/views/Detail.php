@@ -8,15 +8,15 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class ModComments_Detail_View extends Vtiger_Detail_View {
-
-	/**
-	 * Function to get Ajax is enabled or not
-	 * @param Vtiger_Record_Model record model
-	 * @return <boolean> true/false
-	 */
-	public function isAjaxEnabled($recordModel) {
-		return false;
-	}
-
+class ModComments_Detail_View extends Vtiger_Detail_View
+{
+    /**
+     * Function to get Ajax is enabled or not
+     * @param Vtiger_Record_Model record model
+     * @return <boolean> true/false
+     */
+    public function isAjaxEnabled($recordModel)
+    {
+        return false;
+    }
 }

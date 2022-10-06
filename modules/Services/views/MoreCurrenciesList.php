@@ -8,6 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Services_MoreCurrenciesList_View extends Products_MoreCurrenciesList_View {
-
+class Services_MoreCurrenciesList_View extends Products_MoreCurrenciesList_View
+{
 }

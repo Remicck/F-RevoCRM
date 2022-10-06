@@ -8,15 +8,15 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-	'PriceBooks'                   => 'Listini'                     , 
-	'SINGLE_PriceBooks'            => 'Listino'                     , 
-	'LBL_ADD_RECORD'               => 'Aggiungi Listino'              , 
-	'LBL_RECORDS_LIST'             => 'Lista Listini'            , 
-	'LBL_PRICEBOOK_INFORMATION'    => 'Informazioni Listino:'       , 
-	'LBL_EDIT_LIST_PRICE'          => 'Modifica Listino'             , 
-	'Price Book Name'              => 'Nome Listino'                , 
-	'PriceBook No'                 => 'N. Listino'                  , 
-	
-	'LBL_UNIT_PRICE' => 'Prezzo unitario',
-	'LBL_ADD_TO' => 'Aggiungere a',
+    'PriceBooks'                   => 'Listini'                     ,
+    'SINGLE_PriceBooks'            => 'Listino'                     ,
+    'LBL_ADD_RECORD'               => 'Aggiungi Listino'              ,
+    'LBL_RECORDS_LIST'             => 'Lista Listini'            ,
+    'LBL_PRICEBOOK_INFORMATION'    => 'Informazioni Listino:'       ,
+    'LBL_EDIT_LIST_PRICE'          => 'Modifica Listino'             ,
+    'Price Book Name'              => 'Nome Listino'                ,
+    'PriceBook No'                 => 'N. Listino'                  ,
+
+    'LBL_UNIT_PRICE' => 'Prezzo unitario',
+    'LBL_ADD_TO' => 'Aggiungere a',
 );

@@ -8,34 +8,37 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Products_Mass_Action extends Vtiger_Mass_Action {
+class Products_Mass_Action extends Vtiger_Mass_Action
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('isChildProduct');
+    }
 
-	public function __construct() {
-		parent::__construct();
-		$this->exposeMethod('isChildProduct');
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->getMode();
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        } else {
+            parent::process($request);
+        }
+    }
 
-	public function process(Vtiger_Request $request) {
-		$mode = $request->getMode();
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		} else {
-			parent::process($request);
-		}
-	}
+    public function isChildProduct(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $recordIdsList = $this->getRecordsListFromRequest($request);
 
-	public function isChildProduct(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$recordIdsList = $this->getRecordsListFromRequest($request);
+        $response = new Vtiger_Response();
+        if ($moduleName && $recordIdsList) {
+            $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+            $areChildProducts = $moduleModel->areChildProducts($recordIdsList);
 
-		$response = new Vtiger_Response();
-		if ($moduleName && $recordIdsList) {
-			$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-			$areChildProducts = $moduleModel->areChildProducts($recordIdsList);
-
-			$response->setResult($areChildProducts);
-		}
-		$response->emit();
-	}
+            $response->setResult($areChildProducts);
+        }
+        $response->emit();
+    }
 }

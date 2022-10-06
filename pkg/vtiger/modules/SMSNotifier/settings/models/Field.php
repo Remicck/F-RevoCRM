@@ -8,27 +8,28 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_SMSNotifier_Field_Model extends Vtiger_Field_Model {
+class Settings_SMSNotifier_Field_Model extends Vtiger_Field_Model
+{
+    /**
+     * Function to get field data type
+     * @return <String> data type
+     */
+    public function getFieldDataType()
+    {
+        return $this->get('type');
+    }
 
-	/**
-	 * Function to get field data type
-	 * @return <String> data type
-	 */
-	public function getFieldDataType() {
-		return $this->get('type');
-	}
-
-	/**
-	 * Function to get instance of this model
-	 * @param <Array> $rowData
-	 * @return <Settings_SMSNotifier_Field_Model> field model
-	 */
-	public static function getInstanceByRow($rowData) {
-		$fieldModel = new self();
-		foreach ($rowData as $key => $value) {
-			$fieldModel->set($key, $value);
-		}
-		return $fieldModel;
-	}
-
+    /**
+     * Function to get instance of this model
+     * @param <Array> $rowData
+     * @return <Settings_SMSNotifier_Field_Model> field model
+     */
+    public static function getInstanceByRow($rowData)
+    {
+        $fieldModel = new self();
+        foreach ($rowData as $key => $value) {
+            $fieldModel->set($key, $value);
+        }
+        return $fieldModel;
+    }
 }

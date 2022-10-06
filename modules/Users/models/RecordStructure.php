@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Users_RecordStructure_Model extends Vtiger_RecordStructure_Model {
-
+class Users_RecordStructure_Model extends Vtiger_RecordStructure_Model
+{
 }

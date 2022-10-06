@@ -27,29 +27,31 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-class NoViableAltException extends RecognitionException {
-	public $grammarDecisionDescription;
-	public $decisionNumber;
-	public $stateNumber;
+class NoViableAltException extends RecognitionException
+{
+    public $grammarDecisionDescription;
+    public $decisionNumber;
+    public $stateNumber;
 
-	public function __construct($grammarDecisionDescription,
-								$decisionNumber,
-								$stateNumber,
-								$input)
-	{
-		parent::__construct($input);
-		$this->grammarDecisionDescription = $grammarDecisionDescription;
-		$this->decisionNumber = $decisionNumber;
-		$this->stateNumber = $stateNumber;
-	}
+    public function __construct(
+        $grammarDecisionDescription,
+        $decisionNumber,
+        $stateNumber,
+        $input
+    )
+    {
+        parent::__construct($input);
+        $this->grammarDecisionDescription = $grammarDecisionDescription;
+        $this->decisionNumber = $decisionNumber;
+        $this->stateNumber = $stateNumber;
+    }
 
-	public function __toString() {
-		if ( $this->input instanceof CharStream ) {
-			return "NoViableAltException('".$this->getUnexpectedType()."'@[".$this->grammarDecisionDescription."])";
-		}
-		else {
-			return "NoViableAltException(".$this->getUnexpectedType()."@[".$this->grammarDecisionDescription."])";
-		}
-	}
+    public function __toString()
+    {
+        if ($this->input instanceof CharStream) {
+            return "NoViableAltException('".$this->getUnexpectedType()."'@[".$this->grammarDecisionDescription."])";
+        } else {
+            return "NoViableAltException(".$this->getUnexpectedType()."@[".$this->grammarDecisionDescription."])";
+        }
+    }
 }
-?>

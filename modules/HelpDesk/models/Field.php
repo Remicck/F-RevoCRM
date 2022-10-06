@@ -11,22 +11,25 @@
 /**
  * Calendar Field Model Class
  */
-class HelpDesk_Field_Model extends Vtiger_Field_Model {
-	/**
-	 * Function to retieve display value for a value
-	 * @param <String> $value - value which need to be converted to display value
-	 * @return <String> - converted display value
-	 */
-	public function getDisplayValue($value, $record=false, $recordInstance = false) {
-		if($this->getName() == 'description' || $this->getName() == 'solution') {
-				return html_entity_decode($value);
-		}
-		return parent::getDisplayValue($value, $record, $recordInstance);
-	}
-	public function isCkEditor() {
-		if($this->getName() == 'description' || $this->getName() == 'solution') {
-			return true;
-		}
-		return false;
-	}
+class HelpDesk_Field_Model extends Vtiger_Field_Model
+{
+    /**
+     * Function to retieve display value for a value
+     * @param <String> $value - value which need to be converted to display value
+     * @return <String> - converted display value
+     */
+    public function getDisplayValue($value, $record=false, $recordInstance = false)
+    {
+        if ($this->getName() == 'description' || $this->getName() == 'solution') {
+            return html_entity_decode($value);
+        }
+        return parent::getDisplayValue($value, $record, $recordInstance);
+    }
+    public function isCkEditor()
+    {
+        if ($this->getName() == 'description' || $this->getName() == 'solution') {
+            return true;
+        }
+        return false;
+    }
 }

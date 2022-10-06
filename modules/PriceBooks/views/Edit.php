@@ -8,14 +8,15 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class PriceBooks_Edit_View extends Vtiger_Edit_View {
+class PriceBooks_Edit_View extends Vtiger_Edit_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
+        $viewer = $this->getViewer($request);
+        $viewer->assign('IS_RELATION', $request->get('relationOperation'));
 
-		$viewer = $this->getViewer($request);
-		$viewer->assign('IS_RELATION', $request->get('relationOperation'));
-
-		parent::process($request);
-	}
+        parent::process($request);
+    }
 }

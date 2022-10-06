@@ -2,7 +2,6 @@
 
 class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCache
 {
-
     /**
      * Cache object we are decorating
      * @type HTMLPurifier_DefinitionCache

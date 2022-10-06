@@ -7,6 +7,6 @@
  * @author Luke Visinoni (luke.visinoni@gmail.com)
  * @license GNU Lesser General Public License
  */
-class qCal_DateTime_Exception_InvalidPeriod extends qCal_DateTime_Exception {
-
+class qCal_DateTime_Exception_InvalidPeriod extends qCal_DateTime_Exception
+{
 }

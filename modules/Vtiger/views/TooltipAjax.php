@@ -8,39 +8,42 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Vtiger_TooltipAjax_View extends Vtiger_PopupAjax_View {
+class Vtiger_TooltipAjax_View extends Vtiger_PopupAjax_View
+{
+    public function preProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function preProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function postProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-	function process (Vtiger_Request $request) {
-		$viewer = $this->getViewer ($request);
-		$moduleName = $request->getModule();
-		
-		$this->initializeListViewContents($request, $viewer);
-		echo $viewer->view('TooltipContents.tpl', $moduleName, true);
-	}
-	
-	public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer) {
-		$moduleName = $this->getModule($request);
-		$recordId = $request->get('record');
+        $this->initializeListViewContents($request, $viewer);
+        echo $viewer->view('TooltipContents.tpl', $moduleName, true);
+    }
 
-		$tooltipViewModel = Vtiger_TooltipView_Model::getInstance($moduleName, $recordId);
+    public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer)
+    {
+        $moduleName = $this->getModule($request);
+        $recordId = $request->get('record');
 
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->assign('MODULE_MODEL', $tooltipViewModel->getRecord()->getModule());
-		
-		$viewer->assign('TOOLTIP_FIELDS', $tooltipViewModel->getFields());
-		$viewer->assign('RECORD', $tooltipViewModel->getRecord());
-		$viewer->assign('RECORD_STRUCTURE', $tooltipViewModel->getStructure());
-		$viewer->assign('RECORD_ID', $recordId);
+        $tooltipViewModel = Vtiger_TooltipView_Model::getInstance($moduleName, $recordId);
 
-		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
-	}
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->assign('MODULE_MODEL', $tooltipViewModel->getRecord()->getModule());
 
+        $viewer->assign('TOOLTIP_FIELDS', $tooltipViewModel->getFields());
+        $viewer->assign('RECORD', $tooltipViewModel->getRecord());
+        $viewer->assign('RECORD_STRUCTURE', $tooltipViewModel->getStructure());
+        $viewer->assign('RECORD_ID', $recordId);
+
+        $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+    }
 }

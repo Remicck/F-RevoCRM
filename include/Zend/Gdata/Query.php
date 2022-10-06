@@ -39,7 +39,6 @@ require_once 'Zend/Gdata/App/Util.php';
  */
 class Zend_Gdata_Query
 {
-
     /**
      * Query parameters.
      *
@@ -414,5 +413,4 @@ class Zend_Gdata_Query
             throw new Zend_Gdata_App_Exception('Property ' . $name . '  does not exist');
         }
     }
-
 }

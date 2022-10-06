@@ -8,20 +8,19 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Potentials_RelationListView_Model extends Vtiger_RelationListView_Model {
+class Potentials_RelationListView_Model extends Vtiger_RelationListView_Model
+{
+    public function getCreateViewUrl()
+    {
+        $createViewUrl = parent::getCreateViewUrl();
+        $relationModel = $this->getRelationModel();
+        $relatedModuleModel = $relationModel->getRelationModuleModel();
+        $relatedModuleName = $relatedModuleModel->getName();
 
-	public function getCreateViewUrl() {
-		$createViewUrl = parent::getCreateViewUrl();
-		$relationModel = $this->getRelationModel();
-		$relatedModuleModel = $relationModel->getRelationModuleModel();
-		$relatedModuleName = $relatedModuleModel->getName();
-
-		if (in_array($relatedModuleName, array('Quotes', 'SalesOrder'))) {
-			$parentRecordModel = $this->getParentRecordModel();
-			$createViewUrl .= '&account_id='.$parentRecordModel->get('related_to').'&contact_id='.$parentRecordModel->get('contact_id');
-		}
-		return $createViewUrl;
-	}
-
+        if (in_array($relatedModuleName, array('Quotes', 'SalesOrder'))) {
+            $parentRecordModel = $this->getParentRecordModel();
+            $createViewUrl .= '&account_id='.$parentRecordModel->get('related_to').'&contact_id='.$parentRecordModel->get('contact_id');
+        }
+        return $createViewUrl;
+    }
 }
-?>

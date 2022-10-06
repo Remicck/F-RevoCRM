@@ -8,35 +8,38 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Vtiger_PopupAjax_View extends Vtiger_Popup_View {
-	
-	function __construct() {
-		parent::__construct();
-		$this->exposeMethod('getListViewCount');
-		$this->exposeMethod('getRecordsCount');
-		$this->exposeMethod('getPageCount');
-	}
+class Vtiger_PopupAjax_View extends Vtiger_Popup_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('getListViewCount');
+        $this->exposeMethod('getRecordsCount');
+        $this->exposeMethod('getPageCount');
+    }
 
-	function preProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function preProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function postProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function process (Vtiger_Request $request) {
-		$mode = $request->get('mode');
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-		$viewer = $this->getViewer ($request);
-		$moduleName = $request->getModule();
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->get('mode');
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-		$this->initializeListViewContents($request, $viewer);
+        $this->initializeListViewContents($request, $viewer);
 
-		echo $viewer->view('PopupContents.tpl', $moduleName, true);
-	}
-
+        echo $viewer->view('PopupContents.tpl', $moduleName, true);
+    }
 }

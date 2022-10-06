@@ -8,40 +8,43 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Vtiger_ConfigEditorDetail_View extends Settings_Vtiger_Index_View {
+class Settings_Vtiger_ConfigEditorDetail_View extends Settings_Vtiger_Index_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $qualifiedName = $request->getModule(false);
+        $moduleModel = Settings_Vtiger_ConfigModule_Model::getInstance();
 
-	public function process(Vtiger_Request $request) {
-		$qualifiedName = $request->getModule(false);
-		$moduleModel = Settings_Vtiger_ConfigModule_Model::getInstance();
+        $viewer = $this->getViewer($request);
+        $viewer->assign('MODEL', $moduleModel);
+        $viewer->assign('QUALIFIED_MODULE', $qualifiedName);
+        $viewer->assign('CURRENT_USER_MODEL', Users_Record_Model::getCurrentUserModel());
 
-		$viewer = $this->getViewer($request);
-		$viewer->assign('MODEL', $moduleModel);
-		$viewer->assign('QUALIFIED_MODULE', $qualifiedName);
-		$viewer->assign('CURRENT_USER_MODEL', Users_Record_Model::getCurrentUserModel());
+        $viewer->view('ConfigEditorDetail.tpl', $qualifiedName);
+    }
+    public function getPageTitle(Vtiger_Request $request)
+    {
+        $qualifiedModuleName = $request->getModule(false);
+        return vtranslate('LBL_CONFIG_EDITOR', $qualifiedModuleName);
+    }
 
-		$viewer->view('ConfigEditorDetail.tpl', $qualifiedName);
-	}
-	function getPageTitle(Vtiger_Request $request) {
-		$qualifiedModuleName = $request->getModule(false);
-		return vtranslate('LBL_CONFIG_EDITOR',$qualifiedModuleName);
-	}
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+        $jsFileNames = array(
+            "modules.Settings.$moduleName.resources.ConfigEditor",
+            "modules.Settings.$moduleName.resources.ConfigEditorDetail",
+        );
 
-		$jsFileNames = array(
-			"modules.Settings.$moduleName.resources.ConfigEditor",
-			"modules.Settings.$moduleName.resources.ConfigEditorDetail",
-		);
-
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

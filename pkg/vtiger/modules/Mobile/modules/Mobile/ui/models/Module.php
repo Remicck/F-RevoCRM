@@ -10,33 +10,38 @@
 
 include_once dirname(__FILE__) . '/ModuleRecord.php';
 
-class Mobile_UI_ModuleModel {
-	private $data;
-	
-	function initData($moduleData) {
-		$this->data = $moduleData;
-	}
-	
-	function id() {
-		return $this->data['id'];
-	}
-	
-	function name() {
-		return $this->data['name'];
-	}
-	
-	function label() {
-		return $this->data['label'];
-	}
-	
-	static function buildModelsFromResponse($modules) {
-		$instances = array();
-		foreach($modules as $moduleData) {
-			$instance = new self();
-			$instance->initData($moduleData);
-			$instances[] = $instance;
-		}
-		return $instances;
-	}
-	
+class Mobile_UI_ModuleModel
+{
+    private $data;
+
+    public function initData($moduleData)
+    {
+        $this->data = $moduleData;
+    }
+
+    public function id()
+    {
+        return $this->data['id'];
+    }
+
+    public function name()
+    {
+        return $this->data['name'];
+    }
+
+    public function label()
+    {
+        return $this->data['label'];
+    }
+
+    public static function buildModelsFromResponse($modules)
+    {
+        $instances = array();
+        foreach ($modules as $moduleData) {
+            $instance = new self();
+            $instance->initData($moduleData);
+            $instances[] = $instance;
+        }
+        return $instances;
+    }
 }

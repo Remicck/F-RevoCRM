@@ -26,10 +26,10 @@ if (defined('VTIGER_UPGRADE')) {
     for ($i = 0; $i < $rows; $i++) {
         $tablename = $adb->query_result($result, $i, 'tablename');
         $columnname = $adb->query_result($result, $i, 'columnname');
-        if($tablename != $tablename_old || $columnname != $columnname_old){ //同じクエリが連続して飛ぶケースを除外する
+        if ($tablename != $tablename_old || $columnname != $columnname_old) { //同じクエリが連続して飛ぶケースを除外する
             $result_index = $adb->pquery('SHOW INDEX FROM '.$tablename.' WHERE Column_name="'.$columnname.'"');
             $rows_index = $adb->num_rows($result_index);
-            if($rows_index == 0){
+            if ($rows_index == 0) {
                 $adb->pquery("CREATE INDEX ".$columnname." ON ".$tablename."(".$columnname.")");
             }
         }

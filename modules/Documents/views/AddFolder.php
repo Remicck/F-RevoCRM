@@ -8,34 +8,37 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Documents_AddFolder_View extends Vtiger_IndexAjax_View {
+class Documents_AddFolder_View extends Vtiger_IndexAjax_View
+{
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
 
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
-		
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
 
-	public function checkPermission(Vtiger_Request $request) {
-		return parent::checkPermission($request);
-	}
+    public function checkPermission(Vtiger_Request $request)
+    {
+        return parent::checkPermission($request);
+    }
 
-	public function process (Vtiger_Request $request) {
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-		if ($request->has('folderid') && $request->get('mode') == 'edit') {
-			$folderId = $request->get('folderid');
-			$folderModel = Documents_Folder_Model::getInstanceById($folderId);
+        if ($request->has('folderid') && $request->get('mode') == 'edit') {
+            $folderId = $request->get('folderid');
+            $folderModel = Documents_Folder_Model::getInstanceById($folderId);
 
-			$viewer->assign('FOLDER_ID', $folderId);
-			$viewer->assign('SAVE_MODE', $request->get('mode'));
-			$viewer->assign('FOLDER_NAME', $folderModel->getName());
-			$viewer->assign('FOLDER_DESC', $folderModel->getDescription());
-		}
-		$viewer->assign('MODULE',$moduleName);
-		$viewer->view('AddFolder.tpl', $moduleName);
-	}
+            $viewer->assign('FOLDER_ID', $folderId);
+            $viewer->assign('SAVE_MODE', $request->get('mode'));
+            $viewer->assign('FOLDER_NAME', $folderModel->getName());
+            $viewer->assign('FOLDER_DESC', $folderModel->getDescription());
+        }
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->view('AddFolder.tpl', $moduleName);
+    }
 }

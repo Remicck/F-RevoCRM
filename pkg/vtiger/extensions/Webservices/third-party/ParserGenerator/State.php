@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -43,7 +43,7 @@ class PHP_ParserGenerator_StateNode
 /**
  * Each state of the generated parser's finite state machine
  * is encoded as an instance of this class
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -51,7 +51,8 @@ class PHP_ParserGenerator_StateNode
  * @version    0.1.0
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_State {
+class PHP_ParserGenerator_State
+{
     /**
      * The basis configurations for this state
      * @var PHP_ParserGenerator_Config
@@ -78,8 +79,8 @@ class PHP_ParserGenerator_State {
      *
      * @var int
      */
-    public $nTknAct,
-    /**
+    public $nTknAct;
+    public /**
      * Number of non-terminal actions
      *
      * @var int
@@ -90,8 +91,8 @@ class PHP_ParserGenerator_State {
      *
      * @var int
      */
-    public $iTknOfst,
-    /**
+    public $iTknOfst;
+    public /**
      * The offset into the $yy_action table for non-terminals.
      *
      * @var int
@@ -122,7 +123,7 @@ class PHP_ParserGenerator_State {
      * of non-terminal actions, then the smaller is the one with the most
      * token actions.
      */
-    static function stateResortCompare($a, $b)
+    public static function stateResortCompare($a, $b)
     {
         $n = $b->nNtAct - $a->nNtAct;
         if ($n === 0) {
@@ -138,7 +139,7 @@ class PHP_ParserGenerator_State {
      * @param PHP_ParserGenerator_Config|0 $b
      * @return int
      */
-    static function statecmp($a, $b)
+    public static function statecmp($a, $b)
     {
         for ($rc = 0; $rc == 0 && $a && $b;  $a = $a->bp, $b = $b->bp) {
             $rc = $a->rp->index - $b->rp->index;
@@ -177,7 +178,7 @@ class PHP_ParserGenerator_State {
      * @param PHP_ParserGenerator_Config
      * @return null|PHP_ParserGenerator_State
      */
-    static function State_find(PHP_ParserGenerator_Config $key)
+    public static function State_find(PHP_ParserGenerator_Config $key)
     {
         if (!count(self::$x3a)) {
             return 0;
@@ -204,8 +205,10 @@ class PHP_ParserGenerator_State {
      * @param PHP_ParserGenerator_Config $key
      * @return unknown
      */
-    static function State_insert(PHP_ParserGenerator_State $state,
-                                 PHP_ParserGenerator_Config $key)
+    public static function State_insert(
+        PHP_ParserGenerator_State $state,
+        PHP_ParserGenerator_Config $key
+    )
     {
         $h = self::statehash($key);
         if (isset(self::$x3a[$h])) {
@@ -222,7 +225,7 @@ class PHP_ParserGenerator_State {
             $np = $np->next;
         }
         /* Insert the new data */
-        $np = new PHP_ParserGenerator_StateNode;
+        $np = new PHP_ParserGenerator_StateNode();
         $np->key = $key;
         $np->data = $state;
         self::$states[] = $np;
@@ -246,7 +249,7 @@ class PHP_ParserGenerator_State {
      *
      * @return array
      */
-    static function State_arrayof()
+    public static function State_arrayof()
     {
         return self::$states;
     }

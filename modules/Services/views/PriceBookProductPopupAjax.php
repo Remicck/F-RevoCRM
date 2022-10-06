@@ -8,5 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Services_PriceBookProductPopupAjax_View extends Products_PriceBookProductPopupAjax_View {
+class Services_PriceBookProductPopupAjax_View extends Products_PriceBookProductPopupAjax_View
+{
 }

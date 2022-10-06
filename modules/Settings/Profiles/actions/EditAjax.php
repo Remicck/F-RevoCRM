@@ -8,35 +8,36 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-Class Settings_Profiles_EditAjax_Action extends Settings_Vtiger_IndexAjax_View {
+class Settings_Profiles_EditAjax_Action extends Settings_Vtiger_IndexAjax_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('checkDuplicate');
+    }
 
-	function __construct() {
-		parent::__construct();
-		$this->exposeMethod('checkDuplicate');
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->get('mode');
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
 
-	public function process(Vtiger_Request $request) {
-		$mode = $request->get('mode');
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
+    public function checkDuplicate(Vtiger_Request $request)
+    {
+        $profileName = $request->get('profilename');
+        $recordId = $request->get('record');
 
-	public function checkDuplicate(Vtiger_Request $request) {
-		$profileName = $request->get('profilename');
-		$recordId = $request->get('record');
+        $recordModel = Settings_Profiles_Record_Model::getInstanceByName($profileName, false, array($recordId));
 
-		$recordModel = Settings_Profiles_Record_Model::getInstanceByName($profileName, false, array($recordId));
-
-		$response = new Vtiger_Response();
-		if(!empty($recordModel)) {
-			$response->setResult(array('success' => true,'message'=>  vtranslate('LBL_DUPLICATES_EXIST',$request->getModule(false))));
-			
-		}else{
-			$response->setResult(array('success' => false));
-		}
-		$response->emit();
-	}
-
+        $response = new Vtiger_Response();
+        if (!empty($recordModel)) {
+            $response->setResult(array('success' => true,'message'=>  vtranslate('LBL_DUPLICATES_EXIST', $request->getModule(false))));
+        } else {
+            $response->setResult(array('success' => false));
+        }
+        $response->emit();
+    }
 }

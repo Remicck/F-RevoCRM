@@ -19,44 +19,45 @@ include_once "include/Webservices/Custom/ChangePassword.php";
 include_once "include/Webservices/Utils.php";
 include_once "includes/runtime/EntryPoint.php";
 
-class Users_ForgotPassword_Action {
+class Users_ForgotPassword_Action
+{
+    public function changePassword($request)
+    {
+        $request = new Vtiger_Request($request);
+        $viewer = Vtiger_Viewer::getInstance();
+        $userName = $request->get('username');
+        $newPassword = $request->get('password');
+        $confirmPassword = $request->get('confirmPassword');
+        $shortURLID = $request->get('shorturl_id');
+        $secretHash = $request->get('secret_hash');
+        $shortURLModel = Vtiger_ShortURL_Helper::getInstance($shortURLID);
+        $secretToken = $shortURLModel->handler_data['secret_token'];
 
-	public function changePassword($request){
+        $validateData = array('username'  => $userName,
+                            'secret_token'=> $secretToken,
+                            'secret_hash' => $secretHash
+                        );
 
-		$request = new Vtiger_Request($request);
-		$viewer = Vtiger_Viewer::getInstance();
-		$userName = $request->get('username');
-		$newPassword = $request->get('password');
-		$confirmPassword = $request->get('confirmPassword');
-		$shortURLID = $request->get('shorturl_id');
-		$secretHash = $request->get('secret_hash');
-		$shortURLModel = Vtiger_ShortURL_Helper::getInstance($shortURLID);
-		$secretToken = $shortURLModel->handler_data['secret_token'];
+        $valid = $shortURLModel->compareEquals($validateData);
+        if ($valid) {
+            $userId = getUserId_Ol($userName);
+            $user = Users::getActiveAdminUser();
+            $wsUserId = vtws_getWebserviceEntityId('Users', $userId);
+            vtws_changePassword($wsUserId, '', $newPassword, $confirmPassword, $user);
+        } else {
+            $viewer->assign('ERROR', true);
+        }
+        $shortURLModel->delete();
+        $viewer->assign('USERNAME', $userName);
+        $viewer->assign('PASSWORD', $newPassword);
+        $viewer->view('FPLogin.tpl', 'Users');
+    }
 
-		$validateData = array('username'  => $userName,
-							'secret_token'=> $secretToken,
-							'secret_hash' => $secretHash
-						);
-
-		$valid = $shortURLModel->compareEquals($validateData);
-		if($valid) {
-			$userId = getUserId_Ol($userName);
-			$user = Users::getActiveAdminUser();
-			$wsUserId = vtws_getWebserviceEntityId('Users', $userId);
-			vtws_changePassword($wsUserId, '', $newPassword, $confirmPassword, $user);
-		} else {
-			$viewer->assign('ERROR', true);
-		}
-		$shortURLModel->delete();
-		$viewer->assign('USERNAME', $userName);
-		$viewer->assign('PASSWORD', $newPassword);
-		$viewer->view('FPLogin.tpl', 'Users');
-	}
-
-	public static function run($request){
-		$instance = new self();
-		$instance->changePassword($request);
-	}
+    public static function run($request)
+    {
+        $instance = new self();
+        $instance->changePassword($request);
+    }
 }
 
 Users_ForgotPassword_Action::run($_REQUEST);

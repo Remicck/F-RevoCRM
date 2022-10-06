@@ -11,6 +11,6 @@
 /**
  * Mass Edit Record Structure Model
  */
-class PurchaseOrder_MassEditRecordStructure_Model extends Inventory_MassEditRecordStructure_Model {
-
+class PurchaseOrder_MassEditRecordStructure_Model extends Inventory_MassEditRecordStructure_Model
+{
 }

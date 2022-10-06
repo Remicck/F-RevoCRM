@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Home_Widget_Model extends Vtiger_Base_Model {
+class Home_Widget_Model extends Vtiger_Base_Model
+{
 }

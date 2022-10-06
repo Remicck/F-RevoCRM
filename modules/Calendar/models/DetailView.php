@@ -8,34 +8,35 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_DetailView_Model extends Vtiger_DetailView_Model {
-
-	/**
-	 * Function to get the detail view related links
-	 * @return <array> - list of links parameters
-	 */
-	public function getDetailViewRelatedLinks() {
-		$recordModel = $this->getRecord();
+class Calendar_DetailView_Model extends Vtiger_DetailView_Model
+{
+    /**
+     * Function to get the detail view related links
+     * @return <array> - list of links parameters
+     */
+    public function getDetailViewRelatedLinks()
+    {
+        $recordModel = $this->getRecord();
         $moduleName = $recordModel->getType();
-		$relatedLinks = array();
-		//link which shows the summary information(generally detail of record)
-		$relatedLinks[] = array(
-				'linktype' => 'DETAILVIEWTAB',
-				'linklabel' => vtranslate('LBL_DETAILS', $moduleName),
-				'linkKey' => 'LBL_RECORD_DETAILS',
-				'linkurl' => $recordModel->getDetailViewUrl().'&mode=showDetailViewByMode&requestMode=full',
-				'linkicon' => ''
-		);
+        $relatedLinks = array();
+        //link which shows the summary information(generally detail of record)
+        $relatedLinks[] = array(
+                'linktype' => 'DETAILVIEWTAB',
+                'linklabel' => vtranslate('LBL_DETAILS', $moduleName),
+                'linkKey' => 'LBL_RECORD_DETAILS',
+                'linkurl' => $recordModel->getDetailViewUrl().'&mode=showDetailViewByMode&requestMode=full',
+                'linkicon' => ''
+        );
 
-		$parentModuleModel = $this->getModule();
-		if($parentModuleModel->isTrackingEnabled()) {
-			$relatedLinks[] = array(
-					'linktype' => 'DETAILVIEWTAB',
-					'linklabel' => vtranslate('LBL_UPDATES'),
-					'linkurl' => $recordModel->getDetailViewUrl().'&mode=showRecentActivities&page=1',
-					'linkicon' => ''
-			);
-		}
-		return $relatedLinks;
-	}
+        $parentModuleModel = $this->getModule();
+        if ($parentModuleModel->isTrackingEnabled()) {
+            $relatedLinks[] = array(
+                    'linktype' => 'DETAILVIEWTAB',
+                    'linklabel' => vtranslate('LBL_UPDATES'),
+                    'linkurl' => $recordModel->getDetailViewUrl().'&mode=showRecentActivities&page=1',
+                    'linkicon' => ''
+            );
+        }
+        return $relatedLinks;
+    }
 }

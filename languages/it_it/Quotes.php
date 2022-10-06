@@ -8,19 +8,19 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-    'Quotes'                       => 'Preventivo'                  , 
-	'SINGLE_Quotes'                => 'Preventivo'                  , 
-	'LBL_EXPORT_TO_PDF'            => 'Esporta in PDF'              , 
-	'LBL_SEND_MAIL_PDF'            => 'Send Email with PDF'         , // TODO: Review
-	'LBL_ADD_RECORD'               => 'Add Quote'                   , 
-	'LBL_RECORDS_LIST'             => 'Lista Preventivi'            , 
-	'LBL_QUOTE_INFORMATION'        => 'Informazioni Preventivo'     , 
-	'Quote No'                     => 'No. Preventivo'              , 
-	'Quote Stage'                  => 'Stadio Preventivo'           , 
-	'Valid Till'                   => 'Valido fino a'               , 
-	'Inventory Manager'            => 'Responsabile inventario'     , 
-	'Accepted'                     => 'Accettato'                   , 
-	'Rejected'                     => 'Rifiutato'                   , 
+    'Quotes'                       => 'Preventivo'                  ,
+    'SINGLE_Quotes'                => 'Preventivo'                  ,
+    'LBL_EXPORT_TO_PDF'            => 'Esporta in PDF'              ,
+    'LBL_SEND_MAIL_PDF'            => 'Send Email with PDF'         , // TODO: Review
+    'LBL_ADD_RECORD'               => 'Add Quote'                   ,
+    'LBL_RECORDS_LIST'             => 'Lista Preventivi'            ,
+    'LBL_QUOTE_INFORMATION'        => 'Informazioni Preventivo'     ,
+    'Quote No'                     => 'No. Preventivo'              ,
+    'Quote Stage'                  => 'Stadio Preventivo'           ,
+    'Valid Till'                   => 'Valido fino a'               ,
+    'Inventory Manager'            => 'Responsabile inventario'     ,
+    'Accepted'                     => 'Accettato'                   ,
+    'Rejected'                     => 'Rifiutato'                   ,
     'Related To'                   => 'Relativi a'                  ,
 
   'LBL_THIS' => 'Questo',

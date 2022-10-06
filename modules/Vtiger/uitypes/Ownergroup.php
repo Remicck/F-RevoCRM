@@ -8,31 +8,33 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Vtiger_Ownergroup_UIType extends Vtiger_Owner_UIType {
+class Vtiger_Ownergroup_UIType extends Vtiger_Owner_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/OwnerGroup.tpl';
+    }
 
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/OwnerGroup.tpl';
-	}
+    /**
+     * Function to get the Display Value, for the current field type with given DB Insert Value
+     * @param <Object> $value
+     * @return <Object>
+     */
+    public function getDisplayValue($value, $record=false, $recordInstance=false)
+    {
+        $recordModel = new Settings_Groups_Record_Model();
+        $recordModel->set('groupid', $value);
+        $detailViewUrl = $recordModel->getDetailViewUrl();
+        $groupName = getGroupName($value);
+        return "<a href=".$detailViewUrl.">".$groupName[0]."</a>";
+    }
 
-	/**
-	 * Function to get the Display Value, for the current field type with given DB Insert Value
-	 * @param <Object> $value
-	 * @return <Object>
-	 */
-	public function getDisplayValue($value, $record=false, $recordInstance=false) {
-		$recordModel = new Settings_Groups_Record_Model();
-		$recordModel->set('groupid', $value);
-		$detailViewUrl = $recordModel->getDetailViewUrl();
-		$groupName = getGroupName($value);
-		return "<a href=".$detailViewUrl.">".$groupName[0]."</a>";
-	}
-
-	public function getListSearchTemplateName() {
-		return 'uitypes/OwnerGroupFieldSearchView.tpl';
-	}
-
+    public function getListSearchTemplateName()
+    {
+        return 'uitypes/OwnerGroupFieldSearchView.tpl';
+    }
 }

@@ -9,5 +9,6 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Products_Save_Action extends Vtiger_Save_Action {
+class Products_Save_Action extends Vtiger_Save_Action
+{
 }

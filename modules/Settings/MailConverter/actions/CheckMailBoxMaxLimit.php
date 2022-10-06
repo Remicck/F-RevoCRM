@@ -8,20 +8,20 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_MailConverter_CheckMailBoxMaxLimit_Action extends Settings_Vtiger_Index_Action {
-	
-	public function process(Vtiger_Request $request) {
-		$recordsCount = Settings_MailConverter_Record_Model::getCount();
-		$qualifiedModuleName = $request->getModule(false);
-		$response = new Vtiger_Response();
+class Settings_MailConverter_CheckMailBoxMaxLimit_Action extends Settings_Vtiger_Index_Action
+{
+    public function process(Vtiger_Request $request)
+    {
+        $recordsCount = Settings_MailConverter_Record_Model::getCount();
+        $qualifiedModuleName = $request->getModule(false);
+        $response = new Vtiger_Response();
         global $max_mailboxes;
         if ($recordsCount < $max_mailboxes) {
-			$result = array(true);
-			$response->setResult($result);
-		} else {
-			$response->setError(vtranslate('LBL_MAX_LIMIT_EXCEEDED', $qualifiedModuleName));
-		}
-		$response->emit();
-	}
+            $result = array(true);
+            $response->setResult($result);
+        } else {
+            $response->setError(vtranslate('LBL_MAX_LIMIT_EXCEEDED', $qualifiedModuleName));
+        }
+        $response->emit();
+    }
 }
-?>

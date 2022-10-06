@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Leads_QuickCreateAjax_View extends Contacts_QuickCreateAjax_View {
+class Leads_QuickCreateAjax_View extends Contacts_QuickCreateAjax_View
+{
 }

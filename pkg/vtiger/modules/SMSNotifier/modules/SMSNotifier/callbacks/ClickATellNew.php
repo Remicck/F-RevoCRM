@@ -11,16 +11,17 @@ chdir(dirname(__FILE__) . '/../../../');
 include_once 'includes/main/WebUI.php';
 vimport('includes.http.Request');
 
-class SMSNotifier_ClickATellNew_Callbacks {
-	
-	function process(Vtiger_Request $request) {
-		if(vtlib_isModuleActive('SMSNotifier')) {
-			$providerModel = SMSNotifier_Provider_Model::getInstance('ClickATellNew');
-			if($providerModel->validateRequest($request)) {
-				$providerModel->updateMessageStatus($request);
-			}
-		}
-	}
+class SMSNotifier_ClickATellNew_Callbacks
+{
+    public function process(Vtiger_Request $request)
+    {
+        if (vtlib_isModuleActive('SMSNotifier')) {
+            $providerModel = SMSNotifier_Provider_Model::getInstance('ClickATellNew');
+            if ($providerModel->validateRequest($request)) {
+                $providerModel->updateMessageStatus($request);
+            }
+        }
+    }
 }
 
 $clickATell = new SMSNotifier_ClickATellNew_Callbacks();

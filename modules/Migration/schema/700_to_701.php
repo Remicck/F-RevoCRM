@@ -8,13 +8,14 @@
  * All Rights Reserved.
  *********************************************************************************/
 
-if(defined('VTIGER_UPGRADE')) {
-	global $adb, $current_user;
-	$db = PearDatabase::getInstance();
+if (defined('VTIGER_UPGRADE')) {
+    global $adb, $current_user;
+    $db = PearDatabase::getInstance();
 
-	if (!Vtiger_Utils::CheckTable('vtiger_mailscanner')) {
-		Vtiger_Utils::CreateTable('vtiger_mailscanner', 
-				"(`scannerid` INT(11) NOT NULL AUTO_INCREMENT,
+    if (!Vtiger_Utils::CheckTable('vtiger_mailscanner')) {
+        Vtiger_Utils::CreateTable(
+            'vtiger_mailscanner',
+            "(`scannerid` INT(11) NOT NULL AUTO_INCREMENT,
 				`scannername` VARCHAR(30) DEFAULT NULL,
 				`server` VARCHAR(100) DEFAULT NULL,
 				`protocol` VARCHAR(10) DEFAULT NULL,
@@ -29,16 +30,18 @@ if(defined('VTIGER_UPGRADE')) {
 				`scanfrom` VARCHAR(10) DEFAULT 'ALL',
 				`time_zone` VARCHAR(10) DEFAULT NULL,
 				PRIMARY KEY (`scannerid`)
-			  ) ENGINE=InnoDB DEFAULT CHARSET=utf8", true);
-	}
+			  ) ENGINE=InnoDB DEFAULT CHARSET=utf8",
+            true
+        );
+    }
 
-	$updateModulesList = array(	'Project'		=> 'packages/vtiger/optional/Projects.zip',
-								'Google'		=> 'packages/vtiger/optional/Google.zip',
-								'ExtensionStore'=> 'packages/vtiger/marketplace/ExtensionStore.zip');
-	foreach ($updateModulesList as $moduleName => $packagePath) {
-		$moduleInstance = Vtiger_Module::getInstance($moduleName);
-		if($moduleInstance) {
-			updateVtlibModule($moduleName, $packagePath, false);
-		}
-	}
+    $updateModulesList = array(	'Project'		=> 'packages/vtiger/optional/Projects.zip',
+                                'Google'		=> 'packages/vtiger/optional/Google.zip',
+                                'ExtensionStore'=> 'packages/vtiger/marketplace/ExtensionStore.zip');
+    foreach ($updateModulesList as $moduleName => $packagePath) {
+        $moduleInstance = Vtiger_Module::getInstance($moduleName);
+        if ($moduleInstance) {
+            updateVtlibModule($moduleName, $packagePath, false);
+        }
+    }
 }

@@ -62,10 +62,10 @@ require_once 'Zend/Gdata/Books/VolumeFeed.php';
  */
 class Zend_Gdata_Books extends Zend_Gdata
 {
-    const VOLUME_FEED_URI = 'https://books.google.com/books/feeds/volumes';
-    const MY_LIBRARY_FEED_URI = 'https://books.google.com/books/feeds/users/me/collections/library/volumes';
-    const MY_ANNOTATION_FEED_URI = 'https://books.google.com/books/feeds/users/me/volumes';
-    const AUTH_SERVICE_NAME = 'print';
+    public const VOLUME_FEED_URI = 'https://books.google.com/books/feeds/volumes';
+    public const MY_LIBRARY_FEED_URI = 'https://books.google.com/books/feeds/users/me/collections/library/volumes';
+    public const MY_ANNOTATION_FEED_URI = 'https://books.google.com/books/feeds/users/me/volumes';
+    public const AUTH_SERVICE_NAME = 'print';
 
     /**
      * Namespaces used for Zend_Gdata_Books
@@ -90,22 +90,22 @@ class Zend_Gdata_Books extends Zend_Gdata
         $this->registerPackage('Zend_Gdata_Books_Extension');
         parent::__construct($client, $applicationId);
         $this->_httpClient->setParameterPost('service', self::AUTH_SERVICE_NAME);
-     }
+    }
 
     /**
-     * Retrieves a feed of volumes.
-     *
-     * @param Zend_Gdata_Query|string|null $location (optional) The URL to
-     *        query or a Zend_Gdata_Query object from which a URL can be
-     *        determined.
-     * @return Zend_Gdata_Books_VolumeFeed The feed of volumes found at the
-     *         specified URL.
-     */
+    * Retrieves a feed of volumes.
+    *
+    * @param Zend_Gdata_Query|string|null $location (optional) The URL to
+    *        query or a Zend_Gdata_Query object from which a URL can be
+    *        determined.
+    * @return Zend_Gdata_Books_VolumeFeed The feed of volumes found at the
+    *         specified URL.
+    */
     public function getVolumeFeed($location = null)
     {
         if ($location == null) {
             $uri = self::VOLUME_FEED_URI;
-        } else if ($location instanceof Zend_Gdata_Query) {
+        } elseif ($location instanceof Zend_Gdata_Query) {
             $uri = $location->getQueryUrl();
         } else {
             $uri = $location;
@@ -127,7 +127,7 @@ class Zend_Gdata_Books extends Zend_Gdata
     {
         if ($volumeId !== null) {
             $uri = self::VOLUME_FEED_URI . "/" . $volumeId;
-        } else if ($location instanceof Zend_Gdata_Query) {
+        } elseif ($location instanceof Zend_Gdata_Query) {
             $uri = $location->getQueryUrl();
         } else {
             $uri = $location;
@@ -187,7 +187,10 @@ class Zend_Gdata_Books extends Zend_Gdata
             $uri = $location;
         }
         return parent::insertEntry(
-            $entry, $uri, 'Zend_Gdata_Books_VolumeEntry');
+            $entry,
+            $uri,
+            'Zend_Gdata_Books_VolumeEntry'
+        );
     }
 
     /**
@@ -200,5 +203,4 @@ class Zend_Gdata_Books extends Zend_Gdata
     {
         $entry->delete();
     }
-
 }

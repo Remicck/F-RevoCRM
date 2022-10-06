@@ -8,29 +8,31 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class ProjectTask_SaveTask_Action extends Vtiger_Save_Action {
+class ProjectTask_SaveTask_Action extends Vtiger_Save_Action
+{
+    public function process(Vtiger_Request $request)
+    {
+        $response = new Vtiger_Response();
+        try {
+            $recordModel = $this->saveRecord($request);
+            $response->setResult(array('record' => $recordModel->getId(), 'module' => $recordModel->getModuleName()));
+        } catch (DuplicateException $e) {
+            $response->setError($e->getMessage(), $e->getDuplicationMessage(), $e->getMessage());
+        } catch (Exception $e) {
+            $response->setError($e->getMessage());
+        }
+        $response->emit();
+    }
 
-	public function process(Vtiger_Request $request) {
-		$response = new Vtiger_Response();
-		try {
-			$recordModel = $this->saveRecord($request);
-			$response->setResult(array('record' => $recordModel->getId(), 'module' => $recordModel->getModuleName()));
-		} catch (DuplicateException $e) {
-			$response->setError($e->getMessage(), $e->getDuplicationMessage(), $e->getMessage());
-		} catch (Exception $e) {
-			$response->setError($e->getMessage());
-		}
-		$response->emit();
-	}
-
-	/**
-	 * Function to save record
-	 * @param <Vtiger_Request> $request - values of the record
-	 * @return <RecordModel> - record Model of saved record
-	 */
-	public function saveRecord($request) {
-		$recordModel = $this->getRecordModelFromRequest($request);
-		$recordModel->save();
-		return $recordModel;
-	}
+    /**
+     * Function to save record
+     * @param <Vtiger_Request> $request - values of the record
+     * @return <RecordModel> - record Model of saved record
+     */
+    public function saveRecord($request)
+    {
+        $recordModel = $this->getRecordModelFromRequest($request);
+        $recordModel->save();
+        return $recordModel;
+    }
 }

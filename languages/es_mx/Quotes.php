@@ -8,19 +8,19 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-    'Quotes'                       => 'Cotización'                 , 
-	'SINGLE_Quotes'                => 'Cotización'                 , 
-	'LBL_EXPORT_TO_PDF'            => 'Exportar a PDF'              , 
-	'LBL_SEND_MAIL_PDF'            => 'Enviar email con PDF'         , // TODO: Review
-	'LBL_ADD_RECORD'               => 'Agregar Cotización'         , 
-	'LBL_RECORDS_LIST'             => 'Lista de Cotizaciones'       , 
-	'LBL_QUOTE_INFORMATION'        => 'Información de la Cotización', 
-	'Quote No'                     => 'No. de Cotización'              , 
-	'Quote Stage'                  => 'Estado de la Cotización'    , 
-	'Valid Till'                   => 'Válido hasta'               , 
-	'Inventory Manager'            => 'Encargado del inventario'    , 
-	'Accepted'                     => 'Aceptado'                    , 
-	'Rejected'                     => 'Rechazado'                   , 
+    'Quotes'                       => 'Cotización'                 ,
+    'SINGLE_Quotes'                => 'Cotización'                 ,
+    'LBL_EXPORT_TO_PDF'            => 'Exportar a PDF'              ,
+    'LBL_SEND_MAIL_PDF'            => 'Enviar email con PDF'         , // TODO: Review
+    'LBL_ADD_RECORD'               => 'Agregar Cotización'         ,
+    'LBL_RECORDS_LIST'             => 'Lista de Cotizaciones'       ,
+    'LBL_QUOTE_INFORMATION'        => 'Información de la Cotización',
+    'Quote No'                     => 'No. de Cotización'              ,
+    'Quote Stage'                  => 'Estado de la Cotización'    ,
+    'Valid Till'                   => 'Válido hasta'               ,
+    'Inventory Manager'            => 'Encargado del inventario'    ,
+    'Accepted'                     => 'Aceptado'                    ,
+    'Rejected'                     => 'Rechazado'                   ,
     'Related To'                   => 'En relación con'             ,
 
   'LBL_THIS' => 'Este',

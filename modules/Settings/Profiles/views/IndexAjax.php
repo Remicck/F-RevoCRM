@@ -8,13 +8,15 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Profiles_IndexAjax_View extends Settings_Vtiger_Index_View {
+class Settings_Profiles_IndexAjax_View extends Settings_Vtiger_Index_View
+{
+    public function preProcess(Vtiger_Request $request)
+    {
+        return;
+    }
 
-	function preProcess(Vtiger_Request $request) {
-		return;
-	}
-
-	function postProcess(Vtiger_Request $request) {
-		return;
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        return;
+    }
 }

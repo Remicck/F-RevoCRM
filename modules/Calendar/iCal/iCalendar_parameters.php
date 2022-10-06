@@ -1,7 +1,11 @@
-<?php // $Id: iCalendar_parameters.php,v 1.7 2005/07/21 23:17:21 defacer Exp $
+<?php
 
-class iCalendar_parameter {
-    function multiple_values_allowed($parameter) {
+// $Id: iCalendar_parameters.php,v 1.7 2005/07/21 23:17:21 defacer Exp $
+
+class iCalendar_parameter
+{
+    public function multiple_values_allowed($parameter)
+    {
         switch($parameter) {
             case 'DELEGATED-FROM':
             case 'DELEGATED-TO':
@@ -12,7 +16,8 @@ class iCalendar_parameter {
         }
     }
 
-    function default_value($parameter) {
+    public function default_value($parameter)
+    {
         switch($parameter) {
             case 'CUTYPE':   return 'INDIVIDUAL';
             case 'FBTYPE':   return 'BUSY';
@@ -21,46 +26,47 @@ class iCalendar_parameter {
             case 'RELTYPE':  return 'PARENT';
             case 'ROLE':     return 'REQ-PARTICIPANT';
             case 'RSVP':     return 'FALSE';
-            default:         return NULL;
+            default:         return null;
         }
     }
 
-    function is_valid_value(&$parent_property, $parameter, $value) {
+    public function is_valid_value(&$parent_property, $parameter, $value)
+    {
         switch($parameter) {
             // These must all be a URI
             case 'ALTREP':
             case 'DIR':
                 return rfc2445_is_valid_value($value, RFC2445_TYPE_URI);
-            break;
+                break;
 
-            // These must be CAL-ADDRESS, which is equivalent to URI
+                // These must be CAL-ADDRESS, which is equivalent to URI
             case 'DELEGATED-FROM':
             case 'DELEGATED-TO':
             case 'MEMBER':
             case 'SENT-BY':
                 return rfc2445_is_valid_value($value, RFC2445_TYPE_CAL_ADDRESS);
-            break;
+                break;
 
-            // These are textual parameters, so the MUST NOT contain double quotes
+                // These are textual parameters, so the MUST NOT contain double quotes
             case 'CN':
                 return (strpos($value, '"') === false);
-            break;
+                break;
 
-            // These have enumerated legal values
+                // These have enumerated legal values
             case 'CUTYPE':
                 $value = strtoupper($value);
                 return ($value == 'INDIVIDUAL' || $value == 'GROUP' || $value == 'RESOURCE' || $value == 'ROOM' || $value == 'UNKNOWN' || rfc2445_is_xname($value));
-            break;
+                break;
 
             case 'ENCODING':
                 $value = strtoupper($value);
                 return ($value == '8BIT' || $value == 'BASE64' || rfc2445_is_xname($value));
-            break;
+                break;
 
             case 'FBTYPE':
                 $value = strtoupper($value);
                 return ($value == 'FREE' || $value == 'BUSY' || $value == 'BUSY-UNAVAILABLE' || $value == 'BUSY-TENTATIVE' || rfc2445_is_xname($value));
-            break;
+                break;
 
             case 'FMTTYPE':
                 $fmttypes = array(
@@ -82,7 +88,7 @@ class iCalendar_parameter {
                                                'SET-PAYMENT-INITIATION', 'SET-PAYMENT', 'SET-REGISTRATION-INITIATION',
                                                'SET-REGISTRATION', 'VND.SEEMAIL', 'VND.BUSINESSOBJECTS',
                                                'VND.MERIDIAN-SLINGSHOT', 'VND.XARA', 'SGML-OPEN-CATALOG', 'VND.RAPID',
-                                               'VND.ENLIVEN', 'VND.JAPANNET-REGISTRATION-WAKEUP', 
+                                               'VND.ENLIVEN', 'VND.JAPANNET-REGISTRATION-WAKEUP',
                                                'VND.JAPANNET-VERIFICATION-WAKEUP', 'VND.JAPANNET-PAYMENT-WAKEUP',
                                                'VND.JAPANNET-DIRECTORY-SERVICE', 'VND.INTERTRUST.DIGIBOX', 'VND.INTERTRUST.NNCP'),
                         'IMAGE'       => array('JPEG', 'GIF', 'IEF', 'G3FAX', 'TIFF', 'CGM', 'NAPLPS', 'VND.DWG', 'VND.SVF',
@@ -91,32 +97,32 @@ class iCalendar_parameter {
                         'VIDEO'       => array('MPEG', 'QUICKTIME', 'VND.VIVO', 'VND.MOTOROLA.VIDEO', 'VND.MOTOROLA.VIDEOP')
                 );
                 $value = strtoupper($value);
-                if(rfc2445_is_xname($value)) {
+                if (rfc2445_is_xname($value)) {
                     return true;
                 }
                 @list($type, $subtype) = explode('/', $value);
-                if(empty($type) || empty($subtype)) {
+                if (empty($type) || empty($subtype)) {
                     return false;
                 }
-                if(!isset($fmttypes[$type]) || !in_array($subtype, $fmttypes[$type])) {
+                if (!isset($fmttypes[$type]) || !in_array($subtype, $fmttypes[$type])) {
                     return false;
                 }
                 return true;
-            break;
+                break;
 
             case 'LANGUAGE':
                 $value = strtoupper($value);
                 $parts = explode('-', $value);
-                foreach($parts as $part) {
-                    if(empty($part)) {
+                foreach ($parts as $part) {
+                    if (empty($part)) {
                         return false;
                     }
-                    if(strspn($part, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') != strlen($part)) {
+                    if (strspn($part, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789') != strlen($part)) {
                         return false;
                     }
                 }
                 return true;
-            break;
+                break;
 
             case 'PARTSTAT':
                 $value = strtoupper($value);
@@ -124,49 +130,49 @@ class iCalendar_parameter {
                     case 'VEVENT':
                         return ($value == 'NEEDS-ACTION' || $value == 'ACCEPTED' || $value == 'DECLINED' || $value == 'TENTATIVE'
                                 || $value == 'DELEGATED' || rfc2445_is_xname($value));
-                    break;
+                        break;
                     case 'VTODO':
                         return ($value == 'NEEDS-ACTION' || $value == 'ACCEPTED' || $value == 'DECLINED' || $value == 'TENTATIVE'
                                 || $value == 'DELEGATED' || $value == 'COMPLETED' || $value == 'IN-PROCESS' || rfc2445_is_xname($value));
-                    break;
+                        break;
                     case 'VJOURNAL':
                         return ($value == 'NEEDS-ACTION' || $value == 'ACCEPTED' || $value == 'DECLINED' || rfc2445_is_xname($value));
-                    break;
+                        break;
                 }
                 return false;
-            break;
+                break;
 
             case 'RANGE':
                 $value = strtoupper($value);
                 return ($value == 'THISANDPRIOR' || $value == 'THISANDFUTURE');
-            break;
+                break;
 
             case 'RELATED':
                 $value = strtoupper($value);
                 return ($value == 'START' || $value == 'END');
-            break;
+                break;
 
             case 'RELTYPE':
                 $value = strtoupper($value);
                 return ($value == 'PARENT' || $value == 'CHILD' || $value == 'SIBLING' || rfc2445_is_xname($value));
-            break;
+                break;
 
             case 'ROLE':
                 $value = strtoupper($value);
                 return ($value == 'CHAIR' || $value == 'REQ-PARTICIPANT' || $value == 'OPT-PARTICIPANT' || $value == 'NON-PARTICIPANT' || rfc2445_is_xname($value));
-            break;
+                break;
 
             case 'RSVP':
                 $value = strtoupper($value);
                 return ($value == 'TRUE' || $value == 'FALSE');
-            break;
+                break;
 
             case 'TZID':
-                if(empty($value)) {
+                if (empty($value)) {
                     return false;
                 }
                 return (strcspn($value, '";:,') == strlen($value));
-            break;
+                break;
 
             case 'VALUE':
                 $value = strtoupper($value);
@@ -174,11 +180,12 @@ class iCalendar_parameter {
                         $value == 'DATE-TIME' || $value == 'DURATION'   || $value == 'FLOAT'       || $value == 'INTEGER' ||
                         $value == 'PERIOD'    || $value == 'RECUR'      || $value == 'TEXT'        || $value == 'TIME'    ||
                         $value == 'URI'       || $value == 'UTC-OFFSET' || rfc2445_is_xname($value));
-            break;
+                break;
         }
     }
 
-    function do_value_formatting($parameter, $value) {
+    public function do_value_formatting($parameter, $value)
+    {
         switch($parameter) {
             // Parameters of type CAL-ADDRESS or URI MUST be double-quoted
             case 'ALTREP':
@@ -188,15 +195,15 @@ class iCalendar_parameter {
             case 'MEMBER':
             case 'SENT-BY':
                 return '"'.$value.'"';
-            break;
+                break;
 
-            // Textual parameter types must be double quoted if they contain COLON, SEMICOLON
-            // or COMMA. Quoting always sounds easier and standards-conformant though.
+                // Textual parameter types must be double quoted if they contain COLON, SEMICOLON
+                // or COMMA. Quoting always sounds easier and standards-conformant though.
             case 'CN':
                 return '"'.$value.'"';
-            break;
+                break;
 
-            // Parameters with enumerated legal values, just make them all caps
+                // Parameters with enumerated legal values, just make them all caps
             case 'CUTYPE':
             case 'ENCODING':
             case 'FBTYPE':
@@ -210,18 +217,16 @@ class iCalendar_parameter {
             case 'RSVP':
             case 'VALUE':
                 return strtoupper($value);
-            break;
+                break;
 
-            // Parameters we shouldn't be messing with
+                // Parameters we shouldn't be messing with
             case 'TZID':
                 return $value;
-            break;
+                break;
         }
     }
 
-    function undo_value_formatting($parameter, $value) {
+    public function undo_value_formatting($parameter, $value)
+    {
     }
-
 }
-
-?>

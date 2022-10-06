@@ -34,8 +34,8 @@ class Zend_Json
      * so that it is a boolean true value, allowing it to be used with
      * ext/json's functions.
      */
-    const TYPE_ARRAY  = 1;
-    const TYPE_OBJECT = 0;
+    public const TYPE_ARRAY  = 1;
+    public const TYPE_OBJECT = 0;
 
     /**
      * @var bool
@@ -88,4 +88,3 @@ class Zend_Json
         return Zend_Json_Encoder::encode($valueToEncode, $cycleCheck);
     }
 }
-

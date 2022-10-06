@@ -8,19 +8,20 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_DownloadAttachment_Action extends Vtiger_Action_Controller {
+class Vtiger_DownloadAttachment_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
 
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		
-		return $permissions;
-	}
+        return $permissions;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$recordModel = Vtiger_Record_Model::getInstanceById($request->get('record'), $moduleName);
-		$recordModel->downloadFile($request->get('attachmentid'));
-	}
-
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $recordModel = Vtiger_Record_Model::getInstanceById($request->get('record'), $moduleName);
+        $recordModel->downloadFile($request->get('attachmentid'));
+    }
 }

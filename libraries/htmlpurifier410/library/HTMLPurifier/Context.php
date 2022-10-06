@@ -9,7 +9,6 @@
  */
 class HTMLPurifier_Context
 {
-
     /**
      * Private array that stores the references.
      * @type array

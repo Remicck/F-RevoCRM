@@ -8,24 +8,26 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Url_UIType extends Vtiger_Base_UIType {
+class Vtiger_Url_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Url.tpl';
+    }
 
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Url.tpl';
-	}
-
-	public function getDisplayValue($value, $record=false, $recordInstance=false) {
-		$matchPattern = "^[\w]+:\/\/^";
-		preg_match($matchPattern, $value, $matches);
-		if(!empty ($matches[0])) {
-			$value = '<a class="urlField cursorPointer" href="'.$value.'" target="_blank">'.textlength_check($value).'</a>';
-		} else {
-			$value = '<a class="urlField cursorPointer" href="http://'.$value.'" target="_blank">'.textlength_check($value).'</a>';
-		}
-		return $value;
-	}
+    public function getDisplayValue($value, $record=false, $recordInstance=false)
+    {
+        $matchPattern = "^[\w]+:\/\/^";
+        preg_match($matchPattern, $value, $matches);
+        if (!empty($matches[0])) {
+            $value = '<a class="urlField cursorPointer" href="'.$value.'" target="_blank">'.textlength_check($value).'</a>';
+        } else {
+            $value = '<a class="urlField cursorPointer" href="http://'.$value.'" target="_blank">'.textlength_check($value).'</a>';
+        }
+        return $value;
+    }
 }

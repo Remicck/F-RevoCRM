@@ -8,7 +8,8 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-function vtws_relatedtypes($elementType, $user) {
+function vtws_relatedtypes($elementType, $user)
+{
     global $adb, $log;
 
     $allowedTypes = vtws_listtypes(null, $user);
@@ -43,6 +44,5 @@ function vtws_relatedtypes($elementType, $user) {
         }
     }
 
-	return $return;
+    return $return;
 }
-

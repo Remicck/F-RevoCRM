@@ -9,8 +9,8 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_MailConverter_Field_Model extends Vtiger_Field_Model {
-    
+class Settings_MailConverter_Field_Model extends Vtiger_Field_Model
+{
     public static $timeZonePickListValues = array(' '=>'LBL_I_DONT_KNOW',
                                     '-12:00' => '(GMT -12:00 hours) Eniwetok, Kwajalein',
                                     '-11:00' => '(GMT -11:00 hours) Midway Island, Samoa',
@@ -28,10 +28,10 @@ class Settings_MailConverter_Field_Model extends Vtiger_Field_Model {
                                     '0:00' =>'(GMT) Western Europe Time, London, Lisbon, Casablanca, Monrovia',
                                     '+1:00' => '(GMT +1:00 hours) CET(Central Europe Time), Brussels, Copenhagen, Madrid, Paris',
                                     '+2:00' => '(GMT +2:00 hours) EET(Eastern Europe Time), Kaliningrad, South Africa',
-                                    '+3:00' => '(GMT +3:00 hours) Baghdad, Kuwait, Riyadh, Moscow, St. Petersburg, Volgograd, Nairobi',	
+                                    '+3:00' => '(GMT +3:00 hours) Baghdad, Kuwait, Riyadh, Moscow, St. Petersburg, Volgograd, Nairobi',
                                     '+3:30' => '(GMT +3:30 hours) Tehran',
                                     '+4:00' => '{GMT +4:00 hours) Abu Dhabi, Muscat, Baku, Tbilisi',
-                                    '+4:30' => '(GMT +4:30 hours) Kabul]',	
+                                    '+4:30' => '(GMT +4:30 hours) Kabul]',
                                     '+5:00' => '(GMT +5:00 hours) Ekaterinburg, Islamabad, Karachi, Tashkent',
                                     '+5:30' => '(GMT +5:30 hours) Bombay, Calcutta, Madras, New Delhi',
                                     '+6:00' => '(GMT +6:00 hours) Almaty, Dhaka, Colombo',
@@ -44,60 +44,63 @@ class Settings_MailConverter_Field_Model extends Vtiger_Field_Model {
                                     '+12:00' => '(GMT +12:00 hours) Auckland, Wellington, Fiji, Kamchatka, Marshall Island');
 
 
-    public function getFieldDataType() {
+    public function getFieldDataType()
+    {
         return $this->get('datatype');
     }
-    
-    public function getPickListValues() {
+
+    public function getPickListValues()
+    {
         $fieldName = $this->getName();
         $pickListValues = array();
-        if($fieldName == 'searchfor') {
+        if ($fieldName == 'searchfor') {
             $optionList = array('ALL','UNSEEN');
-            foreach($optionList as $option) {
+            foreach ($optionList as $option) {
                 $pickListValues[$option] = vtranslate($option, 'Settings::MailConverter');
             }
-        }else if ($fieldName == 'markas') {
+        } elseif ($fieldName == 'markas') {
             $optionList = array('UNCHANGED', 'UNSEEN','SEEN');
-            foreach($optionList as $option) {
-				$pickListValues[$option] = vtranslate($option, 'Settings::MailConverter');
+            foreach ($optionList as $option) {
+                $pickListValues[$option] = vtranslate($option, 'Settings::MailConverter');
             }
-        }else if ($fieldName == 'time_zone') {
+        } elseif ($fieldName == 'time_zone') {
             $pickListValues = self::$timeZonePickListValues;
-            
         }
         return $pickListValues;
     }
-    
-    public function getEditablePicklistValues() {
+
+    public function getEditablePicklistValues()
+    {
         return $this->getPickListValues();
     }
-    
-    public function getRadioOptions() {
+
+    public function getRadioOptions()
+    {
         $fieldName = $this->getName();
-        if($fieldName == 'ssltype') {
-            $options['notls'] = vtranslate('No TLS','Settings::MailConverter');
-            $options['tls'] = vtranslate('TLS','Settings::MailConverter');
-            $options['ssl'] = vtranslate('SSL','Settings::MailConverter');
-        }
-        elseif($fieldName == 'sslmethod') {
-            $options['validate-cert'] = vtranslate('Validate SSL Certificate','Settings::MailConverter');
-            $options['novalidate-cert'] = vtranslate('Do Not Validate SSL Certificate','Settings::MailConverter');
-        }
-        else if($fieldName == 'protocol') {
+        if ($fieldName == 'ssltype') {
+            $options['notls'] = vtranslate('No TLS', 'Settings::MailConverter');
+            $options['tls'] = vtranslate('TLS', 'Settings::MailConverter');
+            $options['ssl'] = vtranslate('SSL', 'Settings::MailConverter');
+        } elseif ($fieldName == 'sslmethod') {
+            $options['validate-cert'] = vtranslate('Validate SSL Certificate', 'Settings::MailConverter');
+            $options['novalidate-cert'] = vtranslate('Do Not Validate SSL Certificate', 'Settings::MailConverter');
+        } elseif ($fieldName == 'protocol') {
             $options['imap'] = vtranslate('IMAP2', 'Settings::MailConverter');
             $options['imap4'] = vtranslate('IMAP4', 'Settings::MailConverter');
         }
         return $options;
     }
-    
-    public function isEditable() {
-        if(!property_exists($this, 'isEditable')){
+
+    public function isEditable()
+    {
+        if (!property_exists($this, 'isEditable')) {
             return true;
         }
         return $this->isEditable;
     }
 
-	public function getPicklistColors() {
-		return array();
-	}
+    public function getPicklistColors()
+    {
+        return array();
+    }
 }

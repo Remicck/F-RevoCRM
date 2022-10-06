@@ -8,6 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class SalesOrder_ServicesPopup_View extends Inventory_ServicesPopup_View {
-
+class SalesOrder_ServicesPopup_View extends Inventory_ServicesPopup_View
+{
 }

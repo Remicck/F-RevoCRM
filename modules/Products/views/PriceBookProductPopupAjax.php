@@ -8,22 +8,23 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Products_PriceBookProductPopupAjax_View extends Products_PriceBookProductPopup_View {
+class Products_PriceBookProductPopupAjax_View extends Products_PriceBookProductPopup_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-	public function process (Vtiger_Request $request) {
-		$viewer = $this->getViewer ($request);
-		$moduleName = $request->getModule();
+        $companyDetails = Vtiger_CompanyDetails_Model::getInstanceById();
+        $companyLogo = $companyDetails->getLogo();
 
-		$companyDetails = Vtiger_CompanyDetails_Model::getInstanceById();
-		$companyLogo = $companyDetails->getLogo();
+        $this->initializeListViewContents($request, $viewer);
 
-		$this->initializeListViewContents($request, $viewer);
+        $viewer->assign('MODULE_NAME', $moduleName);
+        $viewer->assign('COMPANY_LOGO', $companyLogo);
+        $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+        $viewer->assign('SELECTED_RECORDS', $request->get("selectedRecords"));
 
-		$viewer->assign('MODULE_NAME',$moduleName);
-		$viewer->assign('COMPANY_LOGO',$companyLogo);
-		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
-		$viewer->assign('SELECTED_RECORDS', $request->get("selectedRecords"));
-
-		echo $viewer->view('PriceBookProductPopupContents.tpl', 'Products', true);
-	}
+        echo $viewer->view('PriceBookProductPopupContents.tpl', 'Products', true);
+    }
 }

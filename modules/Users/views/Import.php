@@ -10,32 +10,35 @@
 
 vimport('~~/include/Webservices/Custom/DeleteUser.php');
 
-class Users_Import_View extends Vtiger_Import_View {
-    
-    function checkPermission(Vtiger_Request $request) {
+class Users_Import_View extends Vtiger_Import_View
+{
+    public function checkPermission(Vtiger_Request $request)
+    {
         parent::checkPermission($request);
 
-        if($request->getMode() == 'import') {
+        if ($request->getMode() == 'import') {
             $currentUserModel = Users_Record_Model::getCurrentUserModel();
-            if(!$currentUserModel->isAdminUser()) {
+            if (!$currentUserModel->isAdminUser()) {
                 throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
             }
         }
         return true;
-	}
+    }
 
-	public function initializeMappingParameters(Vtiger_Request $request) {
-		parent::initializeMappingParameters($request);
-		$moduleName = $request->getModule();
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-		$moduleFields = $moduleModel->getFields();
+    public function initializeMappingParameters(Vtiger_Request $request)
+    {
+        parent::initializeMappingParameters($request);
+        $moduleName = $request->getModule();
+        $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+        $moduleFields = $moduleModel->getFields();
 
-		$viewer = $this->getViewer($request);
-		$viewer->assign('IMPORTABLE_FIELDS', $moduleModel->getImportableFieldModels($moduleName));
-	}
+        $viewer = $this->getViewer($request);
+        $viewer->assign('IMPORTABLE_FIELDS', $moduleModel->getImportableFieldModels($moduleName));
+    }
 
-    public function process(Vtiger_Request $request) {
-        if($request->getMode() != 'undoImport') {
+    public function process(Vtiger_Request $request)
+    {
+        if ($request->getMode() != 'undoImport') {
             parent::process($request);
         } else {
             $viewer = new Vtiger_Viewer();
@@ -52,7 +55,7 @@ class Users_Import_View extends Vtiger_Import_View {
             $noOfRecordsDeleted = 0;
             $activeAdminId = Users::getActiveAdminId();
             $userModel = Users_Record_Model::getCurrentUserModel();
-            for($i=0; $i<$noOfRecords; $i++) {
+            for ($i=0; $i<$noOfRecords; $i++) {
                 $recordId = $db->query_result($result, $i, 'recordid');
                 $userId = vtws_getWebserviceEntityId($moduleName, $recordId);
                 $transformUserId = vtws_getWebserviceEntityId($moduleName, $activeAdminId);
@@ -66,5 +69,5 @@ class Users_Import_View extends Vtiger_Import_View {
             $viewer->assign('DELETED_RECORDS_COUNT', $noOfRecordsDeleted);
             $viewer->view('ImportUndoResult.tpl', 'Import');
         }
-	}
+    }
 }

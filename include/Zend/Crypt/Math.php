@@ -33,7 +33,6 @@ require_once 'Zend/Crypt/Math/BigInteger.php';
  */
 class Zend_Crypt_Math extends Zend_Crypt_Math_BigInteger
 {
-
     /**
      * Generate a pseudorandom number within the given range.
      * Will attempt to read from a systems RNG if it exists or else utilises
@@ -58,9 +57,9 @@ class Zend_Crypt_Math extends Zend_Crypt_Math_BigInteger
         $rand = '';
         $i2 = strlen($maximum) - 1;
         for ($i = 1;$i < $i2;$i++) {
-            $rand .= mt_rand(0,9);
+            $rand .= mt_rand(0, 9);
         }
-        $rand .= mt_rand(0,9);
+        $rand .= mt_rand(0, 9);
         return $rand;
     }
 
@@ -71,7 +70,8 @@ class Zend_Crypt_Math extends Zend_Crypt_Math_BigInteger
      * @param string $long
      * @return string
      */
-    public function btwoc($long) {
+    public function btwoc($long)
+    {
         if (ord($long[0]) > 127) {
             return "\x00" . $long;
         }
@@ -84,7 +84,8 @@ class Zend_Crypt_Math extends Zend_Crypt_Math_BigInteger
      * @param string $binary
      * @return string
      */
-    public function fromBinary($binary) {
+    public function fromBinary($binary)
+    {
         return $this->_math->binaryToInteger($binary);
     }
 
@@ -98,5 +99,4 @@ class Zend_Crypt_Math extends Zend_Crypt_Math_BigInteger
     {
         return $this->_math->integerToBinary($integer);
     }
-
 }

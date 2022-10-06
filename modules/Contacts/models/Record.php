@@ -8,51 +8,53 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Contacts_Record_Model extends Vtiger_Record_Model {
+class Contacts_Record_Model extends Vtiger_Record_Model
+{
+    /**
+     * Function returns the url for create event
+     * @return <String>
+     */
+    public function getCreateEventUrl()
+    {
+        $calendarModuleModel = Vtiger_Module_Model::getInstance('Calendar');
+        return $calendarModuleModel->getCreateEventRecordUrl().'&contact_id='.$this->getId();
+    }
 
-	/**
-	 * Function returns the url for create event
-	 * @return <String>
-	 */
-	function getCreateEventUrl() {
-		$calendarModuleModel = Vtiger_Module_Model::getInstance('Calendar');
-		return $calendarModuleModel->getCreateEventRecordUrl().'&contact_id='.$this->getId();
-	}
-
-	/**
-	 * Function returns the url for create todo
-	 * @return <String>
-	 */
-	function getCreateTaskUrl() {
-		$calendarModuleModel = Vtiger_Module_Model::getInstance('Calendar');
-		return $calendarModuleModel->getCreateTaskRecordUrl().'&contact_id='.$this->getId();
-	}
+    /**
+     * Function returns the url for create todo
+     * @return <String>
+     */
+    public function getCreateTaskUrl()
+    {
+        $calendarModuleModel = Vtiger_Module_Model::getInstance('Calendar');
+        return $calendarModuleModel->getCreateTaskRecordUrl().'&contact_id='.$this->getId();
+    }
 
 
-	/**
-	 * Function to get List of Fields which are related from Contacts to Inventory Record
-	 * @return <array>
-	 */
-	public function getInventoryMappingFields() {
-		return array(
-				array('parentField'=>'account_id', 'inventoryField'=>'account_id', 'defaultValue'=>''),
+    /**
+     * Function to get List of Fields which are related from Contacts to Inventory Record
+     * @return <array>
+     */
+    public function getInventoryMappingFields()
+    {
+        return array(
+                array('parentField'=>'account_id', 'inventoryField'=>'account_id', 'defaultValue'=>''),
 
-				//Billing Address Fields
-				array('parentField'=>'mailingcity', 'inventoryField'=>'bill_city', 'defaultValue'=>''),
-				array('parentField'=>'mailingstreet', 'inventoryField'=>'bill_street', 'defaultValue'=>''),
-				array('parentField'=>'mailingstate', 'inventoryField'=>'bill_state', 'defaultValue'=>''),
-				array('parentField'=>'mailingzip', 'inventoryField'=>'bill_code', 'defaultValue'=>''),
-				array('parentField'=>'mailingcountry', 'inventoryField'=>'bill_country', 'defaultValue'=>''),
-				array('parentField'=>'mailingpobox', 'inventoryField'=>'bill_pobox', 'defaultValue'=>''),
+                //Billing Address Fields
+                array('parentField'=>'mailingcity', 'inventoryField'=>'bill_city', 'defaultValue'=>''),
+                array('parentField'=>'mailingstreet', 'inventoryField'=>'bill_street', 'defaultValue'=>''),
+                array('parentField'=>'mailingstate', 'inventoryField'=>'bill_state', 'defaultValue'=>''),
+                array('parentField'=>'mailingzip', 'inventoryField'=>'bill_code', 'defaultValue'=>''),
+                array('parentField'=>'mailingcountry', 'inventoryField'=>'bill_country', 'defaultValue'=>''),
+                array('parentField'=>'mailingpobox', 'inventoryField'=>'bill_pobox', 'defaultValue'=>''),
 
-				//Shipping Address Fields
-				array('parentField'=>'otherstreet', 'inventoryField'=>'ship_street', 'defaultValue'=>''),
-				array('parentField'=>'othercity', 'inventoryField'=>'ship_city', 'defaultValue'=>''),
-				array('parentField'=>'otherstate', 'inventoryField'=>'ship_state', 'defaultValue'=>''),
-				array('parentField'=>'otherzip', 'inventoryField'=>'ship_code', 'defaultValue'=>''),
-				array('parentField'=>'othercountry', 'inventoryField'=>'ship_country', 'defaultValue'=>''),
-				array('parentField'=>'otherpobox', 'inventoryField'=>'ship_pobox', 'defaultValue'=>'')
-		);
-	}
-
+                //Shipping Address Fields
+                array('parentField'=>'otherstreet', 'inventoryField'=>'ship_street', 'defaultValue'=>''),
+                array('parentField'=>'othercity', 'inventoryField'=>'ship_city', 'defaultValue'=>''),
+                array('parentField'=>'otherstate', 'inventoryField'=>'ship_state', 'defaultValue'=>''),
+                array('parentField'=>'otherzip', 'inventoryField'=>'ship_code', 'defaultValue'=>''),
+                array('parentField'=>'othercountry', 'inventoryField'=>'ship_country', 'defaultValue'=>''),
+                array('parentField'=>'otherpobox', 'inventoryField'=>'ship_pobox', 'defaultValue'=>'')
+        );
+    }
 }

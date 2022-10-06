@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -23,7 +23,7 @@
  */
 /**
  * Each production rule in the grammar is stored in this class
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -31,7 +31,8 @@
  * @version    0.1.0
  * @since      Class available since Release 0.1.0
  */
-class PHP_ParserGenerator_Rule {
+class PHP_ParserGenerator_Rule
+{
     /**
      * Left-hand side of the rule
      * @var array an array of {@link PHP_ParserGenerator_Symbol} objects
@@ -59,12 +60,12 @@ class PHP_ParserGenerator_Rule {
     public $rhs;
     /**
      * Aliases for each right-hand side symbol, or null if no alis.
-     * 
+     *
      * In this rule:
      * <pre>
      * foo ::= BAR(A) baz(B).
      * </pre>
-     * 
+     *
      * The right-hand side aliases are A for BAR, and B for baz.
      * @var array aliases are indexed by the right-hand side symbol index.
      */
@@ -76,11 +77,11 @@ class PHP_ParserGenerator_Rule {
     public $line;
     /**
      * The code executed when this rule is reduced
-     * 
+     *
      * <pre>
      * foo(R) ::= BAR(A) baz(B). {R = A + B;}
      * </pre>
-     * 
+     *
      * In the rule above, the code is "R = A + B;"
      * @var string|0
      */
@@ -92,7 +93,7 @@ class PHP_ParserGenerator_Rule {
     public $precsym;
     /**
      * An index number for this rule
-     * 
+     *
      * Used in both naming of reduce functions and determining which rule code
      * to use for reduce actions
      * @var int

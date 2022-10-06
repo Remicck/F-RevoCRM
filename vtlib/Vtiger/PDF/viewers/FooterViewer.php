@@ -9,65 +9,73 @@
  ************************************************************************************/
 include_once dirname(__FILE__) . '/Viewer.php';
 
-class Vtiger_PDF_FooterViewer extends Vtiger_PDF_Viewer {
+class Vtiger_PDF_FooterViewer extends Vtiger_PDF_Viewer
+{
+    protected $model;
 
-	protected $model;
-	
-	protected $onEveryPage = true;
-	protected $onLastPage = false;
-	
-	function setOnEveryPage() {
-		$this->onEveryPage = true;
-		$this->onLastPage = false;
-	}
-	
-	function onEveryPage() {
-		return $this->onEveryPage;
-	}
-	
-	function setOnLastPage() {
-		$this->onEveryPage = false;
-		$this->onLastPage = true;
-	}
-	
-	function onLastPage() {
-		return $this->onLastPage;
-	}
-	
-	function setModel($m) {
-		$this->model = $m;
-	}
-	
-	function totalHeight($parent) {
-		$height = 0.1;
-		
-		if($this->model && $this->onEveryPage()) {
-			$pdf = $parent->getPDF();
+    protected $onEveryPage = true;
+    protected $onLastPage = false;
 
-			$contentText = $this->model->get('content');
-			$height = $pdf->GetStringHeight($contentText, $parent->getTotalWidth());
-		}		
+    public function setOnEveryPage()
+    {
+        $this->onEveryPage = true;
+        $this->onLastPage = false;
+    }
 
-		if($this->onEveryPage) return $height;
-		if($this->onLastPage && $parent->onLastPage()) return $height;
-		return 0;
-	}
-	
-	function initDisplay($parent) {
-		
-	}
+    public function onEveryPage()
+    {
+        return $this->onEveryPage;
+    }
 
-	function display($parent) {
+    public function setOnLastPage()
+    {
+        $this->onEveryPage = false;
+        $this->onLastPage = true;
+    }
 
-		$pdf = $parent->getPDF();
-		$footerFrame = $parent->getFooterFrame();
-		
-		if($this->model) {
-			$targetFooterHeight = ($this->onEveryPage())? $footerFrame->h : 0;
-				
-			$pdf->MultiCell($footerFrame->w, $targetFooterHeight, $this->model->get('content'), 1, 'L', 0, 1, $footerFrame->x, $footerFrame->y);
-		}
-		
-	}
-	
+    public function onLastPage()
+    {
+        return $this->onLastPage;
+    }
+
+    public function setModel($m)
+    {
+        $this->model = $m;
+    }
+
+    public function totalHeight($parent)
+    {
+        $height = 0.1;
+
+        if ($this->model && $this->onEveryPage()) {
+            $pdf = $parent->getPDF();
+
+            $contentText = $this->model->get('content');
+            $height = $pdf->GetStringHeight($contentText, $parent->getTotalWidth());
+        }
+
+        if ($this->onEveryPage) {
+            return $height;
+        }
+        if ($this->onLastPage && $parent->onLastPage()) {
+            return $height;
+        }
+        return 0;
+    }
+
+    public function initDisplay($parent)
+    {
+    }
+
+    public function display($parent)
+    {
+        $pdf = $parent->getPDF();
+        $footerFrame = $parent->getFooterFrame();
+
+        if ($this->model) {
+            $targetFooterHeight = ($this->onEveryPage()) ? $footerFrame->h : 0;
+
+            $pdf->MultiCell($footerFrame->w, $targetFooterHeight, $this->model->get('content'), 1, 'L', 0, 1, $footerFrame->x, $footerFrame->y);
+        }
+    }
 }

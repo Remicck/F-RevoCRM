@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class SalesOrder_ListView_Model extends Inventory_ListView_Model {
+class SalesOrder_ListView_Model extends Inventory_ListView_Model
+{
 }

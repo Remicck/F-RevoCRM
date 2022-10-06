@@ -9,16 +9,16 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Tags_Module_Model extends Settings_Vtiger_Module_Model {
+class Settings_Tags_Module_Model extends Settings_Vtiger_Module_Model
+{
+    public $baseTable = 'vtiger_freetags';
+    public $baseIndex = 'id';
+    public $listFields = array('tag' => 'Tags', 'visibility' => 'Private/Public');
+    public $nameFields = array('tag');
+    public $name = 'Tags';
 
-	var $baseTable = 'vtiger_freetags';
-	var $baseIndex = 'id';
-	var $listFields = array('tag' => 'Tags', 'visibility' => 'Private/Public');
-	var $nameFields = array('tag');
-	var $name = 'Tags';
-
-	public function getCreateRecordUrl() {
-		return "javascript:Settings_Tags_List_Js.triggerAdd(event)";
-	}
-
+    public function getCreateRecordUrl()
+    {
+        return "javascript:Settings_Tags_List_Js.triggerAdd(event)";
+    }
 }

@@ -8,32 +8,32 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-	'LBL_IMPORT_MODULE'            => 'Importa Modulo'               , // TODO: Review
-	'LBL_VTIGER_EXTENSION_STORE'   => 'Vtiger Extension Store'      , // TODO: Review
-	'LBL_PUBLISHER'                => 'Editore'                   , // TODO: Review
-	'LBL_LICENSE'                  => 'Licenza'                     , // TODO: Review
-	'LBL_PUBLISHED_ON'             => 'Pubblicato il'                , // TODO: Review
-	'LBL_INSTALL'                  => 'Installa'                     , // TODO: Review
-	'LBL_UPGRADE'                  => 'Aggiorna'                     , // TODO: Review
-	'LBL_VERSION'                  => 'Versione'                     , // TODO: Review
-	'LBL_DECLINE'                  => 'Rifiuta'                     , // TODO: Review
-	'LBL_ACCEPT_AND_INSTALL'       => 'Accetta e Installa'          , // TODO: Review
-	'LBL_ALREADY_EXISTS'           => 'Già esiste'              , // TODO: Review
-	'LBL_OK'                       => 'OK'                          , // TODO: Review
-	'LBL_EXTENSION_NOT_COMPATABLE' => 'l\'estensione con è compatibile con VTiger', // TODO: Review
-	'LBL_INVALID_FILE'             => 'File non valido'                , // TODO: Review
-	'LBL_NO_LICENSE_PROVIDED'      => 'Nessuna licenza fornita'         , // TODO: Review
-	'LBL_INSTALLATION'             => 'Installazione'                , // TODO: Review
-	'LBL_FAILED'                   => 'Fallita'                      , // TODO: Review
-	'LBL_SUCCESSFULL'              => 'Con successo'                 , // TODO: Review
-	'LBL_INSTALLATION_LOG'         => 'Registro installazione'            , // TODO: Review
+    'LBL_IMPORT_MODULE'            => 'Importa Modulo'               , // TODO: Review
+    'LBL_VTIGER_EXTENSION_STORE'   => 'Vtiger Extension Store'      , // TODO: Review
+    'LBL_PUBLISHER'                => 'Editore'                   , // TODO: Review
+    'LBL_LICENSE'                  => 'Licenza'                     , // TODO: Review
+    'LBL_PUBLISHED_ON'             => 'Pubblicato il'                , // TODO: Review
+    'LBL_INSTALL'                  => 'Installa'                     , // TODO: Review
+    'LBL_UPGRADE'                  => 'Aggiorna'                     , // TODO: Review
+    'LBL_VERSION'                  => 'Versione'                     , // TODO: Review
+    'LBL_DECLINE'                  => 'Rifiuta'                     , // TODO: Review
+    'LBL_ACCEPT_AND_INSTALL'       => 'Accetta e Installa'          , // TODO: Review
+    'LBL_ALREADY_EXISTS'           => 'Già esiste'              , // TODO: Review
+    'LBL_OK'                       => 'OK'                          , // TODO: Review
+    'LBL_EXTENSION_NOT_COMPATABLE' => 'l\'estensione con è compatibile con VTiger', // TODO: Review
+    'LBL_INVALID_FILE'             => 'File non valido'                , // TODO: Review
+    'LBL_NO_LICENSE_PROVIDED'      => 'Nessuna licenza fornita'         , // TODO: Review
+    'LBL_INSTALLATION'             => 'Installazione'                , // TODO: Review
+    'LBL_FAILED'                   => 'Fallita'                      , // TODO: Review
+    'LBL_SUCCESSFULL'              => 'Con successo'                 , // TODO: Review
+    'LBL_INSTALLATION_LOG'         => 'Registro installazione'            , // TODO: Review
 
         //Extension Store translations
         'LBL_VTIGER_EXTENSION_STORE' => 'Vtiger Extension Market',
         'LBL_SEARCH_FOR_EXTENSION'  => 'Cerca Estensione',
         'LBL_DOWNLOADS' => 'Download',
         'LBL_NO_EXTENSIONS_FOUND' => 'Nessun Estensione trovata',
-        'LBL_REGISTER_USER' => 'Registrazione utente',	
+        'LBL_REGISTER_USER' => 'Registrazione utente',
         'LBL_SETUP_CARD_DETAILS' => 'Dettagli di installazione di schede',
         'LBL_SETUP_CARD' => 'Impostazione scheda',
         'LBL_CARD_NUMBER' => 'Numero di carta',

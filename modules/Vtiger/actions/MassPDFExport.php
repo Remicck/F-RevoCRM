@@ -74,8 +74,8 @@ class Vtiger_MassPDFExport_Action extends Vtiger_Mass_Action
                     $uitype4value = $recordModel->get($uitype4fieldname);
                 }
                 $accountname = "";
-                if($recordModel->get("account_id") || $recordModel->get("vendor_id")){
-                    if($moduleName == "PurchaseOrder"){
+                if ($recordModel->get("account_id") || $recordModel->get("vendor_id")) {
+                    if ($moduleName == "PurchaseOrder") {
                         $accountname = Vtiger_Functions::getCRMRecordLabel($recordModel->get("vendor_id"));
                     } else {
                         $accountname = Vtiger_Functions::getCRMRecordLabel($recordModel->get("account_id"));
@@ -122,7 +122,7 @@ class Vtiger_MassPDFExport_Action extends Vtiger_Mass_Action
     {
         return $this->moduleInstance->getFields();
     }
-    
+
     /**
      * Function that generates Export Query based on the mode
      * @param Vtiger_Request $request
@@ -188,7 +188,7 @@ class Vtiger_MassPDFExport_Action extends Vtiger_Mass_Action
             }
         }
 
-        
+
         if (!empty($uitype4fieldname)) {
             $uitype4fieldname = ",".$uitype4fieldname;
         }
@@ -207,43 +207,43 @@ class Vtiger_MassPDFExport_Action extends Vtiger_Mass_Action
             case 'ExportAllData':	if ($orderBy && $orderByFieldModel) {
                 $query .= ' ORDER BY '.$queryGenerator->getOrderByColumn($orderBy).' '.$sortOrder;
             }
-                                        break;
+                break;
 
             case 'ExportCurrentPage':	$pagingModel = new Vtiger_Paging_Model();
-                                        $limit = $pagingModel->getPageLimit();
+                $limit = $pagingModel->getPageLimit();
 
-                                        $currentPage = $request->get('page');
-                                        if (empty($currentPage)) {
-                                            $currentPage = 1;
-                                        }
+                $currentPage = $request->get('page');
+                if (empty($currentPage)) {
+                    $currentPage = 1;
+                }
 
-                                        $currentPageStart = ($currentPage - 1) * $limit;
-                                        if ($currentPageStart < 0) {
-                                            $currentPageStart = 0;
-                                        }
+                $currentPageStart = ($currentPage - 1) * $limit;
+                if ($currentPageStart < 0) {
+                    $currentPageStart = 0;
+                }
 
-                                        if ($orderBy && $orderByFieldModel) {
-                                            $query .= ' ORDER BY '.$queryGenerator->getOrderByColumn($orderBy).' '.$sortOrder;
-                                        }
-                                        $query .= ' LIMIT '.$currentPageStart.','.$limit;
-                                        break;
+                if ($orderBy && $orderByFieldModel) {
+                    $query .= ' ORDER BY '.$queryGenerator->getOrderByColumn($orderBy).' '.$sortOrder;
+                }
+                $query .= ' LIMIT '.$currentPageStart.','.$limit;
+                break;
 
             case 'ExportSelectedRecords':	$idList = $this->getRecordsListFromRequest($request);
-                                            $baseTable = $this->moduleInstance->get('basetable');
-                                            $baseTableColumnId = $this->moduleInstance->get('basetableid');
-                                            if (!empty($idList)) {
-                                                if (!empty($baseTable) && !empty($baseTableColumnId)) {
-                                                    $idList = implode(',', $idList);
-                                                    $query .= ' AND '.$baseTable.'.'.$baseTableColumnId.' IN ('.$idList.')';
-                                                }
-                                            } else {
-                                                $query .= ' AND '.$baseTable.'.'.$baseTableColumnId.' NOT IN ('.implode(',', $request->get('excluded_ids')).')';
-                                            }
+                $baseTable = $this->moduleInstance->get('basetable');
+                $baseTableColumnId = $this->moduleInstance->get('basetableid');
+                if (!empty($idList)) {
+                    if (!empty($baseTable) && !empty($baseTableColumnId)) {
+                        $idList = implode(',', $idList);
+                        $query .= ' AND '.$baseTable.'.'.$baseTableColumnId.' IN ('.$idList.')';
+                    }
+                } else {
+                    $query .= ' AND '.$baseTable.'.'.$baseTableColumnId.' NOT IN ('.implode(',', $request->get('excluded_ids')).')';
+                }
 
-                                            if ($orderBy && $orderByFieldModel) {
-                                                $query .= ' ORDER BY '.$queryGenerator->getOrderByColumn($orderBy).' '.$sortOrder;
-                                            }
-                                            break;
+                if ($orderBy && $orderByFieldModel) {
+                    $query .= ' ORDER BY '.$queryGenerator->getOrderByColumn($orderBy).' '.$sortOrder;
+                }
+                break;
 
 
             default:	break;

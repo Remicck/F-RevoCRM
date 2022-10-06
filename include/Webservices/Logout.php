@@ -8,25 +8,24 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-function vtws_logout($sessionId,$user){
-        global $adb;
-        $sql = "select type from vtiger_ws_operation where name=?";
-        $result = $adb->pquery($sql,array("logout"));
-        $row = $adb->query_result_rowdata($result,0);
-        $requestType = $row['type'];
-        if($_SERVER['REQUEST_METHOD'] != $requestType){
-            throw new WebServiceException(WebServiceErrorCode::$OPERATIONNOTSUPPORTED, "Permission to perform the operation is denied");
-        }
-	$sessionManager = new SessionManager();
-	$sid = $sessionManager->startSession($sessionId);
-	
-	if(!isset($sessionId) || !$sessionManager->isValid()){
-		return $sessionManager->getError();
-	}
+function vtws_logout($sessionId, $user)
+{
+    global $adb;
+    $sql = "select type from vtiger_ws_operation where name=?";
+    $result = $adb->pquery($sql, array("logout"));
+    $row = $adb->query_result_rowdata($result, 0);
+    $requestType = $row['type'];
+    if ($_SERVER['REQUEST_METHOD'] != $requestType) {
+        throw new WebServiceException(WebServiceErrorCode::$OPERATIONNOTSUPPORTED, "Permission to perform the operation is denied");
+    }
+    $sessionManager = new SessionManager();
+    $sid = $sessionManager->startSession($sessionId);
 
-	$sessionManager->destroy();
-//	$sessionManager->setExpire(1);
-	return array("message"=>"successfull");
+    if (!isset($sessionId) || !$sessionManager->isValid()) {
+        return $sessionManager->getError();
+    }
 
+    $sessionManager->destroy();
+    //	$sessionManager->setExpire(1);
+    return array("message"=>"successfull");
 }
-?>

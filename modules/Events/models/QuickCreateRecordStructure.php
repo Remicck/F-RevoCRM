@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Events_QuickCreateRecordStructure_Model extends Calendar_QuickCreateRecordStructure_Model {
+class Events_QuickCreateRecordStructure_Model extends Calendar_QuickCreateRecordStructure_Model
+{
 }

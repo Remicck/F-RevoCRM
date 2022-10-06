@@ -18,8 +18,8 @@
  * @package Smarty
  * @subpackage TemplateResources
  */
-class Smarty_Internal_Resource_Eval extends Smarty_Resource_Recompiled {
-
+class Smarty_Internal_Resource_Eval extends Smarty_Resource_Recompiled
+{
     /**
      * populate Source Object with meta data from Resource
      *
@@ -45,7 +45,7 @@ class Smarty_Internal_Resource_Eval extends Smarty_Resource_Recompiled {
     {
         return $this->decode($source->name);
     }
-    
+
     /**
      * decode base64 and urlencode
      *
@@ -62,10 +62,10 @@ class Smarty_Internal_Resource_Eval extends Smarty_Resource_Recompiled {
                 return urldecode(substr($string, 10));
             }
         }
-        
+
         return $string;
     }
-    
+
     /**
      * modify resource_name according to resource handlers specifications
      *
@@ -88,7 +88,4 @@ class Smarty_Internal_Resource_Eval extends Smarty_Resource_Recompiled {
     {
         return '';
     }
-
 }
-
-?>

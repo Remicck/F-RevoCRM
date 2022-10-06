@@ -12,17 +12,17 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-function __autoload($class) {
-    if ($class == "uploader")
+function __autoload($class)
+{
+    if ($class == "uploader") {
         require "core/uploader.php";
-    elseif ($class == "browser")
+    } elseif ($class == "browser") {
         require "core/browser.php";
-    elseif (file_exists("core/types/$class.php"))
+    } elseif (file_exists("core/types/$class.php")) {
         require "core/types/$class.php";
-    elseif (file_exists("lib/class_$class.php"))
+    } elseif (file_exists("lib/class_$class.php")) {
         require "lib/class_$class.php";
-    elseif (file_exists("lib/helper_$class.php"))
+    } elseif (file_exists("lib/helper_$class.php")) {
         require "lib/helper_$class.php";
+    }
 }
-
-?>

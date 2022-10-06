@@ -8,23 +8,23 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class PDFTemplates_Block_Model extends Vtiger_Block_Model {
+class PDFTemplates_Block_Model extends Vtiger_Block_Model
+{
+    public function getFields()
+    {
+        if (empty($this->fields)) {
+            $moduleFields = PDFTemplates_Field_Model::getAllForModule($this->module);
+            $this->fields = array();
+            $fieldsList = $moduleFields[$this->id];
+            // if block does not contains any fields
+            if (!is_array($moduleFields[$this->id])) {
+                $moduleFields[$this->id] = array();
+            }
 
-	public function getFields() {
-		if (empty($this->fields)) {
-			$moduleFields = PDFTemplates_Field_Model::getAllForModule($this->module);
-			$this->fields = array();
-			$fieldsList = $moduleFields[$this->id];
-			// if block does not contains any fields 
-			if (!is_array($moduleFields[$this->id])) {
-				$moduleFields[$this->id] = array();
-			}
-
-			foreach ($moduleFields[$this->id] as $field) {
-				$this->fields[$field->get('name')] = $field;
-			}
-		}
-		return $this->fields;
-	}
-
+            foreach ($moduleFields[$this->id] as $field) {
+                $this->fields[$field->get('name')] = $field;
+            }
+        }
+        return $this->fields;
+    }
 }

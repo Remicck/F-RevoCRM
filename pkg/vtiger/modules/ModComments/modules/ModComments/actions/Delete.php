@@ -8,9 +8,10 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class ModComments_Delete_Action extends Vtiger_Delete_Action {
-
-	function checkPermission(Vtiger_Request $request) {
-		throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
-	}
+class ModComments_Delete_Action extends Vtiger_Delete_Action
+{
+    public function checkPermission(Vtiger_Request $request)
+    {
+        throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
+    }
 }

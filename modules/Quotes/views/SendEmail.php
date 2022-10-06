@@ -8,8 +8,6 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Quotes_SendEmail_View extends Inventory_SendEmail_View {
-
+class Quotes_SendEmail_View extends Inventory_SendEmail_View
+{
 }
-
-?>

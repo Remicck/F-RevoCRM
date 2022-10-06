@@ -1,8 +1,9 @@
 <?php
+
 // contributed by "Levi Fukumori" levi _AT_ fukumori _DOT_ com _DOT_ br
 // portugese (brazilian)
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'pt-br',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'pt-br',
             DB_ERROR                    => 'erro desconhecido',
             DB_ERROR_ALREADY_EXISTS     => 'já existe',
             DB_ERROR_CANNOT_CREATE      => 'impossível criar',

@@ -8,23 +8,23 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Services_QuickCreateAjax_View extends Products_QuickCreateAjax_View {
+class Services_QuickCreateAjax_View extends Products_QuickCreateAjax_View
+{
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
 
-	public function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
+        $moduleEditFile = 'modules.' . $moduleName . '.resources.Edit';
+        unset($headerScriptInstances[$moduleEditFile]);
 
-		$moduleName = $request->getModule();
-		$moduleEditFile = 'modules.' . $moduleName . '.resources.Edit';
-		unset($headerScriptInstances[$moduleEditFile]);
+        $jsFileNames = array(
+            'modules.Products.resources.Edit',
+        );
 
-		$jsFileNames = array(
-			'modules.Products.resources.Edit',
-		);
-
-		$jsFileNames[] = $moduleEditFile;
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
-
+        $jsFileNames[] = $moduleEditFile;
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

@@ -8,10 +8,11 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class PurchaseOrder_ServicesPopup_View extends Inventory_ServicesPopup_View {
-
-	public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer) {
-		parent::initializeListViewContents($request, $viewer);
-		$viewer->assign('GETURL', 'getPurchaseOrderTaxesURL');
-	}
+class PurchaseOrder_ServicesPopup_View extends Inventory_ServicesPopup_View
+{
+    public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer)
+    {
+        parent::initializeListViewContents($request, $viewer);
+        $viewer->assign('GETURL', 'getPurchaseOrderTaxesURL');
+    }
 }

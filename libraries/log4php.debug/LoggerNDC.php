@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,15 +12,17 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__)); 
- 
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__));
+}
+
 /**
  */
 require_once(LOG4PHP_DIR . '/LoggerLog.php');
@@ -54,7 +56,7 @@ $GLOBALS['log4php.LoggerNDC.maxDepth'] = LOGGER_NDC_HT_SIZE;
  * come into play.
  *
  * <p><i><b>Note that NDCs are managed on a per thread
- * basis</b></i>. NDC operations such as {@link push()}, {@link pop()}, 
+ * basis</b></i>. NDC operations such as {@link push()}, {@link pop()},
  * {@link clear()}, {@link getDepth()} and {@link setMaxDepth()}
  * affect the NDC of the <i>current</i> thread only. NDCs of other
  * threads remain unaffected.
@@ -64,24 +66,24 @@ $GLOBALS['log4php.LoggerNDC.maxDepth'] = LOGGER_NDC_HT_SIZE;
  * the the request. <i>Cookies</i> are another source of distinctive
  * information. To build an NDC one uses the {@link push()}
  * operation.</p>
- * 
+ *
  * Simply put,
  *
  * - Contexts can be nested.
- * - When entering a context, call 
+ * - When entering a context, call
  *   <code>LoggerNDC::push()</code>
  *   As a side effect, if there is no nested diagnostic context for the
  *   current thread, this method will create it.
- * - When leaving a context, call 
+ * - When leaving a context, call
  *   <code>LoggerNDC::pop()</code>
  * - <b>When exiting a thread make sure to call {@link remove()}</b>
- *   
+ *
  * <p>There is no penalty for forgetting to match each
  * <code>push</code> operation with a corresponding <code>pop</code>,
  * except the obvious mismatch between the real application context
  * and the context set in the NDC.</p>
  *
- * <p>If configured to do so, {@link LoggerPatternLayout} and {@link LoggerLayoutTTCC} 
+ * <p>If configured to do so, {@link LoggerPatternLayout} and {@link LoggerLayoutTTCC}
  * instances automatically retrieve the nested diagnostic
  * context for the current thread without any user intervention.
  * Hence, even if a servlet is serving multiple clients
@@ -89,14 +91,14 @@ $GLOBALS['log4php.LoggerNDC.maxDepth'] = LOGGER_NDC_HT_SIZE;
  * the same category) can still be distinguished because each client
  * request will have a different NDC tag.</p>
  *
- *  
+ *
  * @author VxR <vxr@vxr.it>
  * @version $Revision: 1.5 $
- * @package log4php 
+ * @package log4php
  * @since 0.3
  */
-class LoggerNDC {
-
+class LoggerNDC
+{
     /**
      * Clear any nested diagnostic information if any. This method is
      * useful in cases where the same thread can be potentially used
@@ -105,12 +107,12 @@ class LoggerNDC {
      * <p>This method is equivalent to calling the {@link setMaxDepth()}
      * method with a zero <var>maxDepth</var> argument.
      *
-     * @static  
+     * @static
      */
-    function clear()
+    public function clear()
     {
         LoggerLog::debug("LoggerNDC::clear()");
-        
+
         $GLOBALS['log4php.LoggerNDC.ht'] = array();
     }
 
@@ -119,13 +121,13 @@ class LoggerNDC {
      * @static
      * @return array
      */
-    function get()
+    public function get()
     {
         LoggerLog::debug("LoggerNDC::get()");
-    
+
         return $GLOBALS['log4php.LoggerNDC.ht'];
     }
-  
+
     /**
      * Get the current nesting depth of this diagnostic context.
      *
@@ -133,11 +135,11 @@ class LoggerNDC {
      * @return integer
      * @static
      */
-    function getDepth()
+    public function getDepth()
     {
         LoggerLog::debug("LoggerNDC::getDepth()");
-    
-        return sizeof($GLOBALS['log4php.LoggerNDC.ht']);      
+
+        return sizeof($GLOBALS['log4php.LoggerNDC.ht']);
     }
 
     /**
@@ -150,10 +152,10 @@ class LoggerNDC {
      * @return string The innermost diagnostic context.
      * @static
      */
-    function pop()
+    public function pop()
     {
         LoggerLog::debug("LoggerNDC::pop()");
-    
+
         if (sizeof($GLOBALS['log4php.LoggerNDC.ht']) > 0) {
             return array_pop($GLOBALS['log4php.LoggerNDC.ht']);
         } else {
@@ -170,30 +172,30 @@ class LoggerNDC {
      * @return string The innermost diagnostic context.
      * @static
      */
-    function peek()
+    public function peek()
     {
         LoggerLog::debug("LoggerNDC::peek()");
-    
+
         if (sizeof($GLOBALS['log4php.LoggerNDC.ht']) > 0) {
             return end($GLOBALS['log4php.LoggerNDC.ht']);
         } else {
             return '';
         }
     }
-  
+
     /**
      * Push new diagnostic context information for the current thread.
      *
      * <p>The contents of the <var>message</var> parameter is
      * determined solely by the client.
-     *  
+     *
      * @param string $message The new diagnostic context information.
-     * @static  
+     * @static
      */
-    function push($message)
+    public function push($message)
     {
         LoggerLog::debug("LoggerNDC::push()");
-    
+
         array_push($GLOBALS['log4php.LoggerNDC.ht'], (string)$message);
     }
 
@@ -201,10 +203,10 @@ class LoggerNDC {
      * Remove the diagnostic context for this thread.
      * @static
      */
-    function remove()
+    public function remove()
     {
         LoggerLog::debug("LoggerNDC::remove()");
-    
+
         LoggerNDC::clear();
     }
 
@@ -213,8 +215,8 @@ class LoggerNDC {
      * depth is smaller or equal to <var>maxDepth</var>, then no
      * action is taken.
      *
-     * <p>This method is a convenient alternative to multiple 
-     * {@link pop()} calls. Moreover, it is often the case that at 
+     * <p>This method is a convenient alternative to multiple
+     * {@link pop()} calls. Moreover, it is often the case that at
      * the end of complex call sequences, the depth of the NDC is
      * unpredictable. The {@link setMaxDepth()} method circumvents
      * this problem.
@@ -223,18 +225,16 @@ class LoggerNDC {
      * @see getDepth()
      * @static
      */
-    function setMaxDepth($maxDepth)
+    public function setMaxDepth($maxDepth)
     {
         LoggerLog::debug("LoggerNDC::setMaxDepth() maxDepth='$maxDepth'");
-    
+
         $maxDepth = (int)$maxDepth;
         if ($maxDepth <= LOGGER_NDC_HT_SIZE) {
             if (LoggerNDC::getDepth() > $maxDepth) {
                 $GLOBALS['log4php.LoggerNDC.ht'] = array_slice($GLOBALS['log4php.LoggerNDC.ht'], $maxDepth);
             }
-            $GLOBALS['log4php.LoggerNDC.maxDepth'] = $maxDepth;            
+            $GLOBALS['log4php.LoggerNDC.maxDepth'] = $maxDepth;
         }
     }
-  
 }
-?>

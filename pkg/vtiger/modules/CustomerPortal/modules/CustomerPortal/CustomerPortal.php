@@ -8,65 +8,64 @@
  * All Rights Reserved.
  *******************************************************************************/
 
-class CustomerPortal {
+class CustomerPortal
+{
+    /**
+    * Invoked when special actions are performed on the module.
+    * @param String Module name
+    * @param String Event Type
+    */
+    public function vtlib_handler($moduleName, $eventType)
+    {
+        require_once('include/utils/utils.php');
+        global $adb,$mod_strings;
 
- 	/**
-	* Invoked when special actions are performed on the module.
-	* @param String Module name
-	* @param String Event Type
-	*/
-	function vtlib_handler($moduleName, $eventType) {
+        if ($eventType == 'module.postinstall') {
+            $portalModules = array("HelpDesk","Faq","Invoice","Quotes","Products","Services","Documents",
+                                    "Contacts","Accounts","Project","ProjectTask","ProjectMilestone","Assets");
 
-		require_once('include/utils/utils.php');
-		global $adb,$mod_strings;
+            $query = "SELECT max(sequence) AS max_tabseq FROM vtiger_customerportal_tabs";
+            $res = $adb->pquery($query, array());
+            $tabseq = $adb->query_result($res, 0, 'max_tabseq');
+            $i = ++$tabseq;
+            foreach ($portalModules as $module) {
+                $tabIdResult = $adb->pquery('SELECT tabid FROM vtiger_tab WHERE name=?', array($module));
+                $tabId = $adb->query_result($tabIdResult, 0, 'tabid');
+                if ($tabId) {
+                    ++$i;
+                    $adb->pquery("INSERT INTO vtiger_customerportal_tabs(tabid,visible,sequence) VALUES (?, ?, ?)", array($tabId,1,$i));
+                    $adb->pquery("INSERT INTO vtiger_customerportal_prefs(tabid,prefkey,prefvalue) VALUES (?, ?, ?)", array($tabId,'showrelatedinfo',1));
+                }
+            }
 
- 		if($eventType == 'module.postinstall') {
-			$portalModules = array("HelpDesk","Faq","Invoice","Quotes","Products","Services","Documents",
-									"Contacts","Accounts","Project","ProjectTask","ProjectMilestone","Assets");
+            $adb->pquery("INSERT INTO vtiger_customerportal_prefs(tabid,prefkey,prefvalue) VALUES (?, ?, ?)", array(0,'userid',1));
+            $adb->pquery("INSERT INTO vtiger_customerportal_prefs(tabid,prefkey,prefvalue) VALUES (?, ?, ?)", array(0,'defaultassignee',1));
 
-			$query = "SELECT max(sequence) AS max_tabseq FROM vtiger_customerportal_tabs";
-			$res = $adb->pquery($query,array());
-			$tabseq = $adb->query_result($res,0,'max_tabseq');
-			$i = ++$tabseq;
-			foreach($portalModules as $module) {
-				$tabIdResult = $adb->pquery('SELECT tabid FROM vtiger_tab WHERE name=?', array($module));
-				$tabId = $adb->query_result($tabIdResult, 0, 'tabid');
-				if($tabId) {
-					++$i;
-					$adb->pquery("INSERT INTO vtiger_customerportal_tabs(tabid,visible,sequence) VALUES (?, ?, ?)", array($tabId,1,$i));
-					$adb->pquery("INSERT INTO vtiger_customerportal_prefs(tabid,prefkey,prefvalue) VALUES (?, ?, ?)", array($tabId,'showrelatedinfo',1));
-				}
-			}
+            // Mark the module as Standard module
+            $adb->pquery('UPDATE vtiger_tab SET customized=0 WHERE name=?', array($moduleName));
 
-			$adb->pquery("INSERT INTO vtiger_customerportal_prefs(tabid,prefkey,prefvalue) VALUES (?, ?, ?)", array(0,'userid',1));
-			$adb->pquery("INSERT INTO vtiger_customerportal_prefs(tabid,prefkey,prefvalue) VALUES (?, ?, ?)", array(0,'defaultassignee',1));
+            $fieldid = $adb->getUniqueID('vtiger_settings_field');
+            $blockid = getSettingsBlockId('LBL_OTHER_SETTINGS');
+            $seq_res = $adb->pquery("SELECT max(sequence) AS max_seq FROM vtiger_settings_field WHERE blockid = ?", array($blockid));
+            if ($adb->num_rows($seq_res) > 0) {
+                $cur_seq = $adb->query_result($seq_res, 0, 'max_seq');
+                if ($cur_seq != null) {
+                    $seq = $cur_seq + 1;
+                }
+            }
 
-			// Mark the module as Standard module
-			$adb->pquery('UPDATE vtiger_tab SET customized=0 WHERE name=?', array($moduleName));
-
-			$fieldid = $adb->getUniqueID('vtiger_settings_field');
-			$blockid = getSettingsBlockId('LBL_OTHER_SETTINGS');
-			$seq_res = $adb->pquery("SELECT max(sequence) AS max_seq FROM vtiger_settings_field WHERE blockid = ?", array($blockid));
-			if ($adb->num_rows($seq_res) > 0) {
-				$cur_seq = $adb->query_result($seq_res, 0, 'max_seq');
-				if ($cur_seq != null)	$seq = $cur_seq + 1;
-			}
-
-			$adb->pquery('INSERT INTO vtiger_settings_field(fieldid, blockid, name, iconpath, description, linkto, sequence)
+            $adb->pquery('INSERT INTO vtiger_settings_field(fieldid, blockid, name, iconpath, description, linkto, sequence)
 				VALUES (?,?,?,?,?,?,?)', array($fieldid, $blockid, 'LBL_CUSTOMER_PORTAL', 'portal_icon.png', 'PORTAL_EXTENSION_DESCRIPTION', 'index.php?module=CustomerPortal&action=index&parenttab=Settings', $seq));
-
-
-		} else if($eventType == 'module.disabled') {
-		// TODO Handle actions when this module is disabled.
-		} else if($eventType == 'module.enabled') {
-		// TODO Handle actions when this module is enabled.
-		} else if($eventType == 'module.preuninstall') {
-		// TODO Handle actions when this module is about to be deleted.
-		} else if($eventType == 'module.preupdate') {
-		// TODO Handle actions before this module is updated.
-		} else if($eventType == 'module.postupdate') {
-		// TODO Handle actions after this module is updated.
-		}
- 	}
+        } elseif ($eventType == 'module.disabled') {
+            // TODO Handle actions when this module is disabled.
+        } elseif ($eventType == 'module.enabled') {
+            // TODO Handle actions when this module is enabled.
+        } elseif ($eventType == 'module.preuninstall') {
+            // TODO Handle actions when this module is about to be deleted.
+        } elseif ($eventType == 'module.preupdate') {
+            // TODO Handle actions before this module is updated.
+        } elseif ($eventType == 'module.postupdate') {
+            // TODO Handle actions after this module is updated.
+        }
+    }
 }
-?>

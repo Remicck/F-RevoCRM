@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : spa.php
 // Begin       : 2004-03-03
@@ -28,7 +29,7 @@
 // Spanish; Castilian
 
 global $l;
-$l = Array();
+$l = array();
 
 // PAGE META DESCRIPTORS --------------------------------------
 

@@ -8,27 +8,28 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Campaigns_Detail_View extends Vtiger_Detail_View {
+class Campaigns_Detail_View extends Vtiger_Detail_View
+{
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	public function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+        $jsFileNames = array(
+                'modules.Vtiger.resources.List',
+                "modules.$moduleName.resources.List",
+                'modules.CustomView.resources.CustomView',
+                "modules.$moduleName.resources.CustomView",
+                "modules.Emails.resources.MassEdit",
+        );
 
-		$jsFileNames = array(
-				'modules.Vtiger.resources.List',
-				"modules.$moduleName.resources.List",
-				'modules.CustomView.resources.CustomView',
-				"modules.$moduleName.resources.CustomView",
-				"modules.Emails.resources.MassEdit",
-		);
-
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

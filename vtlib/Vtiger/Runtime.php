@@ -8,14 +8,15 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Runtime {
+class Vtiger_Runtime
+{
+    public static function isRestricted($name, $value = false, $supressException = false)
+    {
+        return false;
+    }
 
-	public static function isRestricted($name, $value = false, $supressException = false) {
-		return false;
-	}
-
-	public static function isAllowed($name, $criteria) {
-		return true;
-	}
-
+    public static function isAllowed($name, $criteria)
+    {
+        return true;
+    }
 }

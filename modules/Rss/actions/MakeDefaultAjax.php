@@ -8,23 +8,25 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Rss_MakeDefaultAjax_Action extends Vtiger_Action_Controller {
-    
-    public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
+class Rss_MakeDefaultAjax_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$recordId = $request->get('record');
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $recordId = $request->get('record');
 
-		$recordModel = Rss_Record_Model::getInstanceById($recordId, $moduleName);
-		$recordModel->makeDefault();
+        $recordModel = Rss_Record_Model::getInstanceById($recordId, $moduleName);
+        $recordModel->makeDefault();
 
-		$response = new Vtiger_Response();
-		$response->setResult(array('message'=>'JS_RSS_MADE_AS_DEFAULT', 'record'=>$recordId, 'module'=>$moduleName, 'rssname' =>$recordModel->getName()));
-		$response->emit();
-	}
+        $response = new Vtiger_Response();
+        $response->setResult(array('message'=>'JS_RSS_MADE_AS_DEFAULT', 'record'=>$recordId, 'module'=>$moduleName, 'rssname' =>$recordModel->getName()));
+        $response->emit();
+    }
 }

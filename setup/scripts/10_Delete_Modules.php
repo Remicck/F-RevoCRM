@@ -40,7 +40,7 @@ RecalculateSharingRules();
 
 //uitype 68を廃止する
 $result = $db->query("select fieldid from vtiger_field where uitype = 68");
-if($db->num_rows($result) > 0) {
+if ($db->num_rows($result) > 0) {
     $id = $db->query_result($result, 0, "fieldid");
     $db->query("insert into vtiger_fieldmodulerel(fieldid, module, relmodule, status, sequence) values ($id, 'HelpDesk', 'Accounts',null, null)");
     $db->query("insert into vtiger_fieldmodulerel(fieldid, module, relmodule, status, sequence) values ($id, 'HelpDesk', 'Contacts',null, null)");

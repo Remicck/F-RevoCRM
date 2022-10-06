@@ -10,12 +10,10 @@
 
 $Module_Mobile_Configuration = array(
 
-	'Default.Layout'   => 'simple',
-	'Navigation.Limit' => 25,
-	
-	// Control number of records sent out through API (SyncModuleRecords, Query...) which supports paging.	
-	'API_RECORD_FETCH_LIMIT' => 99, // NOTE: vtws_query internally limits fetch to 100 and give room to perform 1 extra fetch to determine paging
-	
-);
+    'Default.Layout'   => 'simple',
+    'Navigation.Limit' => 25,
 
-?>
+    // Control number of records sent out through API (SyncModuleRecords, Query...) which supports paging.
+    'API_RECORD_FETCH_LIMIT' => 99, // NOTE: vtws_query internally limits fetch to 100 and give room to perform 1 extra fetch to determine paging
+
+);

@@ -9,5 +9,6 @@
  *************************************************************************************/
 
 //Same as Accounts Detail View
-class Contacts_DetailView_Model extends Accounts_DetailView_Model {
+class Contacts_DetailView_Model extends Accounts_DetailView_Model
+{
 }

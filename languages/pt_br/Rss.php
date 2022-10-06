@@ -8,9 +8,9 @@
  * Contributor(s): Valmir C. Trindade - Brazilian Portuguese Translation - www.ttcasolucoes.com.br
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
-	'LBL_RSS_FEED_SOURCES' => 'Fontes Feeds RSS',
+    'LBL_RSS_FEED_SOURCES' => 'Fontes Feeds RSS',
     'LBL_ADD_FEED_SOURCE' => 'Adicionar Fonte Feed',
     'LBL_FEEDS_LIST_FROM' => 'Lista Feed de',
     'LBL_SET_AS_DEFAULT' => 'Configurar como Padrão',
@@ -21,11 +21,9 @@ $languageStrings = Array(
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'RSS salvo com sucesso',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'RSS salvo com sucesso',
     'JS_INVALID_RSS_URL' => 'URL do RSS Inválida',
     'JS_RSS_MADE_AS_DEFAULT' => 'Definir RSS como Padrão',
     'JS_NO_RECORDS' => 'Nenhum Registro',
 
 );
-
-?>

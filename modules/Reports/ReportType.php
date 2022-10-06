@@ -28,19 +28,16 @@ global $image_path;
 global $theme;
 $theme_path="themes/".$theme."/";
 $image_path=$theme_path."images/";
-$list_report_form = new vtigerCRM_Smarty;
+$list_report_form = new vtigerCRM_Smarty();
 $list_report_form->assign("MOD", $mod_strings);
 $list_report_form->assign("APP", $app_strings);
-$list_report_form->assign("IMAGE_PATH",$image_path);
-if(isset($_REQUEST["record"]) && $_REQUEST['record']!='')
-{
-        $recordid = vtlib_purify($_REQUEST["record"]);
-        $oReport = new Reports($recordid);
-        $selectedreporttype = $oReport->reporttype;
-}else
-{
-        $selectedreporttype = "tabular";
+$list_report_form->assign("IMAGE_PATH", $image_path);
+if (isset($_REQUEST["record"]) && $_REQUEST['record']!='') {
+    $recordid = vtlib_purify($_REQUEST["record"]);
+    $oReport = new Reports($recordid);
+    $selectedreporttype = $oReport->reporttype;
+} else {
+    $selectedreporttype = "tabular";
 }
-$list_report_form->assign("REPORT_TYPE",$selectedreporttype);
+$list_report_form->assign("REPORT_TYPE", $selectedreporttype);
 $list_report_form->display("ReportsType.tpl");
-?>

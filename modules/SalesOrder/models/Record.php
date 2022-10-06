@@ -11,17 +11,18 @@
 /**
  * Inventory Record Model Class
  */
-class SalesOrder_Record_Model extends Inventory_Record_Model {
+class SalesOrder_Record_Model extends Inventory_Record_Model
+{
+    public function getCreateInvoiceUrl()
+    {
+        $invoiceModuleModel = Vtiger_Module_Model::getInstance('Invoice');
 
-	function getCreateInvoiceUrl() {
-		$invoiceModuleModel = Vtiger_Module_Model::getInstance('Invoice');
+        return "index.php?module=".$invoiceModuleModel->getName()."&view=".$invoiceModuleModel->getEditViewName()."&salesorder_id=".$this->getId();
+    }
 
-		return "index.php?module=".$invoiceModuleModel->getName()."&view=".$invoiceModuleModel->getEditViewName()."&salesorder_id=".$this->getId();
-	}
-
-	function getCreatePurchaseOrderUrl() {
-		$purchaseOrderModuleModel = Vtiger_Module_Model::getInstance('PurchaseOrder');
-		return "index.php?module=".$purchaseOrderModuleModel->getName()."&view=".$purchaseOrderModuleModel->getEditViewName()."&salesorder_id=".$this->getId();
-	}
-
+    public function getCreatePurchaseOrderUrl()
+    {
+        $purchaseOrderModuleModel = Vtiger_Module_Model::getInstance('PurchaseOrder');
+        return "index.php?module=".$purchaseOrderModuleModel->getName()."&view=".$purchaseOrderModuleModel->getEditViewName()."&salesorder_id=".$this->getId();
+    }
 }

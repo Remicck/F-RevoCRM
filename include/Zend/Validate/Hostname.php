@@ -46,17 +46,17 @@ require_once 'Zend/Validate/Ip.php';
  */
 class Zend_Validate_Hostname extends Zend_Validate_Abstract
 {
-    const CANNOT_DECODE_PUNYCODE  = 'hostnameCannotDecodePunycode';
-    const INVALID                 = 'hostnameInvalid';
-    const INVALID_DASH            = 'hostnameDashCharacter';
-    const INVALID_HOSTNAME        = 'hostnameInvalidHostname';
-    const INVALID_HOSTNAME_SCHEMA = 'hostnameInvalidHostnameSchema';
-    const INVALID_LOCAL_NAME      = 'hostnameInvalidLocalName';
-    const INVALID_URI             = 'hostnameInvalidUri';
-    const IP_ADDRESS_NOT_ALLOWED  = 'hostnameIpAddressNotAllowed';
-    const LOCAL_NAME_NOT_ALLOWED  = 'hostnameLocalNameNotAllowed';
-    const UNDECIPHERABLE_TLD      = 'hostnameUndecipherableTld';
-    const UNKNOWN_TLD             = 'hostnameUnknownTld';
+    public const CANNOT_DECODE_PUNYCODE  = 'hostnameCannotDecodePunycode';
+    public const INVALID                 = 'hostnameInvalid';
+    public const INVALID_DASH            = 'hostnameDashCharacter';
+    public const INVALID_HOSTNAME        = 'hostnameInvalidHostname';
+    public const INVALID_HOSTNAME_SCHEMA = 'hostnameInvalidHostnameSchema';
+    public const INVALID_LOCAL_NAME      = 'hostnameInvalidLocalName';
+    public const INVALID_URI             = 'hostnameInvalidUri';
+    public const IP_ADDRESS_NOT_ALLOWED  = 'hostnameIpAddressNotAllowed';
+    public const LOCAL_NAME_NOT_ALLOWED  = 'hostnameLocalNameNotAllowed';
+    public const UNDECIPHERABLE_TLD      = 'hostnameUndecipherableTld';
+    public const UNKNOWN_TLD             = 'hostnameUnknownTld';
 
     /**
      * @var array
@@ -85,27 +85,27 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
     /**
      * Allows Internet domain names (e.g., example.com)
      */
-    const ALLOW_DNS   = 1;
+    public const ALLOW_DNS   = 1;
 
     /**
      * Allows IP addresses
      */
-    const ALLOW_IP    = 2;
+    public const ALLOW_IP    = 2;
 
     /**
      * Allows local network names (e.g., localhost, www.localdomain)
      */
-    const ALLOW_LOCAL = 4;
+    public const ALLOW_LOCAL = 4;
 
     /**
      * Allows all types of hostnames
      */
-    const ALLOW_URI = 8;
+    public const ALLOW_URI = 8;
 
     /**
      * Allows all types of hostnames
      */
-    const ALLOW_ALL = 15;
+    public const ALLOW_ALL = 15;
 
     /**
      * Array of valid top-level-domains
@@ -337,7 +337,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
     {
         if ($options instanceof Zend_Config) {
             $options = $options->toArray();
-        } else if (!is_array($options)) {
+        } elseif (!is_array($options)) {
             $options = func_get_args();
             $temp['allow'] = array_shift($options);
             if (!empty($options)) {
@@ -459,7 +459,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
      *
      * @param boolean $allowed Set allowed to true to validate IDNs, and false to not validate them
      */
-    public function setValidateIdn ($allowed)
+    public function setValidateIdn($allowed)
     {
         $this->_options['idn'] = (bool) $allowed;
         return $this;
@@ -482,7 +482,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
      *
      * @param boolean $allowed Set allowed to true to validate TLDs, and false to not validate them
      */
-    public function setValidateTld ($allowed)
+    public function setValidateTld($allowed)
     {
         $this->_options['tld'] = (bool) $allowed;
         return $this;
@@ -517,14 +517,14 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
         }
 
         // RFC3986 3.2.2 states:
-        // 
+        //
         //     The rightmost domain label of a fully qualified domain name
-        //     in DNS may be followed by a single "." and should be if it is 
+        //     in DNS may be followed by a single "." and should be if it is
         //     necessary to distinguish between the complete domain name and
         //     some local domain.
-        //     
+        //
         // (see ZF-6363)
-        
+
         // Local hostnames are allowed to be partitial (ending '.')
         if ($this->_options['allow'] & self::ALLOW_LOCAL) {
             if (substr($value, -1) === '.') {
@@ -557,7 +557,6 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
                 if (preg_match('/([^.]{2,10})$/i', end($domainParts), $matches) ||
                     (end($domainParts) == 'ایران') || (end($domainParts) == '中国') ||
                     (end($domainParts) == '公司') || (end($domainParts) == '网络')) {
-
                     reset($domainParts);
 
                     // Hostname characters are: *(label dot)(label dot label); max 254 chars
@@ -604,14 +603,14 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
                         if ((strpos($domainPart, '-') === 0)
                             || ((strlen($domainPart) > 2) && (strpos($domainPart, '-', 2) == 2) && (strpos($domainPart, '-', 3) == 3))
                             || (strpos($domainPart, '-') === (strlen($domainPart) - 1))) {
-                                $this->_error(self::INVALID_DASH);
+                            $this->_error(self::INVALID_DASH);
                             $status = false;
                             break 2;
                         }
 
                         // Check each domain part
                         $checked = false;
-                        foreach($regexChars as $regexKey => $regexChar) {
+                        foreach ($regexChars as $regexKey => $regexChar) {
                             $status = @preg_match($regexChar, $domainPart);
                             if ($status > 0) {
                                 $length = 63;
@@ -652,7 +651,7 @@ class Zend_Validate_Hostname extends Zend_Validate_Abstract
             if ($status && ($this->_options['allow'] & self::ALLOW_DNS)) {
                 return true;
             }
-        } else if ($this->_options['allow'] & self::ALLOW_DNS) {
+        } elseif ($this->_options['allow'] & self::ALLOW_DNS) {
             $this->_error(self::INVALID_HOSTNAME);
         }
 

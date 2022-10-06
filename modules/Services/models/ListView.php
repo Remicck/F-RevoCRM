@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Services_ListView_Model extends Products_ListView_Model {
+class Services_ListView_Model extends Products_ListView_Model
+{
 }

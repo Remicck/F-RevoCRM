@@ -1,7 +1,8 @@
 <?php
+
 // contributed by "Horacio Degiorgi" <horaciod@codigophp.com>
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'es',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'es',
             DB_ERROR                    => 'error desconocido',
             DB_ERROR_ALREADY_EXISTS     => 'ya existe',
             DB_ERROR_CANNOT_CREATE      => 'imposible crear',

@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
@@ -644,7 +645,7 @@ class HTML_Safe
         $doc = $this->repackUTF7($doc);
 
         // Instantiate the parser
-        $parser = new XML_HTMLSax3;
+        $parser = new XML_HTMLSax3();
 
         // Set up the parser
         $parser->set_object($this);
@@ -669,9 +670,9 @@ class HTML_Safe
      * @return string Decoded document
      * @access private
      */
-    function repackUTF7($str)
+    public function repackUTF7($str)
     {
-       return preg_replace_callback('!\+([0-9a-zA-Z/]+)\-!', array($this, 'repackUTF7Callback'), $str);
+        return preg_replace_callback('!\+([0-9a-zA-Z/]+)\-!', array($this, 'repackUTF7Callback'), $str);
     }
 
     /**
@@ -681,20 +682,19 @@ class HTML_Safe
      * @return string Recoded string
      * @access private
      */
-    function repackUTF7Callback($str)
+    public function repackUTF7Callback($str)
     {
-       /* If $str[1] is not a valid string for base64_decode than it return false or binary which json_encode cannot identify.
-        * So we need to check if the string is valid for base64_decode and then only decode it, otherwise return original string.
-        * Source : http://stackoverflow.com/questions/4278106/how-to-check-if-a-string-is-base64-valid-in-php
-        */
-       if(base64_encode(base64_decode($str[1])) === $str[1]) {
+        /* If $str[1] is not a valid string for base64_decode than it return false or binary which json_encode cannot identify.
+         * So we need to check if the string is valid for base64_decode and then only decode it, otherwise return original string.
+         * Source : http://stackoverflow.com/questions/4278106/how-to-check-if-a-string-is-base64-valid-in-php
+         */
+        if (base64_encode(base64_decode($str[1])) === $str[1]) {
             $str = base64_decode($str[1]);
-       }
-       else {
-           return $str[0];
-       }
-       $str = preg_replace_callback('/^((?:\x00.)*)((?:[^\x00].)+)/', array($this, 'repackUTF7Back'), $str);
-       return preg_replace('/\x00(.)/', '$1', $str);
+        } else {
+            return $str[0];
+        }
+        $str = preg_replace_callback('/^((?:\x00.)*)((?:[^\x00].)+)/', array($this, 'repackUTF7Back'), $str);
+        return preg_replace('/\x00(.)/', '$1', $str);
     }
 
     /**
@@ -704,8 +704,8 @@ class HTML_Safe
      * @return string Recoded string
      * @access private
      */
-    function repackUTF7Back($str)
+    public function repackUTF7Back($str)
     {
-       return $str[1].'+'.rtrim(base64_encode($str[2]), '=').'-';
+        return $str[1].'+'.rtrim(base64_encode($str[2]), '=').'-';
     }
 }

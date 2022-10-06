@@ -8,134 +8,153 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class MailManager_Folder_Model {
+class MailManager_Folder_Model
+{
+    protected $mName;
+    protected $mCount;
+    protected $mUnreadCount;
+    protected $mMails;
+    protected $mPageCurrent;
+    protected $mPageStart;
+    protected $mPageEnd;
+    protected $mPageLimit;
+    protected $mMailIds;
+    protected $startCount;
+    protected $endCount;
 
-	protected $mName;
-	protected $mCount;
-	protected $mUnreadCount;
-	protected $mMails;
-	protected $mPageCurrent;
-	protected $mPageStart;
-	protected $mPageEnd;
-	protected $mPageLimit;
-	protected $mMailIds;
-	protected $startCount;
-	protected $endCount;
+    public function __construct($name='')
+    {
+        $this->setName($name);
+    }
 
-	public function __construct($name='') {
-		$this->setName($name);
-	}
+    public function name($prefix='')
+    {
+        $endswith = false;
+        if (!empty($prefix)) {
+            $endswith = (strrpos($prefix, $this->mName) === strlen($prefix)-strlen($this->mName));
+        }
+        if ($endswith) {
+            return $prefix;
+        } else {
+            return $prefix.$this->mName;
+        }
+    }
 
-	public function name($prefix='') {
-		$endswith = false;
-		if (!empty($prefix)) {
-			$endswith = (strrpos($prefix, $this->mName) === strlen($prefix)-strlen($this->mName));
-		}
-		if ($endswith) {
-			return $prefix;
-		} else {
-			return $prefix.$this->mName;
-		}
-	}
-	
-	public function isSentFolder() {
-		$mailBoxModel = MailManager_Mailbox_Model::activeInstance();
-		$folderName = $mailBoxModel->folder();
-		if($this->mName == $folderName) {
-			return true;
-		}
-		return false;
-	}
-	
-	public function setName($name) {
-		$this->mName = $name;
-	}
+    public function isSentFolder()
+    {
+        $mailBoxModel = MailManager_Mailbox_Model::activeInstance();
+        $folderName = $mailBoxModel->folder();
+        if ($this->mName == $folderName) {
+            return true;
+        }
+        return false;
+    }
 
-	public function mails() {
-		return $this->mMails;
-	}
+    public function setName($name)
+    {
+        $this->mName = $name;
+    }
 
-	public function mailIds(){
-		return $this->mMailIds;
-	}
+    public function mails()
+    {
+        return $this->mMails;
+    }
 
-	public function setMailIds($ids){
-		$this->mMailIds = $ids;
-	}
+    public function mailIds()
+    {
+        return $this->mMailIds;
+    }
 
-	public function setMails($mails) {
-		$this->mMails = $mails;
-	}
+    public function setMailIds($ids)
+    {
+        $this->mMailIds = $ids;
+    }
 
-	public function setPaging($start, $end, $limit, $total, $current) {
-		$this->mPageStart = intval($start);
-		$this->mPageEnd = intval($end);
-		$this->mPageLimit = intval($limit);
-		$this->mCount = intval($total);
-		$this->mPageCurrent = intval($current);
-	}
+    public function setMails($mails)
+    {
+        $this->mMails = $mails;
+    }
 
-	public function pageStart() {
-		return $this->mPageStart;
-	}
+    public function setPaging($start, $end, $limit, $total, $current)
+    {
+        $this->mPageStart = intval($start);
+        $this->mPageEnd = intval($end);
+        $this->mPageLimit = intval($limit);
+        $this->mCount = intval($total);
+        $this->mPageCurrent = intval($current);
+    }
 
-	public function pageEnd() {
-		return $this->mPageEnd;
-	}
+    public function pageStart()
+    {
+        return $this->mPageStart;
+    }
 
-	public function pageInfo() {
-		$offset = 0;
-		if($this->mPageCurrent != 0) {	// this is needed as set the start correctly
-			$offset = 1;
-		}
-		$s = max(1, $this->mPageCurrent * $this->mPageLimit + $offset);
+    public function pageEnd()
+    {
+        return $this->mPageEnd;
+    }
 
-		$st = ($s==1)? 0 : $s-1;  // this is needed to set end page correctly
+    public function pageInfo()
+    {
+        $offset = 0;
+        if ($this->mPageCurrent != 0) {	// this is needed as set the start correctly
+            $offset = 1;
+        }
+        $s = max(1, $this->mPageCurrent * $this->mPageLimit + $offset);
 
-		$e = min($st + $this->mPageLimit, $this->mCount);
-		$t = $this->mCount;
+        $st = ($s==1) ? 0 : $s-1;  // this is needed to set end page correctly
 
-		$this->startCount = $s;
-		$this->endCount = $e;
+        $e = min($st + $this->mPageLimit, $this->mCount);
+        $t = $this->mCount;
 
-		return sprintf("%s - %s of %s", $s, $e, $t);
-	}
+        $this->startCount = $s;
+        $this->endCount = $e;
 
-	public function pageCurrent($offset=0) {
-		return $this->mPageCurrent + $offset;
-	}
+        return sprintf("%s - %s of %s", $s, $e, $t);
+    }
 
-	public function hasNextPage() {
-		return ($this->mPageStart > 1);
-	}
+    public function pageCurrent($offset=0)
+    {
+        return $this->mPageCurrent + $offset;
+    }
 
-	public function hasPrevPage() {
-		return ($this->mPageStart != $this->mPageEnd) && ($this->mPageEnd < $this->mCount);
-	}
+    public function hasNextPage()
+    {
+        return ($this->mPageStart > 1);
+    }
 
-	public function count() {
-		return $this->mCount;
-	}
+    public function hasPrevPage()
+    {
+        return ($this->mPageStart != $this->mPageEnd) && ($this->mPageEnd < $this->mCount);
+    }
 
-	public function setCount($count) {
-		$this->mCount = $count;
-	}
+    public function count()
+    {
+        return $this->mCount;
+    }
 
-	public function unreadCount() {
-		return $this->mUnreadCount;
-	}
+    public function setCount($count)
+    {
+        $this->mCount = $count;
+    }
 
-	public function setUnreadCount($unreadCount) {
-		$this->mUnreadCount = $unreadCount;
-	}
+    public function unreadCount()
+    {
+        return $this->mUnreadCount;
+    }
 
-	public function getStartCount() {
-		return $this->startCount;
-	}
+    public function setUnreadCount($unreadCount)
+    {
+        $this->mUnreadCount = $unreadCount;
+    }
 
-	public function getEndCount() {
-		return $this->endCount;
-	}
+    public function getStartCount()
+    {
+        return $this->startCount;
+    }
+
+    public function getEndCount()
+    {
+        return $this->endCount;
+    }
 }
-
-?>

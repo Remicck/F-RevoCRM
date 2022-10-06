@@ -8,48 +8,54 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_API_Request {
+class CustomerPortal_API_Request
+{
+    private $valuemap;
+    private $rawvaluemap;
+    private $defaultmap = array();
 
-	private $valuemap;
-	private $rawvaluemap;
-	private $defaultmap = array();
+    public function __construct($values = array(), $rawvalues = array())
+    {
+        $this->valuemap = $values;
+        $this->rawvaluemap = $rawvalues;
+    }
 
-	function __construct($values = array(), $rawvalues = array()) {
-		$this->valuemap = $values;
-		$this->rawvaluemap = $rawvalues;
-	}
+    public function get($key, $defvalue = '', $purify = true)
+    {
+        if (isset($this->valuemap[$key])) {
+            return $purify ? /* vtlib_purify */($this->valuemap[$key]) : $this->valuemap[$key];
+        }
+        if ($defvalue === '' && isset($this->defaultmap[$key])) {
+            $defvalue = $this->defaultmap[$key];
+        }
+        return $defvalue;
+    }
 
-	function get($key, $defvalue = '', $purify = true) {
-		if (isset($this->valuemap[$key])) {
-			return $purify ? /* vtlib_purify */($this->valuemap[$key]) : $this->valuemap[$key];
-		}
-		if ($defvalue === '' && isset($this->defaultmap[$key])) {
-			$defvalue = $this->defaultmap[$key];
-		}
-		return $defvalue;
-	}
+    public function has($key)
+    {
+        return isset($this->valuemap[$key]);
+    }
 
-	function has($key) {
-		return isset($this->valuemap[$key]);
-	}
+    public function getRaw($key, $defvalue = '')
+    {
+        if (isset($this->rawvaluemap[$key])) {
+            return $this->rawvaluemap[$key];
+        }
+        return $this->get($key, $defvalue);
+    }
 
-	function getRaw($key, $defvalue = '') {
-		if (isset($this->rawvaluemap[$key])) {
-			return $this->rawvaluemap[$key];
-		}
-		return $this->get($key, $defvalue);
-	}
+    public function set($key, $newvalue)
+    {
+        $this->valuemap[$key] = $newvalue;
+    }
 
-	function set($key, $newvalue) {
-		$this->valuemap[$key] = $newvalue;
-	}
+    public function setDefault($key, $defvalue)
+    {
+        $this->defaultmap[$key] = $defvalue;
+    }
 
-	function setDefault($key, $defvalue) {
-		$this->defaultmap[$key] = $defvalue;
-	}
-
-	function getOperation() {
-		return $this->get('_operation');
-	}
-
+    public function getOperation()
+    {
+        return $this->get('_operation');
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_LexerGenerator, a php 5 lexer generator.
- * 
+ *
  * This lexer generator translates a file in a format similar to
  * re2c ({@link http://re2c.org}) and translates it into a PHP 5-based lexer
  *
@@ -24,7 +24,7 @@
 require_once 'PHP/LexerGenerator/Parser.php';
 /**
  * Token scanner for plex files.
- * 
+ *
  * This scanner detects comments beginning with "/*!lex2php" and
  * then returns their components (processing instructions, patterns, strings
  * action code, and regexes)
@@ -61,20 +61,20 @@ class PHP_LexerGenerator_Lexer
      */
     public $value;
 
-    const PHPCODE = PHP_LexerGenerator_Parser::PHPCODE;
-    const COMMENTSTART = PHP_LexerGenerator_Parser::COMMENTSTART;
-    const COMMENTEND = PHP_LexerGenerator_Parser::COMMENTEND;
-    const QUOTE = PHP_LexerGenerator_Parser::QUOTE;
-    const PATTERN = PHP_LexerGenerator_Parser::PATTERN;
-    const CODE = PHP_LexerGenerator_Parser::CODE;
-    const SUBPATTERN = PHP_LexerGenerator_Parser::SUBPATTERN;
-    const PI = PHP_LexerGenerator_Parser::PI;
+    public const PHPCODE = PHP_LexerGenerator_Parser::PHPCODE;
+    public const COMMENTSTART = PHP_LexerGenerator_Parser::COMMENTSTART;
+    public const COMMENTEND = PHP_LexerGenerator_Parser::COMMENTEND;
+    public const QUOTE = PHP_LexerGenerator_Parser::QUOTE;
+    public const PATTERN = PHP_LexerGenerator_Parser::PATTERN;
+    public const CODE = PHP_LexerGenerator_Parser::CODE;
+    public const SUBPATTERN = PHP_LexerGenerator_Parser::SUBPATTERN;
+    public const PI = PHP_LexerGenerator_Parser::PI;
 
     /**
      * prepare scanning
      * @param string the input
      */
-    function __construct($data)
+    public function __construct($data)
     {
         $this->data = str_replace("\r\n", "\n", $data);
         $this->N = 0;
@@ -189,7 +189,7 @@ class PHP_LexerGenerator_Lexer
      */
     private function lexDeclarePI()
     {
-        while ($this->N < strlen($this->data) && 
+        while ($this->N < strlen($this->data) &&
                 ($this->data[$this->N] == ' ' ||
                  $this->data[$this->N] == "\t")) {
             $this->N++; // skip whitespace
@@ -219,7 +219,7 @@ class PHP_LexerGenerator_Lexer
      */
     private function lexDeclarePIRule()
     {
-        while ($this->N < strlen($this->data) && 
+        while ($this->N < strlen($this->data) &&
                 ($this->data[$this->N] == ' ' ||
                  $this->data[$this->N] == "\t")) {
             $this->N++; // skip whitespace
@@ -249,7 +249,7 @@ class PHP_LexerGenerator_Lexer
      */
     private function lexDeclareEquals()
     {
-        while ($this->N < strlen($this->data) && 
+        while ($this->N < strlen($this->data) &&
                 ($this->data[$this->N] == ' ' || $this->data[$this->N] == "\t")) {
             $this->N++; // skip whitespace
         }
@@ -262,7 +262,7 @@ class PHP_LexerGenerator_Lexer
         }
         $this->N++;
         $this->state = 'DeclareRightside';
-        while ($this->N < strlen($this->data) && 
+        while ($this->N < strlen($this->data) &&
                 ($this->data[$this->N] == ' ' || $this->data[$this->N] == "\t")) {
             $this->N++; // skip whitespace
         }
@@ -353,7 +353,7 @@ class PHP_LexerGenerator_Lexer
      */
     private function lexRule()
     {
-        while ($this->N < strlen($this->data) && 
+        while ($this->N < strlen($this->data) &&
                 ($this->data[$this->N] == ' ' ||
                  $this->data[$this->N] == "\t" ||
                  $this->data[$this->N] == "\n")) {
@@ -444,7 +444,7 @@ class PHP_LexerGenerator_Lexer
 
     /**
      * Primary scanner
-     * 
+     *
      * In addition to lexing, this properly increments the line number of lexing.
      * This calls the proper sub-lexer based on the parser state
      * @param unknown_type $parser
@@ -462,4 +462,3 @@ class PHP_LexerGenerator_Lexer
         return false;
     }
 }
-?>

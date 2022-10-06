@@ -2,10 +2,11 @@
 
 require_once('setup/utils/FRPrint.php');
 
-class FRFilterSetting {
-
+class FRFilterSetting
+{
     // 対象モジュールの全てのフィルターを削除する
-    public static function deleteAll(Vtiger_Module $module) {
+    public static function deleteAll(Vtiger_Module $module)
+    {
         FRPrint::out("Filter delete to ".$module->name);
 
         $filter = new Vtiger_Filter();
@@ -15,8 +16,8 @@ class FRFilterSetting {
     }
 
     // 対象モジュールにフィルタを追加する
-    public static function add(Vtiger_Module $module, $name, array $fieldNames, $isDefault = false) {
-
+    public static function add(Vtiger_Module $module, $name, array $fieldNames, $isDefault = false)
+    {
         FRPrint::out("Filter setting to ".$module->name." ".$name."(default=$isDefault) ".print_r($fieldNames, true));
 
         $filter = new Vtiger_Filter();
@@ -26,7 +27,7 @@ class FRFilterSetting {
 
         $cnt = 1;
         $field_list = array();
-        foreach($fieldNames as $name) {
+        foreach ($fieldNames as $name) {
             $field = Vtiger_Field::getInstance($name, $module);
             $filter->addField($field, $cnt);
             $cnt++;

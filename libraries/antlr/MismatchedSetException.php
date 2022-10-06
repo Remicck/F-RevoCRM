@@ -27,17 +27,18 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-class MismatchedSetException extends RecognitionException {
-	public $expecting;
+class MismatchedSetException extends RecognitionException
+{
+    public $expecting;
 
-	public function __construct($expecting, $input) {
-		parent::__construct($input);
-		$this->expecting = $expecting;
-	}
+    public function __construct($expecting, $input)
+    {
+        parent::__construct($input);
+        $this->expecting = $expecting;
+    }
 
-	public function __toString() {
-		return "MismatchedSetException(".$this->getUnexpectedType()."!=".$this->expecting.")";
-	}
+    public function __toString()
+    {
+        return "MismatchedSetException(".$this->getUnexpectedType()."!=".$this->expecting.")";
+    }
 }
-
-?>

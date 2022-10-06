@@ -9,19 +9,19 @@
  ************************************************************************************/
 include_once dirname(__FILE__) . '/ContentViewer.php';
 
-class Vtiger_PDF_InventoryTaxGroupContentViewer extends Vtiger_PDF_InventoryContentViewer {
+class Vtiger_PDF_InventoryTaxGroupContentViewer extends Vtiger_PDF_InventoryContentViewer
+{
+    public function __construct()
+    {
+        // NOTE: General A4 PDF width ~ 189 (excluding margins on either side)
 
-	function __construct() {
-		// NOTE: General A4 PDF width ~ 189 (excluding margins on either side)
-			
-		$this->cells = array( // Name => Width
-			'Code'		=> 30,
-			'Name'		=> 65,
-			'Quantity'	=> 20,
-			'Price'		=> 25,
-			'Discount'	=> 20,
-			'Total'		=> 30
-		);
-	}
-	
+        $this->cells = array( // Name => Width
+            'Code'		=> 30,
+            'Name'		=> 65,
+            'Quantity'	=> 20,
+            'Price'		=> 25,
+            'Discount'	=> 20,
+            'Total'		=> 30
+        );
+    }
 }

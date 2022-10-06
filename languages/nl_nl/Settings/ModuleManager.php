@@ -9,7 +9,7 @@
  * *******************************************************************************
  * Vicus eBusiness Solutions (www.vicus.nl) Version Control
  * Dutch language pack for vtiger CRM version 6.x
- * 
+ *
  * @package   NL-Dutch
  * @author    $Author: luuk $
  * @version   CVS: $Revision: 1.4 $ $Date: 2014/09/07 21:06:45 $
@@ -37,7 +37,7 @@ $languageStrings = array(
     'LBL_FAILED'                   => 'Failed'                      , // TODO: Review
     'LBL_SUCCESSFULL'              => 'Successfull'                 , // TODO: Review
     'LBL_INSTALLATION_LOG'         => 'Installation Log'            , // TODO: Review
-    
-	// VEB added
+
+    // VEB added
     'LBL_IMPORT_ZIP'         => 'Importeer ZIP bestand'            	,
 );

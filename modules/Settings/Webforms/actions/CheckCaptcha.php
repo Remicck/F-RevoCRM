@@ -16,38 +16,43 @@ include_once 'vtlib/Vtiger/Module.php';
 include_once 'include/utils/VtlibUtils.php';
 include_once 'include/recaptcha/recaptchalib.php';
 
-class Webform_CheckCaptcha {
-
-	function checkCaptchaNow($request) {
+class Webform_CheckCaptcha
+{
+    public function checkCaptchaNow($request)
+    {
         // reCAPTCHA public and private keys to validate
-		$publickey = "6Lchg-wSAAAAAIkV51_LSksz6fFdD2vgy59jwa38";
+        $publickey = "6Lchg-wSAAAAAIkV51_LSksz6fFdD2vgy59jwa38";
         $privatekey = "6Lchg-wSAAAAABUvZ57ogylowuv8SK0Hq4h2Yghs";
 
         // to store the response from reCAPTCHA
         $resp = null;
 
         if ($request["recaptcha_response_field"]) {
-                $resp = recaptcha_check_answer ($privatekey,
-                                                $_SERVER["REMOTE_ADDR"],
-                                                $request["recaptcha_challenge_field"],
-                                                $request["recaptcha_response_field"]);
+            $resp = recaptcha_check_answer(
+                $privatekey,
+                $_SERVER["REMOTE_ADDR"],
+                $request["recaptcha_challenge_field"],
+                $request["recaptcha_response_field"]
+            );
 
-                if ($resp->is_valid) {
-                        $this->sendResponse(true, $request['callId']);
-                } else {
-                        $this->sendResponse(false, $request['callId']);
-                }
+            if ($resp->is_valid) {
+                $this->sendResponse(true, $request['callId']);
+            } else {
+                $this->sendResponse(false, $request['callId']);
+            }
         } else {
-			$this->sendResponse(false, $request['callId']);
-		}
-	}
+            $this->sendResponse(false, $request['callId']);
+        }
+    }
 
-	protected function sendResponse($success, $callId) {
+    protected function sendResponse($success, $callId)
+    {
         $response = new Vtiger_Response();
-        if ($success)
+        if ($success) {
             $response->setResult(array('success' => true, 'callId' => $callId));
-        else
+        } else {
             $response->setResult(array('success' => false, 'callId' => $callId));
+        }
 
         // Support JSONP
         if (!empty($_REQUEST['callback'])) {
@@ -58,9 +63,8 @@ class Webform_CheckCaptcha {
         } else {
             $response->emit();
         }
-	}
+    }
 }
 
-$webformCheckCaptcha = new Webform_CheckCaptcha;
+$webformCheckCaptcha = new Webform_CheckCaptcha();
 $webformCheckCaptcha->checkCaptchaNow(vtlib_purify($_REQUEST));
-?>

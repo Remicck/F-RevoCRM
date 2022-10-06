@@ -9,35 +9,39 @@
  *************************************************************************************/
 vimport('~~/modules/SMSNotifier/SMSNotifier.php');
 
-class SMSNotifier_Record_Model extends Vtiger_Record_Model {
+class SMSNotifier_Record_Model extends Vtiger_Record_Model
+{
+    public static function SendSMS($message, $toNumbers, $currentUserId, $recordIds, $moduleName)
+    {
+        return SMSNotifier::sendsms($message, $toNumbers, $currentUserId, $recordIds, $moduleName);
+    }
 
-	public static function SendSMS($message, $toNumbers, $currentUserId, $recordIds, $moduleName) {
-		return SMSNotifier::sendsms($message, $toNumbers, $currentUserId, $recordIds, $moduleName);
-	}
+    public function checkStatus()
+    {
+        $statusDetails = SMSNotifier::smsquery($this->get('id'));
+        $statusColor = $this->getColorForStatus($statusDetails[0]['status']);
 
-	public function checkStatus() {
-		$statusDetails = SMSNotifier::smsquery($this->get('id'));
-		$statusColor = $this->getColorForStatus($statusDetails[0]['status']);
+        $this->setData($statusDetails[0]);
 
-		$this->setData($statusDetails[0]);
+        return $this;
+    }
 
-		return $this;
-	}
+    public function getCheckStatusUrl()
+    {
+        return "index.php?module=".$this->getModuleName()."&view=CheckStatus&record=".$this->getId();
+    }
 
-	public function getCheckStatusUrl() {
-		return "index.php?module=".$this->getModuleName()."&view=CheckStatus&record=".$this->getId();
-	}
-
-	public function getColorForStatus($smsStatus) {
-		if ($smsStatus == 'Processing') {
-			$statusColor = '#FFFCDF';
-		} elseif ($smsStatus == 'Dispatched') {
-			$statusColor = '#E8FFCF';
-		} elseif ($smsStatus == 'Failed') {
-			$statusColor = '#FFE2AF';
-		} else {
-			$statusColor = '#FFFFFF';
-		}
-		return $statusColor;
-	}
+    public function getColorForStatus($smsStatus)
+    {
+        if ($smsStatus == 'Processing') {
+            $statusColor = '#FFFCDF';
+        } elseif ($smsStatus == 'Dispatched') {
+            $statusColor = '#E8FFCF';
+        } elseif ($smsStatus == 'Failed') {
+            $statusColor = '#FFE2AF';
+        } else {
+            $statusColor = '#FFFFFF';
+        }
+        return $statusColor;
+    }
 }

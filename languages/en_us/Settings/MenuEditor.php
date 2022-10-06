@@ -19,11 +19,10 @@ $languageStrings = array(
     'LBL_MENU_EDITOR_INFO' => 'Drag and drop a Module to move/re-order it. You can Remove a Module from the App and Add it back later.',
 );
 
-$jsLanguageStrings = Array (
+$jsLanguageStrings = array(
     'JS_MODULE_NOT_DRAGGABLE' => 'Module Cannot be moved',
     'JS_MODULE_SEQUENCE_SAVED' => 'Module sequence saved successfully',
     'JS_MODULE_REMOVED' => 'Module removed successfully',
     'JS_MODULE_ADD_SUCCESS' => 'Module(s) added successfuly',
     'JS_PLEASE_SELECT_A_MODULE' => 'Please select a Module',
-)
-?>
+);

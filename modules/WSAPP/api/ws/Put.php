@@ -12,19 +12,19 @@ require_once 'include/Webservices/Update.php';
 require_once 'include/Webservices/Delete.php';
 require_once 'modules/WSAPP/Utils.php';
 
-function wsapp_put ($key, $element, $user) {
-        $name = wsapp_getApplicationName($key);
-        if($name){
-            $handlerDetails  = wsapp_getHandler($name);
-            require_once $handlerDetails['handlerpath'];
-            $handler = new $handlerDetails['handlerclass']($key);
+function wsapp_put($key, $element, $user)
+{
+    $name = wsapp_getApplicationName($key);
+    if ($name) {
+        $handlerDetails  = wsapp_getHandler($name);
+        require_once $handlerDetails['handlerpath'];
+        $handler = new $handlerDetails['handlerclass']($key);
 
-            // for Record Source
-            $appNameParts = explode("_",$name);
-            Vtiger_Cache::set('WSAPP', 'appName', strtoupper($appNameParts[0]));
-            
-            return $handler->put($element,$user);
-        }
-        return array();
+        // for Record Source
+        $appNameParts = explode("_", $name);
+        Vtiger_Cache::set('WSAPP', 'appName', strtoupper($appNameParts[0]));
+
+        return $handler->put($element, $user);
+    }
+    return array();
 }
-

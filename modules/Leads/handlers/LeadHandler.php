@@ -8,11 +8,11 @@
  * All Rights Reserved.
  * ************************************************************************************/
 
-class LeadHandler extends VTEventHandler {
-
-	function handleEvent($eventName, $entityData) {
-		if($eventName === 'vtiger.lead.convertlead'){
-		}
-	}
+class LeadHandler extends VTEventHandler
+{
+    public function handleEvent($eventName, $entityData)
+    {
+        if ($eventName === 'vtiger.lead.convertlead') {
+        }
+    }
 }
-

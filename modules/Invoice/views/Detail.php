@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Invoice_Detail_View extends Inventory_Detail_View {
-
+class Invoice_Detail_View extends Inventory_Detail_View
+{
 }

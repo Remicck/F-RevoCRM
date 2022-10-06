@@ -8,15 +8,14 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Events_Multireference_UIType extends Calendar_Multireference_UIType{
-    
+class Events_Multireference_UIType extends Calendar_Multireference_UIType
+{
     /**
-	 * Function to get the Detailview template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getDetailViewTemplateName() {
-		return 'uitypes/MultireferenceDetailView.tpl';
-	}
+     * Function to get the Detailview template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getDetailViewTemplateName()
+    {
+        return 'uitypes/MultireferenceDetailView.tpl';
+    }
 }
-
-?>

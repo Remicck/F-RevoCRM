@@ -1,8 +1,9 @@
 <?php
+
 // Chinese language file contributed by "Cuiyan (cysoft)" cysoft#php.net.
 // Simplified Chinese
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'cn',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'cn',
             DB_ERROR                    => '未知错误',
             DB_ERROR_ALREADY_EXISTS     => '已经存在',
             DB_ERROR_CANNOT_CREATE      => '不能创建',

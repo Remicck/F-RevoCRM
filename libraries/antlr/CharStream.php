@@ -28,38 +28,36 @@
 */
 
 
-class CharStreamConst{
-	public static $EOF = -1;
+class CharStreamConst
+{
+    public static $EOF = -1;
 }
 $CharStream_EOF = -1;
 
 /** A source of characters for an ANTLR lexer */
-interface CharStream extends IntStream {
+interface CharStream extends IntStream
+{
+    /** For infinite streams, you don't need this; primarily I'm providing
+     *  a useful interface for action code.  Just make sure actions don't
+     *  use this on streams that don't support it.
+     */
+    public function substring($start, $stop);
 
-	/** For infinite streams, you don't need this; primarily I'm providing
-	 *  a useful interface for action code.  Just make sure actions don't
-	 *  use this on streams that don't support it.
-	 */
-	public function substring($start, $stop);
+    /** Get the ith character of lookahead.  This is the same usually as
+     *  LA(i).  This will be used for labels in the generated
+     *  lexer code.  I'd prefer to return a char here type-wise, but it's
+     *  probably better to be 32-bit clean and be consistent with LA.
+     */
+    public function LT($i);
 
-	/** Get the ith character of lookahead.  This is the same usually as
-	 *  LA(i).  This will be used for labels in the generated
-	 *  lexer code.  I'd prefer to return a char here type-wise, but it's
-	 *  probably better to be 32-bit clean and be consistent with LA.
-	 */
-	public function LT($i);
+    /** ANTLR tracks the line information automatically */
+    public function getLine();
 
-	/** ANTLR tracks the line information automatically */
-	function getLine();
+    /** Because this stream can rewind, we need to be able to reset the line */
+    public function setLine($line);
 
-	/** Because this stream can rewind, we need to be able to reset the line */
-	function setLine($line);
+    public function setCharPositionInLine($pos);
 
-	function setCharPositionInLine($pos);
-
-	/** The index of the character relative to the beginning of the line 0..n-1 */
-	function getCharPositionInLine();
+    /** The index of the character relative to the beginning of the line 0..n-1 */
+    public function getCharPositionInLine();
 }
-
-
-?>

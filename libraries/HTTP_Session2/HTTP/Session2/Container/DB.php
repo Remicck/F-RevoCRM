@@ -52,7 +52,7 @@ require_once 'HTTP/Session2/Container.php';
 
 /**
  * HTTP/Session2/Exception.php
- * 
+ *
  * @todo Implement HTTP_Session2_Containter_DB_Exception
  */
 require_once 'HTTP/Session2/Exception.php';
@@ -86,7 +86,6 @@ require_once 'DB.php';
  */
 class HTTP_Session2_Container_DB extends HTTP_Session2_Container
 {
-
     /**
      * DB connection object
      *
@@ -134,15 +133,17 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
     {
         if (is_string($dsn)) {
             $this->_db = DB::connect($dsn);
-        } else if (is_object($dsn) && is_a($dsn, 'db_common')) {
+        } elseif (is_object($dsn) && is_a($dsn, 'db_common')) {
             $this->_db = $dsn;
-        } else if (DB::isError($dsn)) {
+        } elseif (DB::isError($dsn)) {
             throw new HTTP_Session2_Exception($dsn->getMessage(), $dsn->getCode());
         } else {
             $msg  = "The given dsn was not valid in file ";
             $msg .= __FILE__ . " at line " . __LINE__;
-            throw new HTTP_Session2_Exception($msg,
-                HTTP_Session2::ERR_SYSTEM_PRECONDITION);
+            throw new HTTP_Session2_Exception(
+                $msg,
+                HTTP_Session2::ERR_SYSTEM_PRECONDITION
+            );
         }
         return true;
     }
@@ -194,15 +195,19 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
      */
     public function read($id)
     {
-        $query = sprintf("SELECT data FROM %s WHERE id = %s AND expiry >= %d",
+        $query = sprintf(
+            "SELECT data FROM %s WHERE id = %s AND expiry >= %d",
             $this->options['table'],
             $this->_db->quote(md5($id)),
-            time());
+            time()
+        );
 
         $result = $this->_db->getOne($query);
         if (DB::isError($result)) {
-            throw new HTTP_Session2_Exception($result->getMessage(),
-                $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getMessage(),
+                $result->getCode()
+            );
         }
         $this->_crc = strlen($result) . crc32($result);
         return $result;
@@ -223,16 +228,20 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
             && ($this->_crc === strlen($data) . crc32($data))) {
             /* $_SESSION hasn't been touched, no need to update the blob column */
             $query = "UPDATE %s SET expiry = %d WHERE id = %s AND expiry >= %d";
-            $query = sprintf($query,
+            $query = sprintf(
+                $query,
                 $this->options['table'],
                 time() + ini_get('session.gc_maxlifetime'),
                 $this->_db->quote(md5($id)),
-                time());
+                time()
+            );
         } else {
             /* Check if table row already exists */
-            $query = sprintf("SELECT COUNT(id) FROM %s WHERE id = '%s'",
+            $query = sprintf(
+                "SELECT COUNT(id) FROM %s WHERE id = '%s'",
                 $this->options['table'],
-                md5($id));
+                md5($id)
+            );
 
             $result = $this->_db->getOne($query);
             if (DB::isError($result)) {
@@ -242,21 +251,25 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
             if (0 == intval($result)) {
                 /* Insert new row into table */
                 $query = "INSERT INTO %s (id, expiry, data) VALUES (%s, %d, %s)";
-                $query = sprintf($query,
+                $query = sprintf(
+                    $query,
                     $this->options['table'],
                     $this->_db->quote(md5($id)),
                     time() + ini_get('session.gc_maxlifetime'),
-                    $this->_db->quote($data));
+                    $this->_db->quote($data)
+                );
             } else {
                 /* Update existing row */
                 $query  = "UPDATE %s SET expiry = %d, data = %s";
                 $query .= " WHERE id = %s AND expiry >= %d";
-                $query  = sprintf($query,
+                $query  = sprintf(
+                    $query,
                     $this->options['table'],
                     time() + ini_get('session.gc_maxlifetime'),
                     $this->_db->quote($data),
                     $this->_db->quote(md5($id)),
-                    time());
+                    time()
+                );
             }
         }
         $result = $this->_db->query($query);
@@ -276,9 +289,11 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
      */
     public function destroy($id)
     {
-        $query = sprintf("DELETE FROM %s WHERE id = %s",
+        $query = sprintf(
+            "DELETE FROM %s WHERE id = %s",
             $this->options['table'],
-            $this->_db->quote(md5($id)));
+            $this->_db->quote(md5($id))
+        );
 
         $result = $this->_db->query($query);
         if (DB::isError($result)) {
@@ -298,9 +313,11 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
      */
     public function gc($maxlifetime)
     {
-        $query = sprintf("DELETE FROM %s WHERE expiry < %d",
+        $query = sprintf(
+            "DELETE FROM %s WHERE expiry < %d",
             $this->options['table'],
-            time());
+            time()
+        );
 
         $result = $this->_db->query($query);
         if (DB::isError($result)) {
@@ -310,15 +327,15 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
 
         if ($this->options['autooptimize']) {
             switch($this->_db->type) {
-            case 'mysql':
-                $query = sprintf("OPTIMIZE TABLE %s", $this->options['table']);
-                break;
-            case 'pgsql':
-                $query = sprintf("VACUUM %s", $this->options['table']);
-                break;
-            default:
-                $query = null;
-                break;
+                case 'mysql':
+                    $query = sprintf("OPTIMIZE TABLE %s", $this->options['table']);
+                    break;
+                case 'pgsql':
+                    $query = sprintf("VACUUM %s", $this->options['table']);
+                    break;
+                default:
+                    $query = null;
+                    break;
             }
             if (isset($query)) {
                 $result = $this->_db->query($query);
@@ -347,9 +364,11 @@ class HTTP_Session2_Container_DB extends HTTP_Session2_Container
         }
 
         // Check if table row already exists
-        $query  = sprintf("SELECT COUNT(id) FROM %s WHERE id = %s",
+        $query  = sprintf(
+            "SELECT COUNT(id) FROM %s WHERE id = %s",
             $target,
-            $this->_db->quoteSmart(md5($id)));
+            $this->_db->quoteSmart(md5($id))
+        );
         $result = $this->_db->getOne($query);
         if (DB::isError($result)) {
             new DB_Error($result->code, PEAR_ERROR_DIE);

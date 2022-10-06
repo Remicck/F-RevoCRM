@@ -5,7 +5,6 @@
  */
 class HTMLPurifier_AttrDef_URI_Host extends HTMLPurifier_AttrDef
 {
-
     /**
      * IPv4 sub-validator.
      * @type HTMLPurifier_AttrDef_URI_IPv4

@@ -11,74 +11,78 @@
 /**
  * CSS Script Model Class
  */
-class Vtiger_CssScript_Model extends Vtiger_Base_Model {
+class Vtiger_CssScript_Model extends Vtiger_Base_Model
+{
+    public const DEFAULT_REL = 'stylesheet';
+    public const DEFAULT_MEDIA = 'screen';
+    public const DEFAULT_TYPE = 'text/css';
 
-	const DEFAULT_REL = 'stylesheet';
-	const DEFAULT_MEDIA = 'screen';
-	const DEFAULT_TYPE = 'text/css';
+    public const LESS_REL = 'stylesheet/less';
 
-	const LESS_REL = 'stylesheet/less';
+    /**
+     * Function to get the rel attribute value
+     * @return <String>
+     */
+    public function getRel()
+    {
+        $rel = $this->get('rel');
+        if (empty($rel)) {
+            $rel = self::DEFAULT_REL;
+        }
+        return $rel;
+    }
 
-	/**
-	 * Function to get the rel attribute value
-	 * @return <String>
-	 */
-	public function getRel(){
-		$rel = $this->get('rel');
-		if(empty($rel)){
-			$rel = self::DEFAULT_REL;
-		}
-		return $rel;
-	}
+    /**
+     * Function to get the media attribute value
+     * @return <String>
+     */
+    public function getMedia()
+    {
+        $media = $this->get('media');
+        if (empty($media)) {
+            $media = self::DEFAULT_MEDIA;
+        }
+        return $media;
+    }
 
-	/**
-	 * Function to get the media attribute value
-	 * @return <String>
-	 */
-	public function getMedia(){
-		$media = $this->get('media');
-		if(empty($media)){
-			$media = self::DEFAULT_MEDIA;
-		}
-		return $media;
-	}
+    /**
+     * Function to get the type attribute value
+     * @return <String>
+     */
+    public function getType()
+    {
+        $type = $this->get('type');
+        if (empty($type)) {
+            $type = self::DEFAULT_TYPE;
+        }
+        return $type;
+    }
 
-	/**
-	 * Function to get the type attribute value
-	 * @return <String>
-	 */
-	public function getType(){
-		$type = $this->get('type');
-		if(empty($type)){
-			$type = self::DEFAULT_TYPE;
-		}
-		return $type;
-	}
+    /**
+     * Function to get the href attribute value
+     * @return <String>
+     */
+    public function getHref()
+    {
+        $href = $this->get('href');
+        if (empty($href)) {
+            $href = $this->get('linkurl');
+        }
+        return $href;
+    }
 
-	/**
-	 * Function to get the href attribute value
-	 * @return <String>
-	 */
-	public function getHref() {
-		$href = $this->get('href');
-		if(empty($href)) {
-			$href = $this->get('linkurl');
-		}
-		return $href;
-	}
-
-	/**
-	 * Function to get the instance of CSS Script model from a given Vtiger_Link object
-	 * @param Vtiger_Link $linkObj
-	 * @return Vtiger_CssScript_Model instance
-	 */
-	public static function getInstanceFromLinkObject (Vtiger_Link $linkObj){
-		$objectProperties = get_object_vars($linkObj);
-		$linkModel = new self();
-		foreach($objectProperties as $properName=>$propertyValue){
-			$linkModel->$properName = $propertyValue;
-		}
-		return $linkModel->setData($objectProperties);
-	}
-
+    /**
+     * Function to get the instance of CSS Script model from a given Vtiger_Link object
+     * @param Vtiger_Link $linkObj
+     * @return Vtiger_CssScript_Model instance
+     */
+    public static function getInstanceFromLinkObject(Vtiger_Link $linkObj)
+    {
+        $objectProperties = get_object_vars($linkObj);
+        $linkModel = new self();
+        foreach ($objectProperties as $properName=>$propertyValue) {
+            $linkModel->$properName = $propertyValue;
+        }
+        return $linkModel->setData($objectProperties);
+    }
 }

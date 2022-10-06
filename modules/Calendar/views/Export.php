@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_Export_View extends Vtiger_Export_View {
+class Calendar_Export_View extends Vtiger_Export_View
+{
 }

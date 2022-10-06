@@ -8,9 +8,10 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-Class SalesOrder_Edit_View extends Inventory_Edit_View {
-
-	public function process(Vtiger_Request $request) {
-		parent::process($request);
-	}
+class SalesOrder_Edit_View extends Inventory_Edit_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        parent::process($request);
+    }
 }

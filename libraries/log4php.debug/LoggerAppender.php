@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,15 +12,17 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__));
- 
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__));
+}
+
 /**
  * Abstract class that defines output logs strategies.
  *
@@ -29,8 +31,8 @@ if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__));
  * @package log4php
  * @abstract
  */
-class LoggerAppender {
-
+class LoggerAppender
+{
     /**
      * Factory
      *
@@ -38,86 +40,88 @@ class LoggerAppender {
      * @param string $class create an instance of this appender class
      * @return LoggerAppender
      */
-    function factory($name, $class)
+    public function factory($name, $class)
     {
         $class = basename($class);
         if (!empty($class)) {
-            if (!class_exists($class)) 
+            if (!class_exists($class)) {
                 @include_once(LOG4PHP_DIR . "/appenders/{$class}.php");
-            if (class_exists($class))
+            }
+            if (class_exists($class)) {
                 return new $class($name);
+            }
         }
         return null;
     }
-    
+
     /**
      * Singleton
      *
      * @param string $name appender name
      * @param string $class create or get a reference instance of this class
-     * @return LoggerAppender 
+     * @return LoggerAppender
      */
-    function &singleton($name, $class = '')
+    public function &singleton($name, $class = '')
     {
         static $instances;
-        
+
         if (!empty($name)) {
             if (!isset($instances[$name])) {
                 if (!empty($class)) {
                     $appender = LoggerAppender::factory($name, $class);
-                    if ($appender !== null) { 
+                    if ($appender !== null) {
                         $instances[$name] = $appender;
                         return $instances[$name];
                     }
                 }
                 return null;
             }
-            return $instances[$name];                
-        }        
-        return null;        
+            return $instances[$name];
+        }
+        return null;
     }
-    
+
     /* --------------------------------------------------------------------------*/
     /* --------------------------------------------------------------------------*/
     /* --------------------------------------------------------------------------*/
-    
+
     /**
      * Add a filter to the end of the filter list.
      *
      * @param LoggerFilter $newFilter add a new LoggerFilter
      * @abstract
      */
-    function addFilter($newFilter)
+    public function addFilter($newFilter)
     {
-        // override 
+        // override
     }
-    
+
     /**
      * Clear the list of filters by removing all the filters in it.
      * @abstract
      */
-    function clearFilters()
+    public function clearFilters()
     {
-        // override    
+        // override
     }
 
     /**
-     * Return the first filter in the filter chain for this Appender. 
+     * Return the first filter in the filter chain for this Appender.
      * The return value may be <i>null</i> if no is filter is set.
      * @return Filter
      */
-    function &getFilter()
+    public function &getFilter()
     {
-        // override    
-    } 
-    
+        // override
+    }
+
     /**
      * Release any resources allocated.
-     * Subclasses of {@link LoggerAppender} should implement 
+     * Subclasses of {@link LoggerAppender} should implement
      * this method to perform proper closing procedures.
      * @abstract
      */
-    function close()
+    public function close()
     {
         //override me
     }
@@ -128,18 +132,18 @@ class LoggerAppender {
      * @param LoggerLoggingEvent $event
      * @abstract
      */
-    function doAppend($event)
+    public function doAppend($event)
     {
-        //override me    
+        //override me
     }
 
     /**
      * Get the name of this appender.
      * @return string
      */
-    function getName()
+    public function getName()
     {
-        //override me    
+        //override me
     }
 
     /**
@@ -147,35 +151,35 @@ class LoggerAppender {
      *
      * @param object $errorHandler
      */
-    function setErrorHandler($errorHandler)
+    public function setErrorHandler($errorHandler)
     {
         // override me
     }
-    
+
     /**
      * Do not use this method.
      * @return object Returns the ErrorHandler for this appender.
      */
-    function &getErrorHandler()
+    public function &getErrorHandler()
     {
         return $this->errorHandler;
-    } 
+    }
 
     /**
      * Set the Layout for this appender.
      *
      * @param LoggerLayout $layout
      */
-    function setLayout($layout)
+    public function setLayout($layout)
     {
         // override me
     }
-    
+
     /**
      * Returns this appender layout.
      * @return LoggerLayout
      */
-    function &getLayout()
+    public function &getLayout()
     {
         // override me
     }
@@ -187,18 +191,18 @@ class LoggerAppender {
      *
      * @param string $name
      */
-    function setName($name) 
+    public function setName($name)
     {
-        // override me    
+        // override me
     }
 
     /**
      * Configurators call this method to determine if the appender
-     * requires a layout. 
+     * requires a layout.
      *
-     * <p>If this method returns <i>true</i>, meaning that layout is required, 
-     * then the configurator will configure a layout using the configuration 
-     * information at its disposal.  If this method returns <i>false</i>, 
+     * <p>If this method returns <i>true</i>, meaning that layout is required,
+     * then the configurator will configure a layout using the configuration
+     * information at its disposal.  If this method returns <i>false</i>,
      * meaning that a layout is not required, then layout configuration will be
      * skipped even if there is available layout configuration
      * information at the disposal of the configurator.</p>
@@ -209,10 +213,8 @@ class LoggerAppender {
      *
      * @return boolean
      */
-    function requiresLayout()
+    public function requiresLayout()
     {
         // override me
     }
-
 }
-?>

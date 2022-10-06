@@ -8,32 +8,34 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_FileLocationType_UIType extends Vtiger_Base_UIType {
-
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/FileLocationType.tpl';
-	}
-
-	/**
-	 * Function to get the Display Value, for the current field type with given DB Insert Value
-	 * @param <String> value of field
-	 * @return <String> Converted value
-	 */
-	public function getDisplayValue($value, $record=false, $recordInstance=false) {
-		if ($value === 'I') {
-			$value = 'LBL_INTERNAL';
-		} else {
-			$value = 'LBL_EXTERNAL';
-		}
-		return vtranslate($value, 'Documents');
-	}
-    
-    public function getListSearchTemplateName() {
-        return 'uitypes/FilelocationtypeFieldSearchView.tpl';
+class Vtiger_FileLocationType_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/FileLocationType.tpl';
     }
 
+    /**
+     * Function to get the Display Value, for the current field type with given DB Insert Value
+     * @param <String> value of field
+     * @return <String> Converted value
+     */
+    public function getDisplayValue($value, $record=false, $recordInstance=false)
+    {
+        if ($value === 'I') {
+            $value = 'LBL_INTERNAL';
+        } else {
+            $value = 'LBL_EXTERNAL';
+        }
+        return vtranslate($value, 'Documents');
+    }
+
+    public function getListSearchTemplateName()
+    {
+        return 'uitypes/FilelocationtypeFieldSearchView.tpl';
+    }
 }

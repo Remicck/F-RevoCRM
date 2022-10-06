@@ -42,7 +42,6 @@ require_once 'Zend/Gdata/YouTube/Extension/Token.php';
  */
 class Zend_Gdata_YouTube_Extension_Link extends Zend_Gdata_App_Extension_Link
 {
-
     protected $_token = null;
 
     /**
@@ -50,8 +49,15 @@ class Zend_Gdata_YouTube_Extension_Link extends Zend_Gdata_App_Extension_Link
      * @see Zend_Gdata_App_Extension_Link#__construct
      * @param Zend_Gdata_YouTube_Extension_Token $token
      */
-    public function __construct($href = null, $rel = null, $type = null,
-            $hrefLang = null, $title = null, $length = null, $token = null)
+    public function __construct(
+        $href = null,
+        $rel = null,
+        $type = null,
+        $hrefLang = null,
+        $title = null,
+        $length = null,
+        $token = null
+    )
     {
         $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct($href, $rel, $type, $hrefLang, $title, $length);
@@ -87,14 +93,14 @@ class Zend_Gdata_YouTube_Extension_Link extends Zend_Gdata_App_Extension_Link
     {
         $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;
         switch ($absoluteNodeName) {
-        case $this->lookupNamespace('yt') . ':' . 'token':
-            $token = new Zend_Gdata_YouTube_Extension_Token();
-            $token->transferFromDOM($child);
-            $this->_token = $token;
-            break;
-        default:
-            parent::takeChildFromDOM($child);
-            break;
+            case $this->lookupNamespace('yt') . ':' . 'token':
+                $token = new Zend_Gdata_YouTube_Extension_Token();
+                $token->transferFromDOM($child);
+                $this->_token = $token;
+                break;
+            default:
+                parent::takeChildFromDOM($child);
+                break;
         }
     }
 
@@ -127,7 +133,6 @@ class Zend_Gdata_YouTube_Extension_Link extends Zend_Gdata_App_Extension_Link
     */
     public function getTokenValue()
     {
-      return $this->getToken()->getText();
+        return $this->getToken()->getText();
     }
-
 }

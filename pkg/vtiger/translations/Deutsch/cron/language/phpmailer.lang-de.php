@@ -26,4 +26,3 @@ $PHPMAILER_LANG["connect_host"] = 'SMTP Fehler: Konnte nicht den SMTP Host verbi
 $PHPMAILER_LANG["file_access"] = 'Auf die folgende Datei konnte nicht zugegriffen werden: ';
 $PHPMAILER_LANG["file_open"] = 'Dateifehler: Datei konnte nicht geöffnet werden: ';
 $PHPMAILER_LANG["encoding"] = 'Unbekannte Kodierung: ';
-?>

@@ -8,13 +8,14 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Password_UIType extends Vtiger_Base_UIType {
-
+class Vtiger_Password_UIType extends Vtiger_Base_UIType
+{
     /**
-	 * Function to get the Template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Password.tpl';
-	}
+     * Function to get the Template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Password.tpl';
+    }
 }

@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class PurchaseOrder_List_View extends Inventory_List_View {
+class PurchaseOrder_List_View extends Inventory_List_View
+{
 }

@@ -10,56 +10,54 @@
 
 vimport('~~/vtlib/Vtiger/Net/Client.php');
 
-interface SMSNotifier_ISMSProvider_Model {
+interface SMSNotifier_ISMSProvider_Model
+{
+    public const MSG_STATUS_DISPATCHED = 'Dispatched';
+    public const MSG_STATUS_PROCESSING = 'Processing';
+    public const MSG_STATUS_DELIVERED  = 'Delivered';
+    public const MSG_STATUS_FAILED     = 'Failed';
+    public const MSG_STATUS_ERROR      = 'ERR: ';
 
-	const MSG_STATUS_DISPATCHED = 'Dispatched';
-	const MSG_STATUS_PROCESSING = 'Processing';
-	const MSG_STATUS_DELIVERED  = 'Delivered';
-	const MSG_STATUS_FAILED     = 'Failed';
-	const MSG_STATUS_ERROR      = 'ERR: ';
+    public const SERVICE_SEND = 'SEND';
+    public const SERVICE_QUERY= 'QUERY';
+    public const SERVICE_PING = 'PING';
+    public const SERVICE_AUTH = 'AUTH';
 
-	const SERVICE_SEND = 'SEND';
-	const SERVICE_QUERY= 'QUERY';
-	const SERVICE_PING = 'PING';
-	const SERVICE_AUTH = 'AUTH';
+    /**
+     * Function to get required parameters other than (userName, password)
+     */
+    public function getRequiredParams();
 
-	/**
-	 * Function to get required parameters other than (userName, password)
-	 */
-	public function getRequiredParams();
+    /**
+     * Function to get service URL to use for a given type
+     * @param <String> $type like SEND, PING, QUERY
+     */
+    public function getServiceURL($type = false);
 
-	/**
-	 * Function to get service URL to use for a given type
-	 * @param <String> $type like SEND, PING, QUERY
-	 */
-	public function getServiceURL($type = false);
+    /**
+     * Function to set authentication parameters
+     * @param <String> $userName
+     * @param <String> $password
+     */
+    public function setAuthParameters($userName, $password);
 
-	/**
-	 * Function to set authentication parameters
-	 * @param <String> $userName
-	 * @param <String> $password
-	 */
-	public function setAuthParameters($userName, $password);
+    /**
+     * Function to set non-auth parameter.
+     * @param <String> $key
+     * @param <String> $value
+     */
+    public function setParameter($key, $value);
 
-	/**
-	 * Function to set non-auth parameter.
-	 * @param <String> $key
-	 * @param <String> $value
-	 */
-	public function setParameter($key, $value);
+    /**
+     * Function to handle SMS Send operation
+     * @param <String> $message
+     * @param <Mixed> $toNumbers One or Array of numbers
+     */
+    public function send($message, $toNumbers);
 
-	/**
-	 * Function to handle SMS Send operation
-	 * @param <String> $message
-	 * @param <Mixed> $toNumbers One or Array of numbers
-	 */
-	public function send($message, $toNumbers);
-
-	/**
-	 * Function to get query for status using messgae id
-	 * @param <Number> $messageId
-	 */
-	public function query($messageId);
-
+    /**
+     * Function to get query for status using messgae id
+     * @param <Number> $messageId
+     */
+    public function query($messageId);
 }
-?>

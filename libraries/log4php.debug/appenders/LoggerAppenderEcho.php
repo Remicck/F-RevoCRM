@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,78 +12,79 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  * @subpackage appenders
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
- 
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+}
+
 /**
  */
 require_once(LOG4PHP_DIR . '/LoggerAppenderSkeleton.php');
 require_once(LOG4PHP_DIR . '/LoggerLog.php');
 
 /**
- * LoggerAppenderEcho uses {@link PHP_MANUAL#echo echo} function to output events. 
- * 
- * <p>This appender requires a layout.</p>  
+ * LoggerAppenderEcho uses {@link PHP_MANUAL#echo echo} function to output events.
+ *
+ * <p>This appender requires a layout.</p>
  *
  * @author VxR <vxr@vxr.it>
  * @version $Revision: 1.5 $
  * @package log4php
  * @subpackage appenders
  */
-class LoggerAppenderEcho extends LoggerAppenderSkeleton {
+class LoggerAppenderEcho extends LoggerAppenderSkeleton
+{
+    /**
+     * @access private
+     */
+    public $requiresLayout = true;
 
     /**
-     * @access private 
+     * @var boolean used internally to mark first append
+     * @access private
      */
-    var $requiresLayout = true;
+    public $firstAppend    = true;
 
-    /**
-     * @var boolean used internally to mark first append 
-     * @access private 
-     */
-    var $firstAppend    = true;
-    
     /**
      * Constructor.
      *
      * @param string $name appender name
      */
-    function LoggerAppenderEcho($name)
+    public function LoggerAppenderEcho($name)
     {
         $this->LoggerAppenderSkeleton($name);
     }
 
-    function activateOptions()
+    public function activateOptions()
     {
         return;
     }
-    
-    function close()
+
+    public function close()
     {
-        if (!$this->firstAppend)
+        if (!$this->firstAppend) {
             echo $this->layout->getFooter();
-        $this->closed = true;    
+        }
+        $this->closed = true;
     }
 
-    function append($event)
+    public function append($event)
     {
         LoggerLog::debug("LoggerAppenderEcho::append()");
-        
+
         if ($this->layout !== null) {
             if ($this->firstAppend) {
                 echo $this->layout->getHeader();
                 $this->firstAppend = false;
             }
             echo $this->layout->format($event);
-        } 
+        }
     }
 }
-
-?>

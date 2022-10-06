@@ -32,7 +32,6 @@
  */
 class Zend_Crypt_DiffieHellman
 {
-
     /**
      * Static flag to select whether to use PHP5.3's openssl extension
      * if available.
@@ -89,9 +88,9 @@ class Zend_Crypt_DiffieHellman
     /**
      * Constants
      */
-    const BINARY = 'binary';
-    const NUMBER = 'number';
-    const BTWOC  = 'btwoc';
+    public const BINARY = 'binary';
+    public const NUMBER = 'number';
+    public const BTWOC  = 'btwoc';
 
     /**
      * Constructor; if set construct the object using the parameter array to
@@ -129,7 +128,7 @@ class Zend_Crypt_DiffieHellman
             if ($this->hasPrivateKey()) {
                 $details['priv_key'] = $this->getPrivateKey();
             }
-            $opensslKeyResource = openssl_pkey_new( array('dh' => $details) );
+            $opensslKeyResource = openssl_pkey_new(array('dh' => $details));
             $data = openssl_pkey_get_details($opensslKeyResource);
             $this->setPrivateKey($data['dh']['priv_key'], self::BINARY);
             $this->setPublicKey($data['dh']['pub_key'], self::BINARY);
@@ -376,5 +375,4 @@ class Zend_Crypt_DiffieHellman
         $rand = $this->_math->rand($this->getGenerator(), $this->getPrime());
         return $rand;
     }
-
 }

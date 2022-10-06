@@ -1,4 +1,5 @@
 <?php
-	class CharStreamState {
-	}
-?>
+
+    class CharStreamState
+    {
+    }

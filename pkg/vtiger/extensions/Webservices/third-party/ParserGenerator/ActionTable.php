@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -40,7 +40,7 @@ class PHP_ParserGenerator_ActionTable
     public $nAction = 0;
     /**
      * The $yy_action table under construction.
-     * 
+     *
      * Each entry is of format:
      * <code>
      *  array(
@@ -69,7 +69,7 @@ class PHP_ParserGenerator_ActionTable
         ));
     /**
      * The smallest (minimum) value of any lookahead token in {@link $aLookahead}
-     * 
+     *
      * The lowest non-terminal is always introduced earlier in the parser file,
      * and is therefore a more significant token.
      * @var int
@@ -88,7 +88,7 @@ class PHP_ParserGenerator_ActionTable
     public $mxLookahead = 0;
     /**
      * The number of slots used in {@link $aLookahead}.
-     * 
+     *
      * This is the same as count($aLookahead), but there was no pressing reason
      * to change this when porting from C.
      * @see $mnLookahead
@@ -101,7 +101,7 @@ class PHP_ParserGenerator_ActionTable
      * @param int
      * @param int
      */
-    function acttab_action($lookahead, $action)
+    public function acttab_action($lookahead, $action)
     {
         if ($this->nLookahead === 0) {
             $this->aLookahead = array();
@@ -134,12 +134,12 @@ class PHP_ParserGenerator_ActionTable
      * in generation of $yy_ofst tables (reduce and shift)
      * @throws Exception
      */
-    function acttab_insert()
+    public function acttab_insert()
     {
         if ($this->nLookahead <= 0) {
             throw new Exception('nLookahead is not set up?');
         }
-    
+
         /* Scan the existing action table looking for an offset where we can
         ** insert the current transaction set.  Fall out of the loop when that
         ** offset is found.  In the worst case, we fall out of the loop when
@@ -177,7 +177,7 @@ class PHP_ParserGenerator_ActionTable
                         break;
                     }
                 }
-                if ($j < $this->nLookahead ) {
+                if ($j < $this->nLookahead) {
                     continue;
                 }
                 for ($j = 0; $j < $this->nAction; $j++) {
@@ -211,7 +211,7 @@ class PHP_ParserGenerator_ActionTable
                             'action' => -1,
                         );
                     }
-                    if ($this->aLookahead[$j]['lookahead'] != 
+                    if ($this->aLookahead[$j]['lookahead'] !=
                           $this->aAction[$k]['lookahead']) {
                         break;
                     }
@@ -266,4 +266,3 @@ class PHP_ParserGenerator_ActionTable
         return $i - $this->mnLookahead;
     }
 }
-?>

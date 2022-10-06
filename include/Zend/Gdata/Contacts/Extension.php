@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -20,21 +20,23 @@
  */
 require_once 'Zend/Gdata/Contacts/Extension.php';
 
-class Zend_Gdata_Contacts_Extension extends Zend_Gdata_Extension {
-
+class Zend_Gdata_Contacts_Extension extends Zend_Gdata_Extension
+{
     protected $_rootNamespace = 'gd';
     protected $_rootElement = '';
     protected $_value = null;
-	
-	protected $_valueAttrName = 'value';
 
-    public function __construct($value = null) {
+    protected $_valueAttrName = 'value';
+
+    public function __construct($value = null)
+    {
         $this->registerAllNamespaces(Zend_Gdata_Contacts::$namespaces);
         parent::__construct();
         $this->_value = $value;
     }
 
-    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null) {
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    {
         $element = parent::getDOM($doc, $majorVersion, $minorVersion);
         if ($this->_value != null) {
             $element->setAttribute('value', $this->_value);
@@ -42,41 +44,45 @@ class Zend_Gdata_Contacts_Extension extends Zend_Gdata_Extension {
         return $element;
     }
 
-    protected function takeAttributeFromDOM($attribute) {
+    protected function takeAttributeFromDOM($attribute)
+    {
         switch ($attribute->localName) {
-        case $this->_valueAttrName:
-            $this->_value = $attribute->nodeValue;
-            break;
-        default:
-            parent::takeAttributeFromDOM($attribute);
+            case $this->_valueAttrName:
+                $this->_value = $attribute->nodeValue;
+                break;
+            default:
+                parent::takeAttributeFromDOM($attribute);
         }
     }
 
-    public function getValue() {
+    public function getValue()
+    {
         return $this->_value;
     }
 
-    public function setValue($value) {
+    public function setValue($value)
+    {
         $this->_value = $value;
         return $this;
     }
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getValue();
     }
-
 }
 
-class Zend_Gdata_Contacts_ExtensionElement extends Zend_Gdata_Extension {
-	
-	public function __construct($value = null) {
+class Zend_Gdata_Contacts_ExtensionElement extends Zend_Gdata_Extension
+{
+    public function __construct($value = null)
+    {
         $this->registerAllNamespaces(Zend_Gdata_Contacts::$namespaces);
         parent::__construct();
         $this->_text = $value;
     }
-	
-	public function getValue() {
+
+    public function getValue()
+    {
         return $this->_text;
     }
-
 }

@@ -2,8 +2,8 @@
 
 // Contributed by Grzegorz Pacan <gp#dione.cc>
 
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'pl',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'pl',
             DB_ERROR                    => 'niezidentyfikowany błąd',
             DB_ERROR_ALREADY_EXISTS     => 'już istnieją',
             DB_ERROR_CANNOT_CREATE      => 'nie można stworzyć',

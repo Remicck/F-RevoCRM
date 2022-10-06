@@ -11,45 +11,48 @@
 /**
  * Vtiger JS Script Model Class
  */
-class Vtiger_JsScript_Model extends Vtiger_Base_Model {
+class Vtiger_JsScript_Model extends Vtiger_Base_Model
+{
+    public const DEFAULT_TYPE = 'text/javascript';
 
-	const DEFAULT_TYPE = 'text/javascript';
+    /**
+     * Function to get the type attribute value
+     * @return <String>
+     */
+    public function getType()
+    {
+        $type = $this->get('type');
+        if (empty($type)) {
+            $type = self::DEFAULT_TYPE;
+        }
+        return $type;
+    }
 
-	/**
-	 * Function to get the type attribute value
-	 * @return <String>
-	 */
-	public function getType() {
-		$type = $this->get('type');
-		if(empty($type)){
-			$type = self::DEFAULT_TYPE;
-		}
-		return $type;
-	}
-
-	/**
-	 * Function to get the src attribute value
-	 * @return <String>
-	 */
-	public function getSrc() {
-		$src = $this->get('src');
-		if(empty($src)) {
+    /**
+     * Function to get the src attribute value
+     * @return <String>
+     */
+    public function getSrc()
+    {
+        $src = $this->get('src');
+        if (empty($src)) {
             $src = $this->get('linkurl');
-		}
-		return $src;
-	}
+        }
+        return $src;
+    }
 
-	/**
-	 * Static Function to get an instance of Vtiger JsScript Model from a given Vtiger_Link object
-	 * @param Vtiger_Link $linkObj
-	 * @return Vtiger_JsScript_Model instance
-	 */
-	public static function getInstanceFromLinkObject (Vtiger_Link $linkObj){
-		$objectProperties = get_object_vars($linkObj);
-		$linkModel = new self();
-		foreach($objectProperties as $properName=>$propertyValue){
-			$linkModel->$properName = $propertyValue;
-		}
-		return $linkModel->setData($objectProperties);
-	}
+    /**
+     * Static Function to get an instance of Vtiger JsScript Model from a given Vtiger_Link object
+     * @param Vtiger_Link $linkObj
+     * @return Vtiger_JsScript_Model instance
+     */
+    public static function getInstanceFromLinkObject(Vtiger_Link $linkObj)
+    {
+        $objectProperties = get_object_vars($linkObj);
+        $linkModel = new self();
+        foreach ($objectProperties as $properName=>$propertyValue) {
+            $linkModel->$properName = $propertyValue;
+        }
+        return $linkModel->setData($objectProperties);
+    }
 }

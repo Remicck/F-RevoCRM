@@ -10,5 +10,6 @@
 
 include_once 'modules/Vtiger/CRMEntity.php';
 
-class PDFTemplates extends Vtiger_CRMEntity {
+class PDFTemplates extends Vtiger_CRMEntity
+{
 }

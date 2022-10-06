@@ -8,23 +8,23 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_Multireference_UIType extends Vtiger_Reference_UIType{
+class Calendar_Multireference_UIType extends Vtiger_Reference_UIType
+{
     /**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Multireference.tpl';
-	}
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Multireference.tpl';
+    }
 
     /**
-	 * Function to get the Detailview template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getDetailViewTemplateName() {
-		return 'uitypes/MultireferenceDetailView.tpl';
-	}
-
+     * Function to get the Detailview template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getDetailViewTemplateName()
+    {
+        return 'uitypes/MultireferenceDetailView.tpl';
+    }
 }
-
-?>

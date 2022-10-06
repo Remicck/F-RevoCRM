@@ -43,7 +43,6 @@ require_once 'Zend/Gdata/YouTube/ActivityEntry.php';
  */
 class Zend_Gdata_YouTube_ActivityFeed extends Zend_Gdata_Feed
 {
-
     /**
      * The classname for individual feed elements.
      *
@@ -62,5 +61,4 @@ class Zend_Gdata_YouTube_ActivityFeed extends Zend_Gdata_Feed
         $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct($element);
     }
-
 }

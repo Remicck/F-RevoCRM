@@ -8,54 +8,57 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class HelpDesk_ConvertFAQ_Action extends Vtiger_Action_Controller {
+class HelpDesk_ConvertFAQ_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
+        $permissions[] = array('module_parameter' => 'custom_module', 'action' => 'CreateView');
+        $request->set('custom_module', 'Faq');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		$permissions[] = array('module_parameter' => 'custom_module', 'action' => 'CreateView');
-		$request->set('custom_module', 'Faq');
-		return $permissions;
-	}
-	
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$recordId = $request->get('record');
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $recordId = $request->get('record');
 
-		$result = array();
-		if (!empty ($recordId)) {
-			$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
+        $result = array();
+        if (!empty($recordId)) {
+            $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
 
-			$faqRecordModel = Faq_Record_Model::getInstanceFromHelpDesk($recordModel);
+            $faqRecordModel = Faq_Record_Model::getInstanceFromHelpDesk($recordModel);
 
-			$answer = $faqRecordModel->get('faq_answer');
-			if ($answer) {
-				try {
-					$faqRecordModel->save();
-					header("Location: ".$faqRecordModel->getDetailViewUrl());
-				} catch (DuplicateException $e) {
-					$requestData = $request->getAll();
-					unset($requestData['__vtrftk']);
-					unset($requestData['action']);
-					unset($requestData['record']);
-					$requestData['view'] = 'Edit';
-					$requestData['module'] = 'HelpDesk';
-					$requestData['duplicateRecords'] = $e->getDuplicateRecordIds();
+            $answer = $faqRecordModel->get('faq_answer');
+            if ($answer) {
+                try {
+                    $faqRecordModel->save();
+                    header("Location: ".$faqRecordModel->getDetailViewUrl());
+                } catch (DuplicateException $e) {
+                    $requestData = $request->getAll();
+                    unset($requestData['__vtrftk']);
+                    unset($requestData['action']);
+                    unset($requestData['record']);
+                    $requestData['view'] = 'Edit';
+                    $requestData['module'] = 'HelpDesk';
+                    $requestData['duplicateRecords'] = $e->getDuplicateRecordIds();
 
-					global $vtiger_current_version;
-					$viewer = new Vtiger_Viewer();
-					$viewer->assign('REQUEST_DATA', $requestData);
-					$viewer->assign('REQUEST_URL', $faqRecordModel->getEditViewUrl()."&parentId=$recordId&parentModule=$moduleName");
-					$viewer->view('RedirectToEditView.tpl', 'Vtiger');
-				} catch (Exception $e) {
-				}
-			} else {
-				header("Location: ".$faqRecordModel->getEditViewUrl()."&parentId=$recordId&parentModule=$moduleName");
-			}
-		}
-	}
+                    global $vtiger_current_version;
+                    $viewer = new Vtiger_Viewer();
+                    $viewer->assign('REQUEST_DATA', $requestData);
+                    $viewer->assign('REQUEST_URL', $faqRecordModel->getEditViewUrl()."&parentId=$recordId&parentModule=$moduleName");
+                    $viewer->view('RedirectToEditView.tpl', 'Vtiger');
+                } catch (Exception $e) {
+                }
+            } else {
+                header("Location: ".$faqRecordModel->getEditViewUrl()."&parentId=$recordId&parentModule=$moduleName");
+            }
+        }
+    }
 
-	public function validateRequest(Vtiger_Request $request) {
-		$request->validateWriteAccess();
-	}
+    public function validateRequest(Vtiger_Request $request)
+    {
+        $request->validateWriteAccess();
+    }
 }

@@ -6,13 +6,12 @@
  */
 
 require_once 'qCal/Loader.php';
-function qCal_Autoloader($name) {
-
+function qCal_Autoloader($name)
+{
     // Try to load only concerned class...
     if (strpos($name, 'qCal') === 0) {
         qCal_Loader::loadClass($name);
     }
-
 }
 
 spl_autoload_register("qCal_Autoloader");

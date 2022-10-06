@@ -8,46 +8,50 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class ExtensionStore_Listings_View extends Vtiger_Index_View {
+class ExtensionStore_Listings_View extends Vtiger_Index_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('getPromotions');
+    }
 
-	public function __construct() {
-		parent::__construct();
-		$this->exposeMethod('getPromotions');
-	}
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        return array();
+    }
 
-    public function requiresPermission(\Vtiger_Request $request) {
-		return array();
-	}
-    
-	public function getHeaderScripts(Vtiger_Request $request) {
-		$jsFileNames = array(
-			"libraries.jquery.boxslider.jqueryBxslider",
-		);
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		return $jsScriptInstances;
-	}
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $jsFileNames = array(
+            "libraries.jquery.boxslider.jqueryBxslider",
+        );
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        return $jsScriptInstances;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$mode = $request->getMode();
-		if (!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->getMode();
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
 
-	/**
-	 * Function to get news listings by passing type as News
-	 */
-	protected function getPromotions(Vtiger_Request $request) {
-		$modelInstance = Settings_ExtensionStore_Extension_Model::getInstance();
-		$promotions = $modelInstance->getListings(null, 'Promotion');
-		$qualifiedModuleName = $request->getModule(false);
+    /**
+     * Function to get news listings by passing type as News
+     */
+    protected function getPromotions(Vtiger_Request $request)
+    {
+        $modelInstance = Settings_ExtensionStore_Extension_Model::getInstance();
+        $promotions = $modelInstance->getListings(null, 'Promotion');
+        $qualifiedModuleName = $request->getModule(false);
 
-		$viewer = $this->getViewer($request);
-		$viewer->assign('PROMOTIONS', $promotions);
-		$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
-		$viewer->assign('HEADER_SCRIPTS', $this->getHeaderScripts($request));
-		$viewer->view('Promotions.tpl', $qualifiedModuleName);
-	}
-
+        $viewer = $this->getViewer($request);
+        $viewer->assign('PROMOTIONS', $promotions);
+        $viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
+        $viewer->assign('HEADER_SCRIPTS', $this->getHeaderScripts($request));
+        $viewer->view('Promotions.tpl', $qualifiedModuleName);
+    }
 }

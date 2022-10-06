@@ -8,24 +8,24 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-function vtws_file_retrieve($file_id, $user) {
-
+function vtws_file_retrieve($file_id, $user)
+{
     global $log, $adb;
 
     $idComponents = vtws_getIdComponents($file_id);
     $attachmentId = $idComponents[1];
-    
+
     $id = vtws_getAttachmentRecordId($attachmentId);
-    if(!$id || !$attachmentId) {
+    if (!$id || !$attachmentId) {
         throw new WebServiceException(WebServiceErrorCode::$RECORDNOTFOUND, "Record you are trying to access is not found");
     } else {
         $id = vtws_getId($idComponents[0], $id);
     }
-    
+
     $webserviceObject = VtigerWebserviceObject::fromId($adb, $id);
     $handlerPath = $webserviceObject->getHandlerPath();
     $handlerClass = $webserviceObject->getHandlerClass();
-    
+
     require_once $handlerPath;
     $handler = new $handlerClass($webserviceObject, $user, $adb, $log);
 
@@ -48,5 +48,3 @@ function vtws_file_retrieve($file_id, $user) {
 
     return $response;
 }
-
-?>

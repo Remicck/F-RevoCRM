@@ -8,36 +8,42 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class PDFTemplates_ListAjax_View extends PDFTemplates_List_View {
-	function __construct() {
-		parent::__construct();
-		$this->exposeMethod('getRecordsCount');
-		$this->exposeMethod('getPageCount');
-		$this->exposeMethod('previewTemplate');
-	}
+class PDFTemplates_ListAjax_View extends PDFTemplates_List_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('getRecordsCount');
+        $this->exposeMethod('getPageCount');
+        $this->exposeMethod('previewTemplate');
+    }
 
-	function preProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function preProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function postProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function process(Vtiger_Request $request) {
-		$mode = $request->get('mode');
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->get('mode');
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
 
-	public function previewTemplate(Vtiger_Request $request){
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
-		$recordId = $request->get('record');
-		$templateRecordModel = PDFTemplates_Record_Model::getInstanceById($recordId);
-		$viewer->assign('RECORD_MODEL',$templateRecordModel);
-		$viewer->view('PreviewPDFTemplate.tpl', $moduleName);
-	}
+    public function previewTemplate(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
+        $recordId = $request->get('record');
+        $templateRecordModel = PDFTemplates_Record_Model::getInstanceById($recordId);
+        $viewer->assign('RECORD_MODEL', $templateRecordModel);
+        $viewer->view('PreviewPDFTemplate.tpl', $moduleName);
+    }
 }

@@ -3,7 +3,7 @@
 /*******************************************************************************
  * The contents of this file are subject to the following licences:
  * - SugarCRM Public License Version 1.1.2 http://www.sugarcrm.com/SPL
- * - vtiger CRM Public License Version 1.0 
+ * - vtiger CRM Public License Version 1.0
  * You may not use this file except in compliance with the License
  * Software distributed under the License is distributed on an  "AS IS" basis,
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
@@ -15,7 +15,7 @@
  * Portions created by Vicus are Copyright (C) Vicus.
  * All Rights Reserved.
  * Feel free to use / redistribute these languagefiles under the VPL 1.0.
- * This translations is based on earlier work of: 
+ * This translations is based on earlier work of:
  * - IT-Online.nl <www.it-online.nl>
  * - Weltevree.org <www.Weltevree.org>
  ********************************************************************************/
@@ -48,4 +48,3 @@ $PHPMAILER_LANG["connect_host"] = 'SMTP Error: Kan niet verbinden met SMTP host.
 $PHPMAILER_LANG["file_access"] = 'Kan de het bestand niet benaderen: ';
 $PHPMAILER_LANG["file_open"] = 'File Error: bestand kan niet worden geopend: ';
 $PHPMAILER_LANG["encoding"] = 'Onbekende codering: ';
-?>

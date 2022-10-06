@@ -8,28 +8,29 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Reports_EditFolder_View extends Vtiger_IndexAjax_View {
+class Reports_EditFolder_View extends Vtiger_IndexAjax_View
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
-	
-	public function process (Vtiger_Request $request) {
-		
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
-		$folderId = $request->get('folderid');
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
+        $folderId = $request->get('folderid');
 
-		if ($folderId) {
-			$folderModel = Reports_Folder_Model::getInstanceById($folderId);
-		} else {
-			$folderModel = Reports_Folder_Model::getInstance();
-		}
-		
-		$viewer->assign('FOLDER_MODEL', $folderModel);
-		$viewer->assign('MODULE',$moduleName);
-		$viewer->view('EditFolder.tpl', $moduleName);
-	}
+        if ($folderId) {
+            $folderModel = Reports_Folder_Model::getInstanceById($folderId);
+        } else {
+            $folderModel = Reports_Folder_Model::getInstance();
+        }
+
+        $viewer->assign('FOLDER_MODEL', $folderModel);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->view('EditFolder.tpl', $moduleName);
+    }
 }

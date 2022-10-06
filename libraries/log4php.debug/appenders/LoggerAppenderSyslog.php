@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,16 +12,18 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  * @subpackage appenders
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
- 
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+}
+
 require_once(LOG4PHP_DIR . '/LoggerAppenderSkeleton.php');
 require_once(LOG4PHP_DIR . '/LoggerLevel.php');
 require_once(LOG4PHP_DIR . '/LoggerLog.php');
@@ -31,7 +33,7 @@ require_once(LOG4PHP_DIR . '/LoggerLog.php');
  *
  * Levels are mapped as follows:
  * - <b>level &gt;= FATAL</b> to LOG_ALERT
- * - <b>FATAL &gt; level &gt;= ERROR</b> to LOG_ERR 
+ * - <b>FATAL &gt; level &gt;= ERROR</b> to LOG_ERR
  * - <b>ERROR &gt; level &gt;= WARN</b> to LOG_WARNING
  * - <b>WARN  &gt; level &gt;= INFO</b> to LOG_INFO
  * - <b>INFO  &gt; level &gt;= DEBUG</b> to LOG_DEBUG
@@ -40,39 +42,39 @@ require_once(LOG4PHP_DIR . '/LoggerLog.php');
  * @version $Revision: 1.11 $
  * @package log4php
  * @subpackage appenders
- */ 
-class LoggerAppenderSyslog extends LoggerAppenderSkeleton {
-    
+ */
+class LoggerAppenderSyslog extends LoggerAppenderSkeleton
+{
     /**
      * Constructor
      *
      * @param string $name appender name
      */
-    function LoggerAppenderSyslog($name)
+    public function LoggerAppenderSyslog($name)
     {
         $this->LoggerAppenderSkeleton($name);
     }
 
-    function activateOptions()
+    public function activateOptions()
     {
         define_syslog_variables();
         $this->closed = false;
     }
 
-    function close() 
+    public function close()
     {
         closelog();
         $this->closed = true;
     }
 
-    function append($event)
+    public function append($event)
     {
         $level   = $event->getLevel();
         $message = $event->getRenderedMessage();
         if ($level->isGreaterOrEqual(LoggerLevel::getLevelFatal())) {
             syslog(LOG_ALERT, $message);
         } elseif ($level->isGreaterOrEqual(LoggerLevel::getLevelError())) {
-            syslog(LOG_ERR, $message);        
+            syslog(LOG_ERR, $message);
         } elseif ($level->isGreaterOrEqual(LoggerLevel::getLevelWarn())) {
             syslog(LOG_WARNING, $message);
         } elseif ($level->isGreaterOrEqual(LoggerLevel::getLevelInfo())) {
@@ -82,4 +84,3 @@ class LoggerAppenderSyslog extends LoggerAppenderSkeleton {
         }
     }
 }
-?>

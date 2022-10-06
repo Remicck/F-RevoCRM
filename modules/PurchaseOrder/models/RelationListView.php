@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class PurchaseOrder_RelationListView_Model extends Inventory_RelationListView_Model {}
-?>
+class PurchaseOrder_RelationListView_Model extends Inventory_RelationListView_Model
+{
+}

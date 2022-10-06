@@ -13,14 +13,13 @@ require_once('vtlib/Vtiger/LayoutImport.php');
  * Layout Manager class for vtiger Modules.
  * @package vtlib
  */
-class Vtiger_Layout extends Vtiger_LayoutImport {
-
-	/**
-	 * Constructor
-	 */
-	function __construct() {
-        
-		parent::__construct();
-	}
+class Vtiger_Layout extends Vtiger_LayoutImport
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 }
-?>

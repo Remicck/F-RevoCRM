@@ -7,15 +7,15 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-class Mobile_WS_Logout extends Mobile_WS_Controller {
+class Mobile_WS_Logout extends Mobile_WS_Controller
+{
+    public function process(Mobile_API_Request $request)
+    {
+        Mobile_API_Session::destroy();
 
-	function process(Mobile_API_Request $request) {
-		Mobile_API_Session::destroy();
-		
-		$response = new Mobile_API_Response();
-		$result = array( 'logout' => true );
-		$response->setResult($result);
-		return $response;
-	}
-	
+        $response = new Mobile_API_Response();
+        $result = array( 'logout' => true );
+        $response->setResult($result);
+        return $response;
+    }
 }

@@ -17,8 +17,8 @@
  * @subpackage TemplateResources
  * @deprecated
  */
-class Smarty_Internal_Resource_Registered extends Smarty_Resource {
-
+class Smarty_Internal_Resource_Registered extends Smarty_Resource
+{
     /**
      * populate Source Object with meta data from Resource
      *
@@ -89,7 +89,4 @@ class Smarty_Internal_Resource_Registered extends Smarty_Resource {
     {
         return basename($source->name);
     }
-
 }
-
-?>

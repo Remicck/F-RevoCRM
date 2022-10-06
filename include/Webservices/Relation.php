@@ -8,15 +8,16 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-function GetRelatedList($module,$relatedmodule,$focus,$query,$button,$returnset,$id='',$edit_val='',$del_val='',$skipActions=false) {
-	return array( 'query' => $query , 'entries' => array() );
+function GetRelatedList($module, $relatedmodule, $focus, $query, $button, $returnset, $id='', $edit_val='', $del_val='', $skipActions=false)
+{
+    return array( 'query' => $query , 'entries' => array() );
 }
 
 /**
  * Function that returns Activity History Query
  * @return <String>
  */
-function GetHistory($parentmodule,$query,$id){
+function GetHistory($parentmodule, $query, $id)
+{
     return array('query' => $query);
 }
-?>

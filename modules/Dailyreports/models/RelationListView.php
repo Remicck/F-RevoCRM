@@ -8,79 +8,80 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Dailyreports_RelationListView_Model extends Vtiger_RelationListView_Model {
+class Dailyreports_RelationListView_Model extends Vtiger_RelationListView_Model
+{
+    public function getHeaders()
+    {
+        $relationModel = $this->getRelationModel();
+        $relatedModuleModel = $relationModel->getRelationModuleModel();
 
-	public function getHeaders() {
-		$relationModel = $this->getRelationModel();
-		$relatedModuleModel = $relationModel->getRelationModuleModel();
+        $summaryFieldsList = $relatedModuleModel->getSummaryViewFieldsList();
 
-		$summaryFieldsList = $relatedModuleModel->getSummaryViewFieldsList();
+        $headerFields = array();
+        if (count($summaryFieldsList) > 0) {
+            foreach ($summaryFieldsList as $fieldName => $fieldModel) {
+                $headerFields[$fieldName] = $fieldModel;
+            }
+        } else {
+            $headerFieldNames = $relatedModuleModel->getRelatedHistoryListFields();
+            foreach ($headerFieldNames as $fieldName) {
+                $headerFields[$fieldName] = $relatedModuleModel->getField($fieldName);
+            }
+        }
+        return $headerFields;
+    }
 
-		$headerFields = array();
-		if(count($summaryFieldsList) > 0) {
-			foreach($summaryFieldsList as $fieldName => $fieldModel) {
-				$headerFields[$fieldName] = $fieldModel;
-			}
-		} else {
-			$headerFieldNames = $relatedModuleModel->getRelatedHistoryListFields();
-			foreach($headerFieldNames as $fieldName) {
-				$headerFields[$fieldName] = $relatedModuleModel->getField($fieldName);
-			}
-		}
-		return $headerFields;
-	}
-	
-	public function getEntries($pagingModel) {
-		$db = PearDatabase::getInstance();
-		$parentModule = $this->getParentRecordModel()->getModule();
-		$relationModule = $this->getRelationModel()->getRelationModuleModel();
-		$relationModuleName = $relationModule->get('name');
-		$relatedColumnFields = $relationModule->getConfigureRelatedListFields();
-		if(count($relatedColumnFields) <= 0){
-			$relatedColumnFields = $relationModule->getRelatedHistoryListFields();
-		}
+    public function getEntries($pagingModel)
+    {
+        $db = PearDatabase::getInstance();
+        $parentModule = $this->getParentRecordModel()->getModule();
+        $relationModule = $this->getRelationModel()->getRelationModuleModel();
+        $relationModuleName = $relationModule->get('name');
+        $relatedColumnFields = $relationModule->getConfigureRelatedListFields();
+        if (count($relatedColumnFields) <= 0) {
+            $relatedColumnFields = $relationModule->getRelatedHistoryListFields();
+        }
 
-		if($relationModuleName == 'Calendar') {
-			//Adding visibility in the related list, showing records based on the visibility
-			$relatedColumnFields['visibility'] = 'visibility';
-		}
+        if ($relationModuleName == 'Calendar') {
+            //Adding visibility in the related list, showing records based on the visibility
+            $relatedColumnFields['visibility'] = 'visibility';
+        }
 
-		$query = $this->getRelationQuery();
+        $query = $this->getRelationQuery();
 
-		if ($this->get('whereCondition') && is_array($this->get('whereCondition'))) {
-			$currentUser = Users_Record_Model::getCurrentUserModel();
-			$queryGenerator = new QueryGenerator($relationModuleName, $currentUser);
-			$queryGenerator->setFields(array_values($relatedColumnFields));
-			$whereCondition = $this->get('whereCondition');
-			foreach ($whereCondition as $fieldName => $fieldValue) {
-				if (is_array($fieldValue)) {
-					$comparator = $fieldValue[1];
-					$searchValue = $fieldValue[2];
-					$type = $fieldValue[3];
-					if ($type == 'time') {
-						$searchValue = Vtiger_Time_UIType::getTimeValueWithSeconds($searchValue);
-					}
-					$queryGenerator->addCondition($fieldName, $searchValue, $comparator, "AND");
-				}
-			}
-			$whereQuerySplit = split("WHERE", $queryGenerator->getWhereClause());
-			if($parentModuleName == 'Accounts' && $relationModuleName == 'Calendar' && (stripos($query, "GROUP BY") !== false)) {
-				$splitQuery = split('GROUP BY', $query);
-				$query = $splitQuery[0]." AND ".$whereQuerySplit[1].' GROUP BY '.$splitQuery[1];
-			} else {
-				$query.=" AND " . $whereQuerySplit[1];
-			}
-		}
+        if ($this->get('whereCondition') && is_array($this->get('whereCondition'))) {
+            $currentUser = Users_Record_Model::getCurrentUserModel();
+            $queryGenerator = new QueryGenerator($relationModuleName, $currentUser);
+            $queryGenerator->setFields(array_values($relatedColumnFields));
+            $whereCondition = $this->get('whereCondition');
+            foreach ($whereCondition as $fieldName => $fieldValue) {
+                if (is_array($fieldValue)) {
+                    $comparator = $fieldValue[1];
+                    $searchValue = $fieldValue[2];
+                    $type = $fieldValue[3];
+                    if ($type == 'time') {
+                        $searchValue = Vtiger_Time_UIType::getTimeValueWithSeconds($searchValue);
+                    }
+                    $queryGenerator->addCondition($fieldName, $searchValue, $comparator, "AND");
+                }
+            }
+            $whereQuerySplit = split("WHERE", $queryGenerator->getWhereClause());
+            if ($parentModuleName == 'Accounts' && $relationModuleName == 'Calendar' && (stripos($query, "GROUP BY") !== false)) {
+                $splitQuery = split('GROUP BY', $query);
+                $query = $splitQuery[0]." AND ".$whereQuerySplit[1].' GROUP BY '.$splitQuery[1];
+            } else {
+                $query.=" AND " . $whereQuerySplit[1];
+            }
+        }
 
-		$startIndex = $pagingModel->getStartIndex();
-		$pageLimit = $pagingModel->getPageLimit();
+        $startIndex = $pagingModel->getStartIndex();
+        $pageLimit = $pagingModel->getPageLimit();
 
-		$orderBy = $this->getForSql('orderby');
-		$sortOrder = $this->getForSql('sortorder');
-		if($orderBy) {
-
+        $orderBy = $this->getForSql('orderby');
+        $sortOrder = $this->getForSql('sortorder');
+        if ($orderBy) {
             $orderByFieldModuleModel = $relationModule->getFieldByColumn($orderBy);
-            if($orderByFieldModuleModel && $orderByFieldModuleModel->isReferenceField()) {
+            if ($orderByFieldModuleModel && $orderByFieldModuleModel->isReferenceField()) {
                 //If reference field then we need to perform a join with crmentity with the related to field
                 $queryComponents = $split = preg_split('/ where /i', $query);
                 $selectAndFromClause = $queryComponents[0];
@@ -91,74 +92,74 @@ class Dailyreports_RelationListView_Model extends Vtiger_RelationListView_Model 
                                         $qualifiedOrderBy.'.crmid ';
                 $query = $selectAndFromClause.' WHERE '.$whereCondition;
                 $query .= ' ORDER BY '.$qualifiedOrderBy.'.label '.$sortOrder;
-            } elseif($orderByFieldModuleModel && $orderByFieldModuleModel->isOwnerField()) {
-				 $query .= ' ORDER BY CONCAT(vtiger_users.first_name, " ", vtiger_users.last_name) '.$sortOrder;
-			} else{
+            } elseif ($orderByFieldModuleModel && $orderByFieldModuleModel->isOwnerField()) {
+                $query .= ' ORDER BY CONCAT(vtiger_users.first_name, " ", vtiger_users.last_name) '.$sortOrder;
+            } else {
                 // Qualify the the column name with table to remove ambugity
                 $qualifiedOrderBy = $orderBy;
                 $orderByField = $relationModule->getFieldByColumn($orderBy);
                 if ($orderByField) {
-					$qualifiedOrderBy = $relationModule->getOrderBySql($qualifiedOrderBy);
-				}
+                    $qualifiedOrderBy = $relationModule->getOrderBySql($qualifiedOrderBy);
+                }
                 $query = "$query ORDER BY $qualifiedOrderBy $sortOrder";
-				}
-			}
+            }
+        }
 
-		$limitQuery = $query .' LIMIT '.$startIndex.','.$pageLimit;
-		$result = $db->pquery($limitQuery, array());
-		$relatedRecordList = array();
-		$currentUser = Users_Record_Model::getCurrentUserModel();
-		$groupsIds = Vtiger_Util_Helper::getGroupsIdsForUsers($currentUser->getId());
-		for($i=0; $i< $db->num_rows($result); $i++ ) {
-			$row = $db->fetch_row($result,$i);
+        $limitQuery = $query .' LIMIT '.$startIndex.','.$pageLimit;
+        $result = $db->pquery($limitQuery, array());
+        $relatedRecordList = array();
+        $currentUser = Users_Record_Model::getCurrentUserModel();
+        $groupsIds = Vtiger_Util_Helper::getGroupsIdsForUsers($currentUser->getId());
+        for ($i=0; $i< $db->num_rows($result); $i++) {
+            $row = $db->fetch_row($result, $i);
 
-			$newRow = array();
-			foreach($row as $col=>$val){
-				if(array_key_exists($col,$relatedColumnFields)){
+            $newRow = array();
+            foreach ($row as $col=>$val) {
+                if (array_key_exists($col, $relatedColumnFields)) {
                     $newRow[$relatedColumnFields[$col]] = $val;
                 }
             }
 
-			//To show the value of "Assigned to"
-			$ownerId = $row['smownerid'];
-			$newRow['assigned_user_id'] = $row['smownerid'];
-			if ($relationModuleName == 'Calendar') {
-				$visibleFields = array('activitytype', 'date_start', 'time_start', 'due_date', 'time_end', 'assigned_user_id', 'visibility', 'smownerid', 'parent_id');
-				$visibility = true;
-				if (in_array($ownerId, $groupsIds)) {
-					$visibility = false;
-				} else if ($ownerId == $currentUser->getId()) {
-					$visibility = false;
-				}
-				if (!$currentUser->isAdminUser() && $newRow['visibility'] == 'Private' && $ownerId && $visibility) {
-					foreach ($newRow as $data => $value) {
-						if (in_array($data, $visibleFields) != -1) {
-							unset($newRow[$data]);
-						}
-					}
-					$newRow['subject'] = vtranslate('Busy', 'Events') . '*';
-				}
-			}
-			$record = Vtiger_Record_Model::getCleanInstance($relationModule->get('name'));
+            //To show the value of "Assigned to"
+            $ownerId = $row['smownerid'];
+            $newRow['assigned_user_id'] = $row['smownerid'];
+            if ($relationModuleName == 'Calendar') {
+                $visibleFields = array('activitytype', 'date_start', 'time_start', 'due_date', 'time_end', 'assigned_user_id', 'visibility', 'smownerid', 'parent_id');
+                $visibility = true;
+                if (in_array($ownerId, $groupsIds)) {
+                    $visibility = false;
+                } elseif ($ownerId == $currentUser->getId()) {
+                    $visibility = false;
+                }
+                if (!$currentUser->isAdminUser() && $newRow['visibility'] == 'Private' && $ownerId && $visibility) {
+                    foreach ($newRow as $data => $value) {
+                        if (in_array($data, $visibleFields) != -1) {
+                            unset($newRow[$data]);
+                        }
+                    }
+                    $newRow['subject'] = vtranslate('Busy', 'Events') . '*';
+                }
+            }
+            $record = Vtiger_Record_Model::getCleanInstance($relationModule->get('name'));
             $record->setData($newRow)->setModuleFromInstance($relationModule);
-			$record->setId($row['crmid']);
-			if($relationModule->get('name') == 'Calendar'){
-				$activityid = $row['crmid'];
-				$activitytyperesult = $db->pquery("select activitytype from vtiger_activity left join vtiger_crmentity on vtiger_crmentity.crmid=vtiger_activity.activityid where deleted <> 1 and activityid=$activityid");
-				$activitytype = $db->query_result($activitytyperesult, 0, 'activitytype');
-				$record->set('CalendarModule', $activitytype == 'Task' ? 'Calendar' : 'Events');
-			}
-			$relatedRecordList[$row['crmid']] = $record;
-		}
-		$pagingModel->calculatePageRange($relatedRecordList);
+            $record->setId($row['crmid']);
+            if ($relationModule->get('name') == 'Calendar') {
+                $activityid = $row['crmid'];
+                $activitytyperesult = $db->pquery("select activitytype from vtiger_activity left join vtiger_crmentity on vtiger_crmentity.crmid=vtiger_activity.activityid where deleted <> 1 and activityid=$activityid");
+                $activitytype = $db->query_result($activitytyperesult, 0, 'activitytype');
+                $record->set('CalendarModule', $activitytype == 'Task' ? 'Calendar' : 'Events');
+            }
+            $relatedRecordList[$row['crmid']] = $record;
+        }
+        $pagingModel->calculatePageRange($relatedRecordList);
 
-		$nextLimitQuery = $query. ' LIMIT '.($startIndex+$pageLimit).' , 1';
-		$nextPageLimitResult = $db->pquery($nextLimitQuery, array());
-		if($db->num_rows($nextPageLimitResult) > 0){
-			$pagingModel->set('nextPageExists', true);
-		}else{
-			$pagingModel->set('nextPageExists', false);
-		}
-		return $relatedRecordList;
-	}
+        $nextLimitQuery = $query. ' LIMIT '.($startIndex+$pageLimit).' , 1';
+        $nextPageLimitResult = $db->pquery($nextLimitQuery, array());
+        if ($db->num_rows($nextPageLimitResult) > 0) {
+            $pagingModel->set('nextPageExists', true);
+        } else {
+            $pagingModel->set('nextPageExists', false);
+        }
+        return $relatedRecordList;
+    }
 }

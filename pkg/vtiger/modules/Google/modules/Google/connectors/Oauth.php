@@ -19,10 +19,10 @@ vimport('~~/include/Zend/Gdata.php');
 vimport('~~/include/Zend/Crypt/Rsa/Key/Private.php');
 vimport('~~/include/Zend/Gdata/Query.php');
 
-class Google_Oauth_Connector {
-
-    var $db = false;
-    var $userId = false;
+class Google_Oauth_Connector
+{
+    public $db = false;
+    public $userId = false;
     protected $_scopes = array(
         'Contacts' => 'http://www.google.com/m8/feeds',
         'Calendar' => 'http://www.google.com/calendar/feeds',
@@ -40,17 +40,19 @@ class Google_Oauth_Connector {
         'callbackUrl' => '' // Will be updated at runtime if not specified.
     );
 
-    function __construct($callbackUrl, $userId = false) {
-//		if (empty($this->_oauthOptions['callbackUrl'])) {
-//			$this->_oauthOptions['callbackUrl'] = $this->getCurrentUrl();
-//		}
+    public function __construct($callbackUrl, $userId = false)
+    {
+        //		if (empty($this->_oauthOptions['callbackUrl'])) {
+        //			$this->_oauthOptions['callbackUrl'] = $this->getCurrentUrl();
+        //		}
         self::initializeSchema();
         $this->userId = $userId;
         $this->_oauthOptions['callbackUrl'] = $callbackUrl;
         $this->db = PearDatabase::getInstance();
     }
 
-    protected function getCurrentUrl() {
+    protected function getCurrentUrl()
+    {
         global $_SERVER;
         /**
          * Filter php_self to avoid a security vulnerability.
@@ -72,25 +74,24 @@ class Google_Oauth_Connector {
         return $protocol . $host . $port . $php_request_uri;
     }
 
-    function hasStoredToken($service, $accessToken = false, $requestToken = false) {
-        if(!$this->userId)
+    public function hasStoredToken($service, $accessToken = false, $requestToken = false)
+    {
+        if (!$this->userId) {
             $this->userId = Users_Record_Model::getCurrentUserModel()->getId();
-        
-        if (!$accessToken && !$requestToken){
+        }
+
+        if (!$accessToken && !$requestToken) {
             $query = "SELECT  1 FROM vtiger_google_oauth WHERE  userid=? and service=?";
             $params = array($this->userId, $service);
-        }
-        else if ($accessToken){
+        } elseif ($accessToken) {
             $query = "SELECT  access_token FROM vtiger_google_oauth WHERE  userid=? and service=? AND access_token<>? AND access_token IS NOT NULL";
             $params = array($this->userId, $service, '');
-        }
-        else if ($requestToken){
+        } elseif ($requestToken) {
             $query = "SELECT  request_token FROM vtiger_google_oauth WHERE  userid=? and service=? AND request_token<>? AND request_token IS NOT NULL";
             $params = array($this->userId, $service, '');
         }
         $result = $this->db->pquery($query, $params);
         if ($this->db->num_rows($result) > 0) {
-
             return true;
         }
         return false;
@@ -101,7 +102,8 @@ class Google_Oauth_Connector {
      * Store token-data in DB instead of serializing in session.
      * Rebuild object with the token-data stored.
      */
-    protected function storeAccessToken($service, $token) {
+    protected function storeAccessToken($service, $token)
+    {
         $user = Users_Record_Model::getCurrentUserModel();
         $query = "INSERT INTO vtiger_google_oauth(service,access_token,userid) VALUES(?,?,?)";
         $params = array($service, base64_encode(serialize($token)), $user->getid());
@@ -113,10 +115,12 @@ class Google_Oauth_Connector {
         $this->db->pquery($query, $params);
     }
 
-    protected function retreiveAccessToken($service) {
-        if(!$this->userId)
+    protected function retreiveAccessToken($service)
+    {
+        if (!$this->userId) {
             $this->userId = Users_Record_Model::getCurrentUserModel()->getId();
-        
+        }
+
         $query = "SELECT access_token FROM vtiger_google_oauth WHERE userid=? AND service =?";
         $params = array($this->userId, $service);
 
@@ -126,17 +130,18 @@ class Google_Oauth_Connector {
         return $token;
     }
 
-    protected function storeRequestToken($service, $token) {
+    protected function storeRequestToken($service, $token)
+    {
         $user = Users_Record_Model::getCurrentUserModel();
         $query = "DELETE FROM vtiger_google_oauth where service=? and userid=?";
         $this->db->pquery($query, array($service, $user->getId()));
 
         $query = "INSERT INTO vtiger_google_oauth(service,request_token,userid) values(?,?,?)";
         $this->db->pquery($query, array($service, base64_encode(serialize($token)), $user->getId()));
-
     }
 
-    protected function retrieveRequestToken($service) {
+    protected function retrieveRequestToken($service)
+    {
         $user = Users_Record_Model::getCurrentUserModel();
 
         $query = "SELECT request_token FROM vtiger_google_oauth WHERE userid=? AND service =?";
@@ -148,18 +153,16 @@ class Google_Oauth_Connector {
         return $token;
     }
 
-    function getHttpClient($service) {
-
-        $token = NULL;
+    public function getHttpClient($service)
+    {
+        $token = null;
         if (!$this->hasStoredToken($service, true, false, $this->userId)) {
             $consumer = new Zend_Oauth_Consumer($this->_oauthOptions);
 
             if (isset($_GET['oauth_token'])) {
-
                 $token = $consumer->getAccessToken($_GET, $this->retrieveRequestToken($service));
                 $this->storeAccessToken($service, $token);
             } else {
-
                 $scope = isset($this->_scopes[$service]) ? $this->_scopes[$service] : false;
 
                 if ($scope === false) {
@@ -177,14 +180,16 @@ class Google_Oauth_Connector {
 
         return $token->getHttpClient($this->_oauthOptions);
     }
-    
-    
-	 public static function initializeSchema(){
-		 if(!Vtiger_Utils::CheckTable('vtiger_google_oauth')) {
-                Vtiger_Utils::CreateTable('vtiger_google_oauth',
-                        '(service varchar(64),request_token text,access_token text,userid int)',true);
-            }
-	 }
 
+
+     public static function initializeSchema()
+     {
+         if (!Vtiger_Utils::CheckTable('vtiger_google_oauth')) {
+             Vtiger_Utils::CreateTable(
+                 'vtiger_google_oauth',
+                 '(service varchar(64),request_token text,access_token text,userid int)',
+                 true
+             );
+         }
+     }
 }
-

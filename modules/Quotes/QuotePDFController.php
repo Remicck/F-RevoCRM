@@ -7,45 +7,48 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-	
+
 include_once 'include/InventoryPDFController.php';
 
-class Vtiger_QuotePDFController extends Vtiger_InventoryPDFController{
-	function buildHeaderModelTitle() {
-		$singularModuleNameKey = 'SINGLE_'.$this->moduleName;
-		$translatedSingularModuleLabel = getTranslatedString($singularModuleNameKey, $this->moduleName);
-		if($translatedSingularModuleLabel == $singularModuleNameKey) {
-			$translatedSingularModuleLabel = getTranslatedString($this->moduleName, $this->moduleName);
-		}
-		return sprintf("%s: %s", $translatedSingularModuleLabel, $this->focusColumnValue('quote_no'));
-	}
+class Vtiger_QuotePDFController extends Vtiger_InventoryPDFController
+{
+    public function buildHeaderModelTitle()
+    {
+        $singularModuleNameKey = 'SINGLE_'.$this->moduleName;
+        $translatedSingularModuleLabel = getTranslatedString($singularModuleNameKey, $this->moduleName);
+        if ($translatedSingularModuleLabel == $singularModuleNameKey) {
+            $translatedSingularModuleLabel = getTranslatedString($this->moduleName, $this->moduleName);
+        }
+        return sprintf("%s: %s", $translatedSingularModuleLabel, $this->focusColumnValue('quote_no'));
+    }
 
-	function getWatermarkContent() {
-		return $this->focusColumnValue('quotestatus');
-	}
+    public function getWatermarkContent()
+    {
+        return $this->focusColumnValue('quotestatus');
+    }
 
-	function buildHeaderModelColumnCenter() {
-		$modelColumn1 = parent::buildHeaderModelColumnCenter();
-		$modelColumn1['お見積書'] = '';
-		return $modelColumn1;
-	}
+    public function buildHeaderModelColumnCenter()
+    {
+        $modelColumn1 = parent::buildHeaderModelColumnCenter();
+        $modelColumn1['お見積書'] = '';
+        return $modelColumn1;
+    }
 
-	function buildHeaderModelColumnRight() {
-		$issueDateLabel = getTranslatedString('Issued Date', $this->moduleName);
-		$validDateLabel = getTranslatedString('Valid Date', $this->moduleName);
-		$billingAddressLabel = getTranslatedString('LBL_BILLING_ADDRESS', $this->moduleName);
-		$shippingAddressLabel = getTranslatedString('LBL_VENDOR_ADDRESS', $this->moduleName);
+    public function buildHeaderModelColumnRight()
+    {
+        $issueDateLabel = getTranslatedString('Issued Date', $this->moduleName);
+        $validDateLabel = getTranslatedString('Valid Date', $this->moduleName);
+        $billingAddressLabel = getTranslatedString('LBL_BILLING_ADDRESS', $this->moduleName);
+        $shippingAddressLabel = getTranslatedString('LBL_VENDOR_ADDRESS', $this->moduleName);
 
-		$modelColumn2 = array(
-				'dates' => array(
-					$issueDateLabel  => $this->formatDate(date("Y-m-d")),
-					$validDateLabel => $this->formatDate($this->focusColumnValue('validtill')),
-				),
-				$billingAddressLabel  => $this->buildHeaderBillingAddress(),
-				$shippingAddressLabel => $this->buildHeaderShippingAddress()
-			);
-		return $modelColumn2;
-	}
+        $modelColumn2 = array(
+                'dates' => array(
+                    $issueDateLabel  => $this->formatDate(date("Y-m-d")),
+                    $validDateLabel => $this->formatDate($this->focusColumnValue('validtill')),
+                ),
+                $billingAddressLabel  => $this->buildHeaderBillingAddress(),
+                $shippingAddressLabel => $this->buildHeaderShippingAddress()
+            );
+        return $modelColumn2;
+    }
 }
-
-?>

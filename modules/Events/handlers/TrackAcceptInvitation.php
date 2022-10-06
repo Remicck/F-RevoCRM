@@ -8,23 +8,21 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Events_TrackAcceptInvitation_Handler {
-
-	function acceptInvitation($data) {
-		global $current_user;
-		$eventId = $data['eventId'];
-		$userId = $data['userId'];
-		$current_user = Users_Privileges_Model::getInstanceById($userId);
-		$recordModel = Events_Record_Model::getInstanceById($eventId, 'Events');
-		$inviteeDetails = $recordModel->getInviteesDetails($userId);
-		if ($inviteeDetails[$userId] !== 'accepted') {
-			$recordModel->updateInvitationStatus($eventId, $userId, 'accepted');
-			$recordModel->set('assigned_user_id', $userId);
-			$recordModel->save();
-		}
-		echo 'Event added to your calendar - Thank you!';
-	}
-
+class Events_TrackAcceptInvitation_Handler
+{
+    public function acceptInvitation($data)
+    {
+        global $current_user;
+        $eventId = $data['eventId'];
+        $userId = $data['userId'];
+        $current_user = Users_Privileges_Model::getInstanceById($userId);
+        $recordModel = Events_Record_Model::getInstanceById($eventId, 'Events');
+        $inviteeDetails = $recordModel->getInviteesDetails($userId);
+        if ($inviteeDetails[$userId] !== 'accepted') {
+            $recordModel->updateInvitationStatus($eventId, $userId, 'accepted');
+            $recordModel->set('assigned_user_id', $userId);
+            $recordModel->save();
+        }
+        echo 'Event added to your calendar - Thank you!';
+    }
 }
-
-?>

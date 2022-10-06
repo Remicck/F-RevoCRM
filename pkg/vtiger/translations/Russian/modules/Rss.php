@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'RSS поток Источники',
     'LBL_ADD_FEED_SOURCE' => 'Добавить поток Источник',
@@ -16,19 +16,16 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Установить по умолчанию',
     'LBL_SENDER' => 'передатчик',
     'LBL_FEED_SOURCE' => 'Лента Источник',
-    'LBL_ENTER_FEED_SOURCE' => 'Введите поток Источник',  
+    'LBL_ENTER_FEED_SOURCE' => 'Введите поток Источник',
     'SINGLE_Rss' => 'RSS подача',
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss успешно сохранены',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss успешно сохранены',
     'JS_INVALID_RSS_URL' => 'Неверный Rss Адрес',
     'JS_RSS_MADE_AS_DEFAULT' => 'Rss Сделано Использовать по умолчанию',
-    
+
 
   'JS_NO_RECORDS' => 'Нет Записей',
 
 );
-
-
-?>

@@ -8,12 +8,10 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class DailyreportsHandler extends VTEventHandler {
-
-    public function handleEvent($handlerType, $data) {
-
+class DailyreportsHandler extends VTEventHandler
+{
+    public function handleEvent($handlerType, $data)
+    {
         echo "This handler has been called for the $name event";
-
     }
-
-} 
+}

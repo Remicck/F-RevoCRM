@@ -1,11 +1,11 @@
 <?php
 /**
  * Master Unit Test Suite file for HTTP_Session2
- * 
- * This top-level test suite file organizes 
- * all class test suite files, 
- * so that the full suite can be run 
- * by PhpUnit or via "pear run-tests -u". 
+ *
+ * This top-level test suite file organizes
+ * all class test suite files,
+ * so that the full suite can be run
+ * by PhpUnit or via "pear run-tests -u".
  *
  * PHP version 5
  *
@@ -27,7 +27,7 @@ if (version_compare(PHP_VERSION, "5.1.4") < 0) {
     // Cannnot run test suites
     echo 'Cannot run test suite via PhpUnit... requires at least PHP v5.1.4.' . PHP_EOL;
     echo 'Use "pear run-tests -p HTTP_Session2" to run the PHPT tests directly.' . PHP_EOL
-;
+    ;
     exit(1);
 }
 
@@ -61,11 +61,11 @@ define('HTTP_Session2_DIR_PHPT', dirname(__FILE__));
 
 /**
  * Master Unit Test Suite class for HTTP_Session2
- * 
- * This top-level test suite class organizes 
- * all class test suite files, 
- * so that the full suite can be run 
- * by PhpUnit or via "pear run-tests -up HTTP_Session2". 
+ *
+ * This top-level test suite class organizes
+ * all class test suite files,
+ * so that the full suite can be run
+ * by PhpUnit or via "pear run-tests -up HTTP_Session2".
  *
  * @category   XML
  * @package    HTTP_Session2
@@ -78,7 +78,6 @@ define('HTTP_Session2_DIR_PHPT', dirname(__FILE__));
  */
 class HTTP_Session2_AllTests
 {
-
     /**
      * Launches the TextUI test runner
      *
@@ -97,11 +96,12 @@ class HTTP_Session2_AllTests
      * @return PHPUnit_Framework_TestSuite a master test suite
      *                                     containing all class test suites
      * @uses PHPUnit_Framework_TestSuite
-     */ 
+     */
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite(
-            'HTTP_Session2 Full Suite of Unit Tests');
+            'HTTP_Session2 Full Suite of Unit Tests'
+        );
 
         /*
          * You must add each additional class-level test suite name here
@@ -128,4 +128,3 @@ if (PHPUnit_MAIN_METHOD == 'HTTP_Session2_AllTests::main') {
 }
 
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
-?>

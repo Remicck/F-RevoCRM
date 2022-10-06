@@ -11,454 +11,448 @@ require_once('include/database/PearDatabase.php');
 //require_once('modules/Reports/CannedReports.php');
 global $adb;
 
-$rptfolder = Array(Array('顧客企業と顧客担当者のレポート'=>'顧客企業と顧客担当者のレポート'),
-		   Array('見込み客のレポート'=>'見込み客のレポート'),
-	           Array('案件のレポート'=>'案件のレポート'),
-		   Array('活動のレポート'=>'活動のレポート'),
-		   Array('チケットのレポート'=>'チケットのレポート'),
-		   Array('製品のレポート'=>'製品のレポート'),
-		   Array('見積のレポート' =>'見積のレポート'),
-		   Array('発注のレポート'=>'発注のレポート'),
-		   Array('請求のレポート'=>'請求のレポート'),
-		   Array('受注のレポート'=>'受注のレポート'),
-		   Array('キャンペーンのレポート'=>'キャンペーンのレポート'),
-		   Array('メールのレポート'=>'メールのレポート'),
+$rptfolder = array(array('顧客企業と顧客担当者のレポート'=>'顧客企業と顧客担当者のレポート'),
+           array('見込み客のレポート'=>'見込み客のレポート'),
+               array('案件のレポート'=>'案件のレポート'),
+           array('活動のレポート'=>'活動のレポート'),
+           array('チケットのレポート'=>'チケットのレポート'),
+           array('製品のレポート'=>'製品のレポート'),
+           array('見積のレポート' =>'見積のレポート'),
+           array('発注のレポート'=>'発注のレポート'),
+           array('請求のレポート'=>'請求のレポート'),
+           array('受注のレポート'=>'受注のレポート'),
+           array('キャンペーンのレポート'=>'キャンペーンのレポート'),
+           array('メールのレポート'=>'メールのレポート'),
                   );
 
-$reportmodules = Array(Array('primarymodule'=>'Contacts','secondarymodule'=>'Accounts'),
-		       Array('primarymodule'=>'Contacts','secondarymodule'=>'Accounts'),
-		       Array('primarymodule'=>'Contacts','secondarymodule'=>'Potentials'),
-		       Array('primarymodule'=>'Leads','secondarymodule'=>''),
-		       Array('primarymodule'=>'Leads','secondarymodule'=>''),
-		       Array('primarymodule'=>'Potentials','secondarymodule'=>''),
-		       Array('primarymodule'=>'Potentials','secondarymodule'=>''),
-		       Array('primarymodule'=>'Calendar','secondarymodule'=>''),
-		       Array('primarymodule'=>'Calendar','secondarymodule'=>''),
-		       Array('primarymodule'=>'HelpDesk','secondarymodule'=>'Products'),
-		       Array('primarymodule'=>'HelpDesk','secondarymodule'=>''),
-  		       Array('primarymodule'=>'HelpDesk','secondarymodule'=>''),
-		       Array('primarymodule'=>'Products','secondarymodule'=>''),
-		       Array('primarymodule'=>'Products','secondarymodule'=>'Contacts'),
-		       Array('primarymodule'=>'Quotes','secondarymodule'=>''),
-		       Array('primarymodule'=>'Quotes','secondarymodule'=>''),
-		       Array('primarymodule'=>'PurchaseOrder','secondarymodule'=>'Contacts'),
-		       Array('primarymodule'=>'PurchaseOrder','secondarymodule'=>''),
-		       Array('primarymodule'=>'Invoice','secondarymodule'=>''),
-		       Array('primarymodule'=>'SalesOrder','secondarymodule'=>''),
-		       Array('primarymodule'=>'Campaigns','secondarymodule'=>'')
-		      );
+$reportmodules = array(array('primarymodule'=>'Contacts','secondarymodule'=>'Accounts'),
+               array('primarymodule'=>'Contacts','secondarymodule'=>'Accounts'),
+               array('primarymodule'=>'Contacts','secondarymodule'=>'Potentials'),
+               array('primarymodule'=>'Leads','secondarymodule'=>''),
+               array('primarymodule'=>'Leads','secondarymodule'=>''),
+               array('primarymodule'=>'Potentials','secondarymodule'=>''),
+               array('primarymodule'=>'Potentials','secondarymodule'=>''),
+               array('primarymodule'=>'Calendar','secondarymodule'=>''),
+               array('primarymodule'=>'Calendar','secondarymodule'=>''),
+               array('primarymodule'=>'HelpDesk','secondarymodule'=>'Products'),
+               array('primarymodule'=>'HelpDesk','secondarymodule'=>''),
+               array('primarymodule'=>'HelpDesk','secondarymodule'=>''),
+               array('primarymodule'=>'Products','secondarymodule'=>''),
+               array('primarymodule'=>'Products','secondarymodule'=>'Contacts'),
+               array('primarymodule'=>'Quotes','secondarymodule'=>''),
+               array('primarymodule'=>'Quotes','secondarymodule'=>''),
+               array('primarymodule'=>'PurchaseOrder','secondarymodule'=>'Contacts'),
+               array('primarymodule'=>'PurchaseOrder','secondarymodule'=>''),
+               array('primarymodule'=>'Invoice','secondarymodule'=>''),
+               array('primarymodule'=>'SalesOrder','secondarymodule'=>''),
+               array('primarymodule'=>'Campaigns','secondarymodule'=>'')
+              );
 
-$selectcolumns = Array(Array(
+$selectcolumns = array(array(
                              'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
-							 'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
+                             'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
                              'vtiger_contactsubdetails:leadsource:Contacts_Lead_Source:leadsource:V',
                              'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
-			     'vtiger_account:industry:Accounts_industry:industry:V',
-			     'vtiger_contactdetails:email:Contacts_Email:email:E'),
+                 'vtiger_account:industry:Accounts_industry:industry:V',
+                 'vtiger_contactdetails:email:Contacts_Email:email:E'),
 
-		       Array(
-				'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
-				'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
+               array(
+                'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
+                'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
                              'vtiger_contactsubdetails:leadsource:Contacts_Lead_Source:leadsource:V',
                              'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
                              'vtiger_account:industry:Accounts_industry:industry:V',
                              'vtiger_contactdetails:email:Contacts_Email:email:E'),
 
-		       Array(
-				'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
-				'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
+               array(
+                'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
+                'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
                              'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
                              'vtiger_contactdetails:email:Contacts_Email:email:E',
                              'vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
                              'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V'),
 
-		       Array(
-				'vtiger_leaddetails:lastname:Leads_Last_Name:lastname:V',
-				'vtiger_leaddetails:firstname:Leads_First_Name:firstname:V',
-			     'vtiger_leaddetails:company:Leads_Company:company:V',
-			     'vtiger_leaddetails:email:Leads_Email:email:E',
-			     'vtiger_leaddetails:leadsource:Leads_Lead_Source:leadsource:V'),
+               array(
+                'vtiger_leaddetails:lastname:Leads_Last_Name:lastname:V',
+                'vtiger_leaddetails:firstname:Leads_First_Name:firstname:V',
+                 'vtiger_leaddetails:company:Leads_Company:company:V',
+                 'vtiger_leaddetails:email:Leads_Email:email:E',
+                 'vtiger_leaddetails:leadsource:Leads_Lead_Source:leadsource:V'),
 
-		       Array(
-				'vtiger_leaddetails:lastname:Leads_Last_Name:lastname:V',
-				'vtiger_leaddetails:firstname:Leads_First_Name:firstname:V',
+               array(
+                'vtiger_leaddetails:lastname:Leads_Last_Name:lastname:V',
+                'vtiger_leaddetails:firstname:Leads_First_Name:firstname:V',
                              'vtiger_leaddetails:company:Leads_Company:company:V',
                              'vtiger_leaddetails:email:Leads_Email:email:E',
-			     'vtiger_leaddetails:leadsource:Leads_Lead_Source:leadsource:V',
-			     'vtiger_leaddetails:leadstatus:Leads_Lead_Status:leadstatus:V'),
+                 'vtiger_leaddetails:leadsource:Leads_Lead_Source:leadsource:V',
+                 'vtiger_leaddetails:leadstatus:Leads_Lead_Status:leadstatus:V'),
 
-		       Array('vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
+               array('vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
                              'vtiger_potential:amount:Potentials_Amount:amount:N',
                              'vtiger_potential:potentialtype:Potentials_Type:opportunity_type:V',
                              'vtiger_potential:leadsource:Potentials_Lead_Source:leadsource:V',
                              'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V'),
 
-		       Array('vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
+               array('vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
                              'vtiger_potential:amount:Potentials_Amount:amount:N',
                              'vtiger_potential:potentialtype:Potentials_Type:opportunity_type:V',
                              'vtiger_potential:leadsource:Potentials_Lead_Source:leadsource:V',
-			     'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V'),
+                 'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V'),
 
-		       Array('vtiger_activity:subject:Calendar_Subject:subject:V',
-			     'vtiger_contactdetailsCalendar:lastname:Calendar_Contact_Name:contact_id:I',
+               array('vtiger_activity:subject:Calendar_Subject:subject:V',
+                 'vtiger_contactdetailsCalendar:lastname:Calendar_Contact_Name:contact_id:I',
                              'vtiger_activity:status:Calendar_Status:taskstatus:V',
                              'vtiger_activity:priority:Calendar_Priority:taskpriority:V',
                              'vtiger_usersCalendar:user_name:Calendar_Assigned_To:assigned_user_id:V'),
 
-		       Array('vtiger_activity:subject:Calendar_Subject:subject:V',
+               array('vtiger_activity:subject:Calendar_Subject:subject:V',
                              'vtiger_contactdetailsCalendar:lastname:Calendar_Contact_Name:contact_id:I',
                              'vtiger_activity:status:Calendar_Status:taskstatus:V',
                              'vtiger_activity:priority:Calendar_Priority:taskpriority:V',
                              'vtiger_usersCalendar:user_name:Calendar_Assigned_To:assigned_user_id:V'),
 
-        	       Array('vtiger_troubletickets:title:HelpDesk_Title:ticket_title:V',
+                   array('vtiger_troubletickets:title:HelpDesk_Title:ticket_title:V',
                              'vtiger_troubletickets:status:HelpDesk_Status:ticketstatus:V',
                              'vtiger_products:productname:Products_Product_Name:productname:V',
                              'vtiger_products:discontinued:Products_Product_Active:discontinued:V',
                              'vtiger_products:productcategory:Products_Product_Category:productcategory:V',
-			     'vtiger_products:manufacturer:Products_Manufacturer:manufacturer:V'),
+                 'vtiger_products:manufacturer:Products_Manufacturer:manufacturer:V'),
 
- 		       Array('vtiger_troubletickets:title:HelpDesk_Title:ticket_title:V',
+               array('vtiger_troubletickets:title:HelpDesk_Title:ticket_title:V',
                              'vtiger_troubletickets:priority:HelpDesk_Priority:ticketpriorities:V',
                              'vtiger_troubletickets:severity:HelpDesk_Severity:ticketseverities:V',
                              'vtiger_troubletickets:status:HelpDesk_Status:ticketstatus:V',
                              'vtiger_troubletickets:category:HelpDesk_Category:ticketcategories:V',
                              'vtiger_usersHelpDesk:user_name:HelpDesk_Assigned_To:assigned_user_id:V'),
 
-		       Array('vtiger_troubletickets:title:HelpDesk_Title:ticket_title:V',
+               array('vtiger_troubletickets:title:HelpDesk_Title:ticket_title:V',
                              'vtiger_troubletickets:priority:HelpDesk_Priority:ticketpriorities:V',
                              'vtiger_troubletickets:severity:HelpDesk_Severity:ticketseverities:V',
                              'vtiger_troubletickets:status:HelpDesk_Status:ticketstatus:V',
                              'vtiger_troubletickets:category:HelpDesk_Category:ticketcategories:V',
                              'vtiger_usersHelpDesk:user_name:HelpDesk_Assigned_To:assigned_user_id:V'),
 
- 		       Array('vtiger_products:productname:Products_Product_Name:productname:V',
+               array('vtiger_products:productname:Products_Product_Name:productname:V',
                              'vtiger_products:productcode:Products_Product_Code:productcode:V',
                              'vtiger_products:discontinued:Products_Product_Active:discontinued:V',
                              'vtiger_products:productcategory:Products_Product_Category:productcategory:V',
                              'vtiger_products:website:Products_Website:website:V',
-			     'vtiger_vendorRelProducts:vendorname:Products_Vendor_Name:vendor_id:I',
-			     'vtiger_products:mfr_part_no:Products_Mfr_PartNo:mfr_part_no:V'),
+                 'vtiger_vendorRelProducts:vendorname:Products_Vendor_Name:vendor_id:I',
+                 'vtiger_products:mfr_part_no:Products_Mfr_PartNo:mfr_part_no:V'),
 
-		       Array('vtiger_products:productname:Products_Product_Name:productname:V',
+               array('vtiger_products:productname:Products_Product_Name:productname:V',
                              'vtiger_products:manufacturer:Products_Manufacturer:manufacturer:V',
                              'vtiger_products:productcategory:Products_Product_Category:productcategory:V',
                              'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
                              'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
                              'vtiger_contactsubdetails:leadsource:Contacts_Lead_Source:leadsource:V'),
 
-		       Array('vtiger_quotes:subject:Quotes_Subject:subject:V',
+               array('vtiger_quotes:subject:Quotes_Subject:subject:V',
                              'vtiger_potentialRelQuotes:potentialname:Quotes_Potential_Name:potential_id:I',
                              'vtiger_quotes:quotestage:Quotes_Quote_Stage:quotestage:V',
                              'vtiger_quotes:contactid:Quotes_Contact_Name:contact_id:V',
                              'vtiger_usersRel1:user_name:Quotes_Inventory_Manager:assigned_user_id1:I',
                              'vtiger_accountQuotes:accountname:Quotes_Account_Name:account_id:I'),
 
-		       Array('vtiger_quotes:subject:Quotes_Subject:subject:V',
+               array('vtiger_quotes:subject:Quotes_Subject:subject:V',
                              'vtiger_potentialRelQuotes:potentialname:Quotes_Potential_Name:potential_id:I',
                              'vtiger_quotes:quotestage:Quotes_Quote_Stage:quotestage:V',
                              'vtiger_quotes:contactid:Quotes_Contact_Name:contact_id:V',
                              'vtiger_usersRel1:user_name:Quotes_Inventory_Manager:assigned_user_id1:I',
                              'vtiger_accountQuotes:accountname:Quotes_Account_Name:account_id:I',
-			     'vtiger_quotes:carrier:Quotes_Carrier:carrier:V',
-			     'vtiger_quotes:shipping:Quotes_Shipping:shipping:V'),
+                 'vtiger_quotes:carrier:Quotes_Carrier:carrier:V',
+                 'vtiger_quotes:shipping:Quotes_Shipping:shipping:V'),
 
-		       Array('vtiger_purchaseorder:subject:PurchaseOrder_Subject:subject:V',
-			     'vtiger_vendorRelPurchaseOrder:vendorname:PurchaseOrder_Vendor_Name:vendor_id:I',
-			     'vtiger_purchaseorder:tracking_no:PurchaseOrder_Tracking_Number:tracking_no:V',
-			     'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
-			     'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
-			     'vtiger_contactsubdetails:leadsource:Contacts_Lead_Source:leadsource:V',
-			     'vtiger_contactdetails:email:Contacts_Email:email:E'),
+               array('vtiger_purchaseorder:subject:PurchaseOrder_Subject:subject:V',
+                 'vtiger_vendorRelPurchaseOrder:vendorname:PurchaseOrder_Vendor_Name:vendor_id:I',
+                 'vtiger_purchaseorder:tracking_no:PurchaseOrder_Tracking_Number:tracking_no:V',
+                 'vtiger_contactdetails:lastname:Contacts_Last_Name:lastname:V',
+                 'vtiger_contactdetails:firstname:Contacts_First_Name:firstname:V',
+                 'vtiger_contactsubdetails:leadsource:Contacts_Lead_Source:leadsource:V',
+                 'vtiger_contactdetails:email:Contacts_Email:email:E'),
 
-		       Array('vtiger_purchaseorder:subject:PurchaseOrder_Subject:subject:V',
-			     'vtiger_vendorRelPurchaseOrder:vendorname:PurchaseOrder_Vendor_Name:vendor_id:I',
-			     'vtiger_purchaseorder:requisition_no:PurchaseOrder_Requisition_No:requisition_no:V',
+               array('vtiger_purchaseorder:subject:PurchaseOrder_Subject:subject:V',
+                 'vtiger_vendorRelPurchaseOrder:vendorname:PurchaseOrder_Vendor_Name:vendor_id:I',
+                 'vtiger_purchaseorder:requisition_no:PurchaseOrder_Requisition_No:requisition_no:V',
                              'vtiger_purchaseorder:tracking_no:PurchaseOrder_Tracking_Number:tracking_no:V',
-			     'vtiger_contactdetailsPurchaseOrder:lastname:PurchaseOrder_Contact_Name:contact_id:I',
-			     'vtiger_purchaseorder:carrier:PurchaseOrder_Carrier:carrier:V',
-			     'vtiger_purchaseorder:salescommission:PurchaseOrder_Sales_Commission:salescommission:N',
-			     'vtiger_purchaseorder:exciseduty:PurchaseOrder_Excise_Duty:exciseduty:N',
+                 'vtiger_contactdetailsPurchaseOrder:lastname:PurchaseOrder_Contact_Name:contact_id:I',
+                 'vtiger_purchaseorder:carrier:PurchaseOrder_Carrier:carrier:V',
+                 'vtiger_purchaseorder:salescommission:PurchaseOrder_Sales_Commission:salescommission:N',
+                 'vtiger_purchaseorder:exciseduty:PurchaseOrder_Excise_Duty:exciseduty:N',
                              'vtiger_usersPurchaseOrder:user_name:PurchaseOrder_Assigned_To:assigned_user_id:V'),
 
-		       Array('vtiger_invoice:subject:Invoice_Subject:subject:V',
-			     'vtiger_invoice:salesorderid:Invoice_Sales_Order:salesorder_id:I',
-			     'vtiger_invoice:customerno:Invoice_Customer_No:customerno:V',
-			     'vtiger_invoice:exciseduty:Invoice_Excise_Duty:exciseduty:N',
-			     'vtiger_invoice:salescommission:Invoice_Sales_Commission:salescommission:N',
-			     'vtiger_accountInvoice:accountname:Invoice_Account_Name:account_id:I'),
+               array('vtiger_invoice:subject:Invoice_Subject:subject:V',
+                 'vtiger_invoice:salesorderid:Invoice_Sales_Order:salesorder_id:I',
+                 'vtiger_invoice:customerno:Invoice_Customer_No:customerno:V',
+                 'vtiger_invoice:exciseduty:Invoice_Excise_Duty:exciseduty:N',
+                 'vtiger_invoice:salescommission:Invoice_Sales_Commission:salescommission:N',
+                 'vtiger_accountInvoice:accountname:Invoice_Account_Name:account_id:I'),
 
-		       Array('vtiger_salesorder:subject:SalesOrder_Subject:subject:V',
-			     'vtiger_quotesSalesOrder:subject:SalesOrder_Quote_Name:quote_id:I',
-			     'vtiger_contactdetailsSalesOrder:lastname:SalesOrder_Contact_Name:contact_id:I',
-			     'vtiger_salesorder:duedate:SalesOrder_Due_Date:duedate:D',
-			     'vtiger_salesorder:carrier:SalesOrder_Carrier:carrier:V',
-			     'vtiger_salesorder:sostatus:SalesOrder_Status:sostatus:V',
-			     'vtiger_accountSalesOrder:accountname:SalesOrder_Account_Name:account_id:I',
-			     'vtiger_salesorder:salescommission:SalesOrder_Sales_Commission:salescommission:N',
-			     'vtiger_salesorder:exciseduty:SalesOrder_Excise_Duty:exciseduty:N',
-			     'vtiger_usersSalesOrder:user_name:SalesOrder_Assigned_To:assigned_user_id:V'),
+               array('vtiger_salesorder:subject:SalesOrder_Subject:subject:V',
+                 'vtiger_quotesSalesOrder:subject:SalesOrder_Quote_Name:quote_id:I',
+                 'vtiger_contactdetailsSalesOrder:lastname:SalesOrder_Contact_Name:contact_id:I',
+                 'vtiger_salesorder:duedate:SalesOrder_Due_Date:duedate:D',
+                 'vtiger_salesorder:carrier:SalesOrder_Carrier:carrier:V',
+                 'vtiger_salesorder:sostatus:SalesOrder_Status:sostatus:V',
+                 'vtiger_accountSalesOrder:accountname:SalesOrder_Account_Name:account_id:I',
+                 'vtiger_salesorder:salescommission:SalesOrder_Sales_Commission:salescommission:N',
+                 'vtiger_salesorder:exciseduty:SalesOrder_Excise_Duty:exciseduty:N',
+                 'vtiger_usersSalesOrder:user_name:SalesOrder_Assigned_To:assigned_user_id:V'),
 
-		       Array('vtiger_campaign:campaignname:Campaigns_Campaign_Name:campaignname:V',
-			     'vtiger_campaign:campaigntype:Campaigns_Campaign_Type:campaigntype:V',
-			     'vtiger_campaign:targetaudience:Campaigns_Target_Audience:targetaudience:V',
-			     'vtiger_campaign:budgetcost:Campaigns_Budget_Cost:budgetcost:I',
-			     'vtiger_campaign:actualcost:Campaigns_Actual_Cost:actualcost:I',
-			     'vtiger_campaign:expectedrevenue:Campaigns_Expected_Revenue:expectedrevenue:I',
-			     'vtiger_campaign:expectedsalescount:Campaigns_Expected_Sales_Count:expectedsalescount:N',
-			     'vtiger_campaign:actualsalescount:Campaigns_Actual_Sales_Count:actualsalescount:N',
-			     'vtiger_usersCampaigns:user_name:Campaigns_Assigned_To:assigned_user_id:V')
-			);
+               array('vtiger_campaign:campaignname:Campaigns_Campaign_Name:campaignname:V',
+                 'vtiger_campaign:campaigntype:Campaigns_Campaign_Type:campaigntype:V',
+                 'vtiger_campaign:targetaudience:Campaigns_Target_Audience:targetaudience:V',
+                 'vtiger_campaign:budgetcost:Campaigns_Budget_Cost:budgetcost:I',
+                 'vtiger_campaign:actualcost:Campaigns_Actual_Cost:actualcost:I',
+                 'vtiger_campaign:expectedrevenue:Campaigns_Expected_Revenue:expectedrevenue:I',
+                 'vtiger_campaign:expectedsalescount:Campaigns_Expected_Sales_Count:expectedsalescount:N',
+                 'vtiger_campaign:actualsalescount:Campaigns_Actual_Sales_Count:actualsalescount:N',
+                 'vtiger_usersCampaigns:user_name:Campaigns_Assigned_To:assigned_user_id:V')
+            );
 
-$reports = Array(Array('reportname'=>'顧客担当者 ( 顧客企業別 )',
+$reports = array(array('reportname'=>'顧客担当者 ( 顧客企業別 )',
                        'reportfolder'=>'顧客企業と顧客担当者のレポート',
                        'description'=>'顧客企業に関連付けられた顧客担当者',
                        'reporttype'=>'tabular',
-		       'sortid'=>'','stdfilterid'=>'','advfilterid'=>'0'),
+               'sortid'=>'','stdfilterid'=>'','advfilterid'=>'0'),
 
-		 Array('reportname'=>'顧客担当者 ( 顧客企業なし )',
+         array('reportname'=>'顧客担当者 ( 顧客企業なし )',
                        'reportfolder'=>'顧客企業と顧客担当者のレポート',
                        'description'=>'顧客企業に関連付けられていない顧客担当者',
                        'reporttype'=>'tabular',
-		       'sortid'=>'','stdfilterid'=>'','advfilterid'=>'1'),
+               'sortid'=>'','stdfilterid'=>'','advfilterid'=>'1'),
 
-		 Array('reportname'=>'顧客担当者 ( 案件別 )',
+         array('reportname'=>'顧客担当者 ( 案件別 )',
                        'reportfolder'=>'顧客企業と顧客担当者のレポート',
                        'description'=>'案件に関連付けられた顧客担当者',
                        'reporttype'=>'tabular',
-		       'sortid'=>'','stdfilterid'=>'','advfilterid'=>'2'),
+               'sortid'=>'','stdfilterid'=>'','advfilterid'=>'2'),
 
-		 Array('reportname'=>'見込み客 ( 紹介元別 )',
+         array('reportname'=>'見込み客 ( 紹介元別 )',
                        'reportfolder'=>'見込み客のレポート',
                        'description'=>'見込み客 ( 紹介元別 )',
                        'reporttype'=>'summary',
-		       'sortid'=>'0','stdfilterid'=>'','advfilterid'=>''),
+               'sortid'=>'0','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'見込み客のステータス レポート',
+         array('reportname'=>'見込み客のステータス レポート',
                        'reportfolder'=>'見込み客のレポート',
                        'description'=>'見込み客のステータス レポート',
                        'reporttype'=>'summary',
                        'sortid'=>'1','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'案件パイプライン',
+         array('reportname'=>'案件パイプライン',
                        'reportfolder'=>'案件のレポート',
                        'description'=>'案件パイプライン',
                        'reporttype'=>'summary',
                        'sortid'=>'2','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'完了済み案件',
+         array('reportname'=>'完了済み案件',
                        'reportfolder'=>'案件のレポート',
                        'description'=>'受注済みの案件',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>'3'),
 
-		 Array('reportname'=>'先月の活動',
+         array('reportname'=>'先月の活動',
                        'reportfolder'=>'活動のレポート',
                        'description'=>'先月の活動',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'0','advfilterid'=>''),
 
-		 Array('reportname'=>'今月の活動',
+         array('reportname'=>'今月の活動',
                        'reportfolder'=>'活動のレポート',
                        'description'=>'今月の活動',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'1','advfilterid'=>''),
 
-		 Array('reportname'=>'チケット ( 製品別 )',
+         array('reportname'=>'チケット ( 製品別 )',
                        'reportfolder'=>'チケットのレポート',
                        'description'=>'製品に関連付けられたチケット',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'チケット ( 優先度別 )',
+         array('reportname'=>'チケット ( 優先度別 )',
                        'reportfolder'=>'チケットのレポート',
                        'description'=>'チケット ( 優先度別 )',
                        'reporttype'=>'summary',
                        'sortid'=>'3','stdfilterid'=>'','advfilterid'=>''),
 
- 		 Array('reportname'=>'未完了のチケット',
+         array('reportname'=>'未完了のチケット',
                        'reportfolder'=>'チケットのレポート',
                        'description'=>'未完了のチケット',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>'4'),
 
-		 Array('reportname'=>'製品の詳細',
+         array('reportname'=>'製品の詳細',
                        'reportfolder'=>'製品のレポート',
                        'description'=>'製品の詳細のレポート',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'製品 ( 顧客担当者別 )',
+         array('reportname'=>'製品 ( 顧客担当者別 )',
                        'reportfolder'=>'製品のレポート',
                        'description'=>'顧客担当者に関連付けられた製品',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'未完了の見積り',
+         array('reportname'=>'未完了の見積り',
                        'reportfolder'=>'見積のレポート',
                        'description'=>'Quotes that are Open',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>'5'),
 
-		 Array('reportname'=>'見積の詳細のレポート',
+         array('reportname'=>'見積の詳細のレポート',
                        'reportfolder'=>'見積のレポート',
                        'description'=>'見積の詳細のレポート',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'発注 ( 顧客担当者別 )',
+         array('reportname'=>'発注 ( 顧客担当者別 )',
                        'reportfolder'=>'発注のレポート',
                        'description'=>'顧客担当者に関連付けられた発注',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'発注の詳細のレポート',
+         array('reportname'=>'発注の詳細のレポート',
                        'reportfolder'=>'発注のレポート',
                        'description'=>'発注の詳細のレポート',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'請求の詳細のレポート',
+         array('reportname'=>'請求の詳細のレポート',
                        'reportfolder'=>'請求のレポート',
                        'description'=>'請求の詳細のレポート',
                        'reporttype'=>'tabular',
-		       'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
+               'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-		 Array('reportname'=>'受注の詳細のレポート',
+         array('reportname'=>'受注の詳細のレポート',
                        'reportfolder'=>'受注のレポート',
                        'description'=>'受注の詳細のレポート',
                        'reporttype'=>'tabular',
                        'sortid'=>'','stdfilterid'=>'','advfilterid'=>''),
 
-	         Array('reportname'=>'キャンペーンの予測と実際',
-		       'reportfolder'=>'キャンペーンのレポート',
-		       'description'=>'キャンペーンの予測と実際',
-		       'reporttype'=>'tabular',
-		       'sortid'=>'','stdfilterid'=>'','advfilterid'=>'')
+             array('reportname'=>'キャンペーンの予測と実際',
+               'reportfolder'=>'キャンペーンのレポート',
+               'description'=>'キャンペーンの予測と実際',
+               'reporttype'=>'tabular',
+               'sortid'=>'','stdfilterid'=>'','advfilterid'=>'')
 
-		);
+        );
 
-$sortorder = Array(
-                   Array(
-                         Array('columnname'=>'vtiger_leaddetails:leadsource:Leads_Lead_Source:leadsource:V',
+$sortorder = array(
+                   array(
+                         array('columnname'=>'vtiger_leaddetails:leadsource:Leads_Lead_Source:leadsource:V',
                                'sortorder'=>'Ascending'
                               )
-			),
-		   Array(
-                         Array('columnname'=>'vtiger_leaddetails:leadstatus:Leads_Lead_Status:leadstatus:V',
+            ),
+           array(
+                         array('columnname'=>'vtiger_leaddetails:leadstatus:Leads_Lead_Status:leadstatus:V',
                                'sortorder'=>'Ascending'
                               )
                         ),
-		   Array(
-                         Array('columnname'=>'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V',
+           array(
+                         array('columnname'=>'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V',
                                'sortorder'=>'Ascending'
                               )
                         ),
-		   Array(
-                         Array('columnname'=>'vtiger_troubletickets:priority:HelpDesk_Priority:ticketpriorities:V',
+           array(
+                         array('columnname'=>'vtiger_troubletickets:priority:HelpDesk_Priority:ticketpriorities:V',
                                'sortorder'=>'Ascending'
                               )
                         )
                   );
 
-$stdfilters = Array(Array('columnname'=>'vtiger_crmentity:modifiedtime:modifiedtime:Calendar_Modified_Time',
-			  'datefilter'=>'lastmonth',
-			  'startdate'=>'2005-05-01',
-			  'enddate'=>'2005-05-31'),
+$stdfilters = array(array('columnname'=>'vtiger_crmentity:modifiedtime:modifiedtime:Calendar_Modified_Time',
+              'datefilter'=>'lastmonth',
+              'startdate'=>'2005-05-01',
+              'enddate'=>'2005-05-31'),
 
-		    Array('columnname'=>'vtiger_crmentity:modifiedtime:modifiedtime:Calendar_Modified_Time',
+            array('columnname'=>'vtiger_crmentity:modifiedtime:modifiedtime:Calendar_Modified_Time',
                           'datefilter'=>'thismonth',
                           'startdate'=>'2005-06-01',
                           'enddate'=>'2005-06-30')
-		   );
+           );
 
-$advfilters = Array(
-                      Array(
-                            Array('columnname'=>'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
+$advfilters = array(
+                      array(
+                            array('columnname'=>'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
                                   'comparator'=>'n',
                                   'value'=>''
                                  )
                            ),
-		      Array(
-                            Array('columnname'=>'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
+              array(
+                            array('columnname'=>'vtiger_contactdetails:accountid:Contacts_Account_Name:account_id:V',
                                   'comparator'=>'e',
                                   'value'=>''
                                  )
                            ),
-		      Array(
-                            Array('columnname'=>'vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
+              array(
+                            array('columnname'=>'vtiger_potential:potentialname:Potentials_Potential_Name:potentialname:V',
                                   'comparator'=>'n',
                                   'value'=>''
                                  )
                            ),
-		      Array(
-                            Array('columnname'=>'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V',
+              array(
+                            array('columnname'=>'vtiger_potential:sales_stage:Potentials_Sales_Stage:sales_stage:V',
                                   'comparator'=>'e',
                                   'value'=>'Closed Won'
                                  )
                            ),
-		      Array(
-                            Array('columnname'=>'vtiger_troubletickets:status:HelpDesk_Status:ticketstatus:V',
+              array(
+                            array('columnname'=>'vtiger_troubletickets:status:HelpDesk_Status:ticketstatus:V',
                                   'comparator'=>'n',
                                   'value'=>'Closed'
                                  )
                            ),
-		      Array(
-                            Array('columnname'=>'vtiger_quotes:quotestage:Quotes_Quote_Stage:quotestage:V',
+              array(
+                            array('columnname'=>'vtiger_quotes:quotestage:Quotes_Quote_Stage:quotestage:V',
                                   'comparator'=>'n',
                                   'value'=>'Accepted'
                                  ),
-			    Array('columnname'=>'vtiger_quotes:quotestage:Quotes_Quote_Stage:quotestage:V',
+                array('columnname'=>'vtiger_quotes:quotestage:Quotes_Quote_Stage:quotestage:V',
                                   'comparator'=>'n',
                                   'value'=>'Rejected'
                                  )
                            )
                      );
 //quotes:quotestage:Quotes_Quote_Stage:quotestage:V
-foreach($rptfolder as $key=>$rptarray)
-{
-        foreach($rptarray as $foldername=>$folderdescription)
-        {
-                PopulateReportFolder($foldername,$folderdescription);
-                $reportid[$foldername] = $key+1;
-        }
+foreach ($rptfolder as $key=>$rptarray) {
+    foreach ($rptarray as $foldername=>$folderdescription) {
+        PopulateReportFolder($foldername, $folderdescription);
+        $reportid[$foldername] = $key+1;
+    }
 }
 
-foreach($reports as $key=>$report)
-{
-        $queryid = insertSelectQuery();
-        insertReports($queryid,$reportid[$report['reportfolder']],$report['reportname'],$report['description'],$report['reporttype']);
-        insertSelectColumns($queryid,$selectcolumns[$key]);
-        insertReportModules($queryid,$reportmodules[$key]['primarymodule'],$reportmodules[$key]['secondarymodule']);
+foreach ($reports as $key=>$report) {
+    $queryid = insertSelectQuery();
+    insertReports($queryid, $reportid[$report['reportfolder']], $report['reportname'], $report['description'], $report['reporttype']);
+    insertSelectColumns($queryid, $selectcolumns[$key]);
+    insertReportModules($queryid, $reportmodules[$key]['primarymodule'], $reportmodules[$key]['secondarymodule']);
 
-	if(isset($stdfilters[$report['stdfilterid']]))
-	{
-		$i = $report['stdfilterid'];
-		insertStdFilter($queryid,$stdfilters[$i]['columnname'],$stdfilters[$i]['datefilter'],$stdfilters[$i]['startdate'],$stdfilters[$i]['enddate']);
-	}
+    if (isset($stdfilters[$report['stdfilterid']])) {
+        $i = $report['stdfilterid'];
+        insertStdFilter($queryid, $stdfilters[$i]['columnname'], $stdfilters[$i]['datefilter'], $stdfilters[$i]['startdate'], $stdfilters[$i]['enddate']);
+    }
 
-	if(isset($advfilters[$report['advfilterid']]))
-	{
-		insertAdvFilter($queryid,$advfilters[$report['advfilterid']]);
-	}
+    if (isset($advfilters[$report['advfilterid']])) {
+        insertAdvFilter($queryid, $advfilters[$report['advfilterid']]);
+    }
 
-	if($report['reporttype'] == "summary")
-	{
-		insertSortColumns($queryid,$sortorder[$report['sortid']]);
-	}
+    if ($report['reporttype'] == "summary") {
+        insertSortColumns($queryid, $sortorder[$report['sortid']]);
+    }
 }
-$adb->pquery("UPDATE vtiger_report SET sharingtype='Public'",array());
+$adb->pquery("UPDATE vtiger_report SET sharingtype='Public'", array());
 /** Function to store the foldername and folderdescription to database
  *  This function accepts the given folder name and description
  *  ans store it in db as SAVED
  */
 
-function PopulateReportFolder($fldrname,$fldrdescription)
+function PopulateReportFolder($fldrname, $fldrdescription)
 {
-	global $adb;
-	$sql = "INSERT INTO vtiger_reportfolder (FOLDERNAME,DESCRIPTION,STATE) VALUES(?,?,?)";
-	$params = array($fldrname, $fldrdescription, 'SAVED');
-	$result = $adb->pquery($sql, $params);
+    global $adb;
+    $sql = "INSERT INTO vtiger_reportfolder (FOLDERNAME,DESCRIPTION,STATE) VALUES(?,?,?)";
+    $params = array($fldrname, $fldrdescription, 'SAVED');
+    $result = $adb->pquery($sql, $params);
 }
 
 /** Function to add an entry in selestquery vtiger_table
@@ -467,15 +461,14 @@ function PopulateReportFolder($fldrname,$fldrdescription)
 
 function insertSelectQuery()
 {
-	global $adb;
-	$genQueryId = $adb->getUniqueID("vtiger_selectquery");
-        if($genQueryId != "")
-        {
-		$iquerysql = "insert into vtiger_selectquery (QUERYID,STARTINDEX,NUMOFOBJECTS) values (?,?,?)";
-		$iquerysqlresult = $adb->pquery($iquerysql, array($genQueryId,0,0));
-	}
+    global $adb;
+    $genQueryId = $adb->getUniqueID("vtiger_selectquery");
+    if ($genQueryId != "") {
+        $iquerysql = "insert into vtiger_selectquery (QUERYID,STARTINDEX,NUMOFOBJECTS) values (?,?,?)";
+        $iquerysqlresult = $adb->pquery($iquerysql, array($genQueryId,0,0));
+    }
 
-	return $genQueryId;
+    return $genQueryId;
 }
 
 /** Function to store the vtiger_field names selected for a vtiger_report to a database
@@ -483,17 +476,15 @@ function insertSelectQuery()
  *
  */
 
-function insertSelectColumns($queryid,$columnname)
+function insertSelectColumns($queryid, $columnname)
 {
-	global $adb;
-	if($queryid != "")
-	{
-		for($i=0;$i < count($columnname);$i++)
-		{
-			$icolumnsql = "insert into vtiger_selectcolumn (QUERYID,COLUMNINDEX,COLUMNNAME) values (?,?,?)";
-			$icolumnsqlresult = $adb->pquery($icolumnsql, array($queryid, $i, $columnname[$i]));
-		}
-	}
+    global $adb;
+    if ($queryid != "") {
+        for ($i=0;$i < count($columnname);$i++) {
+            $icolumnsql = "insert into vtiger_selectcolumn (QUERYID,COLUMNINDEX,COLUMNNAME) values (?,?,?)";
+            $icolumnsqlresult = $adb->pquery($icolumnsql, array($queryid, $i, $columnname[$i]));
+        }
+    }
 }
 
 
@@ -502,15 +493,14 @@ function insertSelectColumns($queryid,$columnname)
  *  as arguments and store the informations in vtiger_report vtiger_table
  */
 
-function insertReports($queryid,$folderid,$reportname,$description,$reporttype)
+function insertReports($queryid, $folderid, $reportname, $description, $reporttype)
 {
-	global $adb;
-	if($queryid != "")
-	{
-		$ireportsql = "insert into vtiger_report (REPORTID,FOLDERID,REPORTNAME,DESCRIPTION,REPORTTYPE,QUERYID,STATE) values (?,?,?,?,?,?,?)";
+    global $adb;
+    if ($queryid != "") {
+        $ireportsql = "insert into vtiger_report (REPORTID,FOLDERID,REPORTNAME,DESCRIPTION,REPORTTYPE,QUERYID,STATE) values (?,?,?,?,?,?,?)";
         $ireportparams = array($queryid, $folderid, $reportname, $description, $reporttype, $queryid, 'SAVED');
-		$ireportresult = $adb->pquery($ireportsql, $ireportparams);
-	}
+        $ireportresult = $adb->pquery($ireportsql, $ireportparams);
+    }
 }
 
 /** Function to store the vtiger_report modules to database
@@ -519,14 +509,13 @@ function insertReports($queryid,$folderid,$reportname,$description,$reporttype)
  */
 
 
-function insertReportModules($queryid,$primarymodule,$secondarymodule)
+function insertReportModules($queryid, $primarymodule, $secondarymodule)
 {
-	global $adb;
-	if($queryid != "")
-	{
-		$ireportmodulesql = "insert into vtiger_reportmodules (REPORTMODULESID,PRIMARYMODULE,SECONDARYMODULES) values (?,?,?)";
-		$ireportmoduleresult = $adb->pquery($ireportmodulesql, array($queryid, $primarymodule, $secondarymodule));
-	}
+    global $adb;
+    if ($queryid != "") {
+        $ireportmodulesql = "insert into vtiger_reportmodules (REPORTMODULESID,PRIMARYMODULE,SECONDARYMODULES) values (?,?,?)";
+        $ireportmoduleresult = $adb->pquery($ireportmodulesql, array($queryid, $primarymodule, $secondarymodule));
+    }
 }
 
 
@@ -537,18 +526,15 @@ function insertReportModules($queryid,$primarymodule,$secondarymodule)
  */
 
 
-function insertSortColumns($queryid,$sortlists)
+function insertSortColumns($queryid, $sortlists)
 {
-	global $adb;
-	if($queryid != "")
-	{
-		foreach($sortlists as $i=>$sort)
-                {
-			$sort_bysql = "insert into vtiger_reportsortcol (SORTCOLID,REPORTID,COLUMNNAME,SORTORDER) values (?,?,?,?)";
-			$sort_byresult = $adb->pquery($sort_bysql, array(($i+1), $queryid, $sort['columnname'], $sort['sortorder']));
-		}
-	}
-
+    global $adb;
+    if ($queryid != "") {
+        foreach ($sortlists as $i=>$sort) {
+            $sort_bysql = "insert into vtiger_reportsortcol (SORTCOLID,REPORTID,COLUMNNAME,SORTORDER) values (?,?,?,?)";
+            $sort_byresult = $adb->pquery($sort_bysql, array(($i+1), $queryid, $sort['columnname'], $sort['sortorder']));
+        }
+    }
 }
 
 
@@ -558,15 +544,13 @@ function insertSortColumns($queryid,$sortlists)
  */
 
 
-function insertStdFilter($queryid,$filtercolumn,$datefilter,$startdate,$enddate)
+function insertStdFilter($queryid, $filtercolumn, $datefilter, $startdate, $enddate)
 {
-	global $adb;
-	if($queryid != "")
-	{
-		$ireportmodulesql = "insert into vtiger_reportdatefilter (DATEFILTERID,DATECOLUMNNAME,DATEFILTER,STARTDATE,ENDDATE) values (?,?,?,?,?)";
-		$ireportmoduleresult = $adb->pquery($ireportmodulesql, array($queryid, $filtercolumn, $datefilter, $startdate, $enddate));
-	}
-
+    global $adb;
+    if ($queryid != "") {
+        $ireportmodulesql = "insert into vtiger_reportdatefilter (DATEFILTERID,DATECOLUMNNAME,DATEFILTER,STARTDATE,ENDDATE) values (?,?,?,?,?)";
+        $ireportmoduleresult = $adb->pquery($ireportmodulesql, array($queryid, $filtercolumn, $datefilter, $startdate, $enddate));
+    }
 }
 
 /** Function to store the vtiger_report conditions to database
@@ -575,20 +559,17 @@ function insertStdFilter($queryid,$filtercolumn,$datefilter,$startdate,$enddate)
  */
 
 
-function insertAdvFilter($queryid,$filters)
+function insertAdvFilter($queryid, $filters)
 {
-	global $adb;
-	if($queryid != "")
-	{
-		$columnIndexArray = array();
-		foreach($filters as $i=>$filter)
-		{
-			$irelcriteriasql = "insert into vtiger_relcriteria(QUERYID,COLUMNINDEX,COLUMNNAME,COMPARATOR,VALUE) values (?,?,?,?,?)";
-			$irelcriteriaresult = $adb->pquery($irelcriteriasql, array($queryid,$i,$filter['columnname'],$filter['comparator'],$filter['value']));
-			$columnIndexArray[] = $i;
-		}
-		$conditionExpression = implode(' and ', $columnIndexArray);
-		$adb->pquery('INSERT INTO vtiger_relcriteria_grouping VALUES(?,?,?,?)', array(1, $queryid, '', $conditionExpression));
-	}
+    global $adb;
+    if ($queryid != "") {
+        $columnIndexArray = array();
+        foreach ($filters as $i=>$filter) {
+            $irelcriteriasql = "insert into vtiger_relcriteria(QUERYID,COLUMNINDEX,COLUMNNAME,COMPARATOR,VALUE) values (?,?,?,?,?)";
+            $irelcriteriaresult = $adb->pquery($irelcriteriasql, array($queryid,$i,$filter['columnname'],$filter['comparator'],$filter['value']));
+            $columnIndexArray[] = $i;
+        }
+        $conditionExpression = implode(' and ', $columnIndexArray);
+        $adb->pquery('INSERT INTO vtiger_relcriteria_grouping VALUES(?,?,?,?)', array(1, $queryid, '', $conditionExpression));
+    }
 }
-?>

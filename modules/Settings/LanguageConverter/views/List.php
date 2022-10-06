@@ -9,63 +9,65 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_LanguageConverter_List_View extends Settings_Vtiger_List_View {
+class Settings_LanguageConverter_List_View extends Settings_Vtiger_List_View
+{
+    // public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer) {
+    // 	Settings_LanguageConverter_Module_Model::getCache();
 
-	// public function initializeListViewContents(Vtiger_Request $request, Vtiger_Viewer $viewer) {
-	// 	Settings_LanguageConverter_Module_Model::getCache();
+    // 	$moduleName = $request->getModule();
+    // 	$qualifiedModuleName = $request->getModule(false);
 
-	// 	$moduleName = $request->getModule();
-	// 	$qualifiedModuleName = $request->getModule(false);
+    // 	$listViewModel = Settings_Vtiger_ListView_Model::getInstance($qualifiedModuleName);
+    // 	$listViewModel->set('orderby', 'sequence');
 
-	// 	$listViewModel = Settings_Vtiger_ListView_Model::getInstance($qualifiedModuleName);
-	// 	$listViewModel->set('orderby', 'sequence');		 
+    // 	$pagingModel = new Vtiger_Paging_Model();
 
-	// 	$pagingModel = new Vtiger_Paging_Model();
+    // 	if(!$this->listViewHeaders){
+    // 		$this->listViewHeaders = $listViewModel->getListViewHeaders();
+    // 	}
+    // 	if(!$this->listViewEntries){
+    // 		$this->listViewEntries = $listViewModel->getListViewEntries($pagingModel);
+    // 	}
 
-	// 	if(!$this->listViewHeaders){
-	// 		$this->listViewHeaders = $listViewModel->getListViewHeaders();
-	// 	}
-	// 	if(!$this->listViewEntries){
-	// 		$this->listViewEntries = $listViewModel->getListViewEntries($pagingModel);
-	// 	}
+    // 	$viewer->assign('MODULE', $moduleName);
+    // 	$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
+    // 	$viewer->assign('MODULE_MODEL', $listViewModel->getModule());
+    // 	$viewer->assign('PAGING_MODEL', $pagingModel);
+    // 	$viewer->assign('LISTVIEW_HEADERS', $this->listViewHeaders);
+    // 	$viewer->assign('LISTVIEW_ENTRIES', $this->listViewEntries);
+    // 	$viewer->assign('CURRENT_USER_MODEL', Users_Record_Model::getCurrentUserModel());
+    // }
 
-	// 	$viewer->assign('MODULE', $moduleName);
-	// 	$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
-	// 	$viewer->assign('MODULE_MODEL', $listViewModel->getModule());
-	// 	$viewer->assign('PAGING_MODEL', $pagingModel);
-	// 	$viewer->assign('LISTVIEW_HEADERS', $this->listViewHeaders);
-	// 	$viewer->assign('LISTVIEW_ENTRIES', $this->listViewEntries);
-	// 	$viewer->assign('CURRENT_USER_MODEL', Users_Record_Model::getCurrentUserModel());
-	// }
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+        $jsFileNames = array(
+            "~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/floatThead/jquery.floatThead.js",
+            "~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/perfect-scrollbar/js/perfect-scrollbar.jquery.js"
+        );
 
-		$jsFileNames = array(
-			"~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/floatThead/jquery.floatThead.js",
-			"~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/perfect-scrollbar/js/perfect-scrollbar.jquery.js"
-		);
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
+    public function getHeaderCss(Vtiger_Request $request)
+    {
+        $headerCssInstances = parent::getHeaderCss($request);
 
-	public function getHeaderCss(Vtiger_Request $request) {
-		$headerCssInstances = parent::getHeaderCss($request);
+        $cssFileNames = array(
+            "~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/perfect-scrollbar/css/perfect-scrollbar.css",
+        );
+        $cssInstances = $this->checkAndConvertCssStyles($cssFileNames);
+        $headerCssInstances = array_merge($headerCssInstances, $cssInstances);
 
-		$cssFileNames = array(
-			"~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/perfect-scrollbar/css/perfect-scrollbar.css",
-		);
-		$cssInstances = $this->checkAndConvertCssStyles($cssFileNames);
-		$headerCssInstances = array_merge($headerCssInstances, $cssInstances);
-
-		return $headerCssInstances;
-	}
+        return $headerCssInstances;
+    }
 }

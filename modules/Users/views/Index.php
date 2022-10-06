@@ -8,51 +8,57 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Users_Index_View extends Vtiger_Basic_View {
-	public function checkPermission(Vtiger_Request $request){
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		if(!$currentUserModel->isAdminUser()) {
-			throw new AppException(vtranslate('LBL_PERMISSION_DENIED', 'Vtiger'));
-		}
-	}
-	
-	public function preProcess (Vtiger_Request $request) {
-		parent::preProcess($request);
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		if($currentUserModel->isAdminUser()) {
-			$settingsIndexView = new Settings_Vtiger_Index_View();
-			$settingsIndexView->preProcessSettings($request);
-		}
-	}
+class Users_Index_View extends Vtiger_Basic_View
+{
+    public function checkPermission(Vtiger_Request $request)
+    {
+        $currentUserModel = Users_Record_Model::getCurrentUserModel();
+        if (!$currentUserModel->isAdminUser()) {
+            throw new AppException(vtranslate('LBL_PERMISSION_DENIED', 'Vtiger'));
+        }
+    }
 
-	public function postProcess(Vtiger_Request $request) {
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		if($currentUserModel->isAdminUser()) {
-			$settingsIndexView = new Settings_Vtiger_Index_View();
-			$settingsIndexView->postProcessSettings($request);
-		}
-		parent::postProcess($request);
-	}
+    public function preProcess(Vtiger_Request $request)
+    {
+        parent::preProcess($request);
+        $currentUserModel = Users_Record_Model::getCurrentUserModel();
+        if ($currentUserModel->isAdminUser()) {
+            $settingsIndexView = new Settings_Vtiger_Index_View();
+            $settingsIndexView->preProcessSettings($request);
+        }
+    }
 
-	public function process(Vtiger_Request $request) {
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        $currentUserModel = Users_Record_Model::getCurrentUserModel();
+        if ($currentUserModel->isAdminUser()) {
+            $settingsIndexView = new Settings_Vtiger_Index_View();
+            $settingsIndexView->postProcessSettings($request);
+        }
+        parent::postProcess($request);
+    }
 
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+    public function process(Vtiger_Request $request)
+    {
+    }
 
-		$jsFileNames = array(
-			'modules.Vtiger.resources.Vtiger',
-			"modules.$moduleName.resources.$moduleName",
-		);
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
+        $jsFileNames = array(
+            'modules.Vtiger.resources.Vtiger',
+            "modules.$moduleName.resources.$moduleName",
+        );
+
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

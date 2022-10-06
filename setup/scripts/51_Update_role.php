@@ -29,14 +29,13 @@ global $adb;
 $roles = Settings_Roles_Record_Model::getAll();
 $transRole = null;
 
-foreach($roles as $r) {
-    if($r->getId() == 'H1') {//Organaization ここは入ってこないかも。
+foreach ($roles as $r) {
+    if ($r->getId() == 'H1') {//Organaization ここは入ってこないかも。
         $r->set('rolename', '組織');
         $r->set('mode', 'edit');
         $r->save();
         continue;
-    }
-    else if($r->getId() == 'H2') {//CEO
+    } elseif ($r->getId() == 'H2') {//CEO
         $r->set('rolename', '管理者');
         $r->set('parentrole', 'H1::H2');
         $r->set('depth', '1');
@@ -44,8 +43,7 @@ foreach($roles as $r) {
         $r->save();
         $transRole = $r;
         continue;
-    }
-    else if($r->getId() == 'H3') {//Vice President
+    } elseif ($r->getId() == 'H3') {//Vice President
         $r->set('rolename', 'マネージャー');
         // $r->set('parentrole', 'H1::H3');
         // $r->set('depth', '1');
@@ -53,8 +51,7 @@ foreach($roles as $r) {
         $r->save();
         $transRole = $r;
         continue;
-    }
-    else if($r->getId() == 'H4') {//Sales Manager
+    } elseif ($r->getId() == 'H4') {//Sales Manager
         $r->set('rolename', '一般');
         // $r->set('parentrole', 'H1::H4');
         // $r->set('depth', '1');
@@ -62,8 +59,7 @@ foreach($roles as $r) {
         $r->save();
         $transRole = $r;
         continue;
-    }
-    else if($r->getId() == 'H5') {//Sales Person
+    } elseif ($r->getId() == 'H5') {//Sales Person
         $r->set('rolename', 'パート・アルバイト');
         // $r->set('parentrole', 'H1::H5');
         // $r->set('depth', '1');
@@ -71,8 +67,7 @@ foreach($roles as $r) {
         $r->save();
         $transRole = $r;
         continue;
-    }
-    else {
+    } else {
         $r->delete($transRole);
         continue;
     }

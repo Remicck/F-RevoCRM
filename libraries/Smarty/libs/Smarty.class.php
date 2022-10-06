@@ -104,8 +104,8 @@ include_once SMARTY_SYSPLUGINS_DIR.'smarty_internal_cacheresource_file.php';
  * This is the main Smarty class
  * @package Smarty
  */
-class Smarty extends Smarty_Internal_TemplateBase {
-
+class Smarty extends Smarty_Internal_TemplateBase
+{
     /**#@+
      * constant definitions
      */
@@ -113,49 +113,49 @@ class Smarty extends Smarty_Internal_TemplateBase {
     /**
      * smarty version
      */
-    const SMARTY_VERSION = 'Smarty-3.1.7';
+    public const SMARTY_VERSION = 'Smarty-3.1.7';
 
     /**
      * define variable scopes
      */
-    const SCOPE_LOCAL = 0;
-    const SCOPE_PARENT = 1;
-    const SCOPE_ROOT = 2;
-    const SCOPE_GLOBAL = 3;
+    public const SCOPE_LOCAL = 0;
+    public const SCOPE_PARENT = 1;
+    public const SCOPE_ROOT = 2;
+    public const SCOPE_GLOBAL = 3;
     /**
      * define caching modes
      */
-    const CACHING_OFF = 0;
-    const CACHING_LIFETIME_CURRENT = 1;
-    const CACHING_LIFETIME_SAVED = 2;
+    public const CACHING_OFF = 0;
+    public const CACHING_LIFETIME_CURRENT = 1;
+    public const CACHING_LIFETIME_SAVED = 2;
     /**
      * define compile check modes
      */
-    const COMPILECHECK_OFF = 0;
-    const COMPILECHECK_ON = 1;
-    const COMPILECHECK_CACHEMISS = 2;
+    public const COMPILECHECK_OFF = 0;
+    public const COMPILECHECK_ON = 1;
+    public const COMPILECHECK_CACHEMISS = 2;
     /**
      * modes for handling of "<?php ... ?>" tags in templates.
      */
-    const PHP_PASSTHRU = 0; //-> print tags as plain text
-    const PHP_QUOTE = 1; //-> escape tags as entities
-    const PHP_REMOVE = 2; //-> escape tags as entities
-    const PHP_ALLOW = 3; //-> escape tags as entities
+    public const PHP_PASSTHRU = 0; //-> print tags as plain text
+    public const PHP_QUOTE = 1; //-> escape tags as entities
+    public const PHP_REMOVE = 2; //-> escape tags as entities
+    public const PHP_ALLOW = 3; //-> escape tags as entities
     /**
      * filter types
      */
-    const FILTER_POST = 'post';
-    const FILTER_PRE = 'pre';
-    const FILTER_OUTPUT = 'output';
-    const FILTER_VARIABLE = 'variable';
+    public const FILTER_POST = 'post';
+    public const FILTER_PRE = 'pre';
+    public const FILTER_OUTPUT = 'output';
+    public const FILTER_VARIABLE = 'variable';
     /**
      * plugin types
      */
-    const PLUGIN_FUNCTION = 'function';
-    const PLUGIN_BLOCK = 'block';
-    const PLUGIN_COMPILER = 'compiler';
-    const PLUGIN_MODIFIER = 'modifier';
-    const PLUGIN_MODIFIERCOMPILER = 'modifiercompiler';
+    public const PLUGIN_FUNCTION = 'function';
+    public const PLUGIN_BLOCK = 'block';
+    public const PLUGIN_COMPILER = 'compiler';
+    public const PLUGIN_MODIFIER = 'modifier';
+    public const PLUGIN_MODIFIERCOMPILER = 'modifiercompiler';
 
     /**#@-*/
 
@@ -189,8 +189,8 @@ class Smarty extends Smarty_Internal_TemplateBase {
      * Flag denoting if PCRE should run in UTF-8 mode
      */
     public static $_UTF8_MODIFIER = 'u';
-    
-    
+
+
     /**#@+
      * variables
      */
@@ -728,7 +728,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
             }
         } else {
             $_result = array();
-            foreach (self::$global_tpl_vars AS $key => $var) {
+            foreach (self::$global_tpl_vars as $key => $var) {
                 $_result[$key] = $var->value;
             }
             return $_result;
@@ -742,7 +742,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
      * @param string  $type     resource type
      * @return integer number of cache files deleted
      */
-    function clearAllCache($exp_time = null, $type = null)
+    public function clearAllCache($exp_time = null, $type = null)
     {
         // load cache resource and call clearAll
         $_cache_resource = Smarty_CacheResource::load($this, $type);
@@ -913,7 +913,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
                     $this->config_dir[$k] = rtrim($v, '/\\') . DS;
                 }
             }
-        } elseif( $key !== null ) {
+        } elseif ($key !== null) {
             // override directory at specified index
             $this->config_dir[$key] = rtrim($config_dir, '/\\') . DS;
         } else {
@@ -1279,7 +1279,7 @@ class Smarty extends Smarty_Internal_TemplateBase {
         $_plugin_filename = "{$_name_parts[1]}.{$_name_parts[2]}.php";
 
         // loop through plugin dirs and find the plugin
-        foreach($this->getPluginsDir() as $_plugin_dir) {
+        foreach ($this->getPluginsDir() as $_plugin_dir) {
             $names = array(
                 $_plugin_dir . $_plugin_filename,
                 $_plugin_dir . strtolower($_plugin_filename),
@@ -1465,14 +1465,16 @@ if (Smarty::$_CHARSET !== 'UTF-8') {
  * Smarty exception class
  * @package Smarty
  */
-class SmartyException extends Exception {
+class SmartyException extends Exception
+{
 }
 
 /**
  * Smarty compiler exception class
  * @package Smarty
  */
-class SmartyCompilerException extends SmartyException  {
+class SmartyCompilerException extends SmartyException
+{
 }
 
 /**
@@ -1498,5 +1500,3 @@ function smartyAutoload($class)
         include SMARTY_SYSPLUGINS_DIR . $_class . '.php';
     }
 }
-
-?>

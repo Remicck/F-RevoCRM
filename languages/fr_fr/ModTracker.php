@@ -8,9 +8,9 @@
  * All Rights Reserved.
  * Translated by ABOnline solutions - http://www.abo-s.com/
  * Boris CLEMENT
- * December 2013      
+ * December 2013
  *************************************************************************************/
 
 $languageStrings = array(
-	'SINGLE_ModTracker' => 'Historique des modifications',
+    'SINGLE_ModTracker' => 'Historique des modifications',
 );

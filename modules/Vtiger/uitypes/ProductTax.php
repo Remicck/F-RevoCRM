@@ -7,13 +7,14 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  *************************************************************************************/
-class Vtiger_ProductTax_UIType extends Vtiger_Base_UIType {
-	/**
-	 * Function to get the Template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/ProductTax.tpl';
-	}
+class Vtiger_ProductTax_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/ProductTax.tpl';
+    }
 }
-?>

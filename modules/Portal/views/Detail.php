@@ -8,49 +8,53 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Portal_Detail_View extends Vtiger_Index_View {
+class Portal_Detail_View extends Vtiger_Index_View
+{
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
 
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		
-		return $permissions;
-	}
-	
-	function preProcess(Vtiger_Request $request, $display=true) {
-		parent::preProcess($request);
-	}
+        return $permissions;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$recordId = $request->get('record');
-		$module = $request->getModule();
+    public function preProcess(Vtiger_Request $request, $display=true)
+    {
+        parent::preProcess($request);
+    }
 
-		$url = Portal_Module_Model::getWebsiteUrl($recordId);
-		$recordList = Portal_Module_Model::getAllRecords();
+    public function process(Vtiger_Request $request)
+    {
+        $recordId = $request->get('record');
+        $module = $request->getModule();
 
-		$viewer = $this->getViewer($request);
+        $url = Portal_Module_Model::getWebsiteUrl($recordId);
+        $recordList = Portal_Module_Model::getAllRecords();
 
-		$viewer->assign('MODULE', $module);
-		$viewer->assign('RECORD_ID', $recordId);
-		$viewer->assign('URL', $url);
-		$viewer->assign('RECORDS_LIST', $recordList);
+        $viewer = $this->getViewer($request);
 
-		$viewer->view('DetailView.tpl', $module);
-	}
+        $viewer->assign('MODULE', $module);
+        $viewer->assign('RECORD_ID', $recordId);
+        $viewer->assign('URL', $url);
+        $viewer->assign('RECORDS_LIST', $recordList);
 
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+        $viewer->view('DetailView.tpl', $module);
+    }
 
-		$jsFileNames = array(
-			'modules.Vtiger.resources.List',
-			'modules.Vtiger.resources.Detail',
-			"modules.$moduleName.resources.List",
-			"modules.$moduleName.resources.Detail",
-		);
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
+        $jsFileNames = array(
+            'modules.Vtiger.resources.List',
+            'modules.Vtiger.resources.Detail',
+            "modules.$moduleName.resources.List",
+            "modules.$moduleName.resources.Detail",
+        );
+
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

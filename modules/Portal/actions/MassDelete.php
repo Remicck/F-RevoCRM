@@ -8,18 +8,20 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Portal_MassDelete_Action extends Vtiger_MassDelete_Action {
+class Portal_MassDelete_Action extends Vtiger_MassDelete_Action
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
-	
-    public function process(Vtiger_Request $request) {
+    public function process(Vtiger_Request $request)
+    {
         $module = $request->getModule();
-        
+
         Portal_Module_Model::deleteRecords($request);
-        
+
         $response = new Vtiger_Response();
         $result = array('message' => vtranslate('LBL_BOOKMARKS_DELETED_SUCCESSFULLY', $module));
         $response->setResult($result);

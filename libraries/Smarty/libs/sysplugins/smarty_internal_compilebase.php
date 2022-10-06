@@ -13,8 +13,8 @@
  * @package Smarty
  * @subpackage Compiler
  */
-abstract class Smarty_Internal_CompileBase {
-
+abstract class Smarty_Internal_CompileBase
+{
     /**
      * Array of names of required attribute required by tag
      *
@@ -63,27 +63,27 @@ abstract class Smarty_Internal_CompileBase {
                 // option flag ?
                 if (in_array(trim($mixed, '\'"'), $this->option_flags)) {
                     $_indexed_attr[trim($mixed, '\'"')] = true;
-                    // shorthand attribute ?
-                } else if (isset($this->shorttag_order[$key])) {
+                // shorthand attribute ?
+                } elseif (isset($this->shorttag_order[$key])) {
                     $_indexed_attr[$this->shorttag_order[$key]] = $mixed;
                 } else {
                     // too many shorthands
                     $compiler->trigger_template_error('too many shorthand attributes', $compiler->lex->taglineno);
                 }
-                // named attribute
+            // named attribute
             } else {
                 $kv = each($mixed);
                 // option flag?
                 if (in_array($kv['key'], $this->option_flags)) {
                     if (is_bool($kv['value'])) {
                         $_indexed_attr[$kv['key']] = $kv['value'];
-                    } else if (is_string($kv['value']) && in_array(trim($kv['value'], '\'"'), array('true', 'false'))) {
+                    } elseif (is_string($kv['value']) && in_array(trim($kv['value'], '\'"'), array('true', 'false'))) {
                         if (trim($kv['value']) == 'true') {
                             $_indexed_attr[$kv['key']] = true;
                         } else {
                             $_indexed_attr[$kv['key']] = false;
                         }
-                    } else if (is_numeric($kv['value']) && in_array($kv['value'], array(0, 1))) {
+                    } elseif (is_numeric($kv['value']) && in_array($kv['value'], array(0, 1))) {
                         if ($kv['value'] == 1) {
                             $_indexed_attr[$kv['key']] = true;
                         } else {
@@ -92,7 +92,7 @@ abstract class Smarty_Internal_CompileBase {
                     } else {
                         $compiler->trigger_template_error("illegal value of option flag \"{$kv['key']}\"", $compiler->lex->taglineno);
                     }
-                    // must be named attribute
+                // must be named attribute
                 } else {
                     reset($mixed);
                     $_indexed_attr[key($mixed)] = $mixed[key($mixed)];
@@ -170,7 +170,4 @@ abstract class Smarty_Internal_CompileBase {
         $compiler->trigger_template_error("unexpected closing tag", $compiler->lex->taglineno);
         return;
     }
-
 }
-
-?>

@@ -8,61 +8,61 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	// Basic Strings
-	'SINGLE_Documents' => 'ドキュメント',
-	'Documents' => 'ドキュメント',
-	'LBL_ADD_RECORD' => 'ドキュメントの追加',
-	'LBL_RECORDS_LIST' => 'ドキュメントリスト',
+    // Basic Strings
+    'SINGLE_Documents' => 'ドキュメント',
+    'Documents' => 'ドキュメント',
+    'LBL_ADD_RECORD' => 'ドキュメントの追加',
+    'LBL_RECORDS_LIST' => 'ドキュメントリスト',
 
-	// Blocks
-	'LBL_NOTE_INFORMATION' => '基本情報',
-	'LBL_FILE_INFORMATION' => 'ファイル情報',
-	'LBL_DESCRIPTION' => '詳細内容',
+    // Blocks
+    'LBL_NOTE_INFORMATION' => '基本情報',
+    'LBL_FILE_INFORMATION' => 'ファイル情報',
+    'LBL_DESCRIPTION' => '詳細内容',
 
-	//Field Labels
-	'Title' => 'タイトル',
-	'File Name' => 'ファイル名',
-	'Note' => 'メモ',
-	'File Type' => 'ファイルタイプ',
-	'File Size' => 'ファイルサイズ',
-	'Download Type' => 'ダウンロード種別',
-	'Version' => 'バージョン',
-	'Active' => '有効',
-	'Download Count' => 'ダウンロード回数',
-	'Folder Name' => 'フォルダ名',
-	'Document No' => 'ドキュメント番号',
-	'Last Modified By' => '最終更新者',
-	'Download' => 'ダウンロード',
+    //Field Labels
+    'Title' => 'タイトル',
+    'File Name' => 'ファイル名',
+    'Note' => 'メモ',
+    'File Type' => 'ファイルタイプ',
+    'File Size' => 'ファイルサイズ',
+    'Download Type' => 'ダウンロード種別',
+    'Version' => 'バージョン',
+    'Active' => '有効',
+    'Download Count' => 'ダウンロード回数',
+    'Folder Name' => 'フォルダ名',
+    'Document No' => 'ドキュメント番号',
+    'Last Modified By' => '最終更新者',
+    'Download' => 'ダウンロード',
 
-	//Folder
-	'LBL_FOLDER_HAS_DOCUMENTS' => '削除する前にドキュメントをフォルダから移動してください。',
+    //Folder
+    'LBL_FOLDER_HAS_DOCUMENTS' => '削除する前にドキュメントをフォルダから移動してください。',
 
-	//DetailView Actions
-	'LBL_DOWNLOAD_FILE' => 'ファイルのダウンロード',
-	'LBL_CHECK_FILE_INTEGRITY' => 'ファイル整合性チェック',
-	'LBL_EMAIL_FILE_AS_ATTACHMENT' => 'メールに添付',
+    //DetailView Actions
+    'LBL_DOWNLOAD_FILE' => 'ファイルのダウンロード',
+    'LBL_CHECK_FILE_INTEGRITY' => 'ファイル整合性チェック',
+    'LBL_EMAIL_FILE_AS_ATTACHMENT' => 'メールに添付',
 
-	//EditView
-	'LBL_INTERNAL' => '内部',
-	'LBL_EXTERNAL' => '外部',
-	'LBL_MAX_UPLOAD_SIZE' => '最大アップロードサイズ',
+    //EditView
+    'LBL_INTERNAL' => '内部',
+    'LBL_EXTERNAL' => '外部',
+    'LBL_MAX_UPLOAD_SIZE' => '最大アップロードサイズ',
 
-	//ListView Actions
-	'LBL_MOVE' => '移動',
-	'LBL_ADD_FOLDER' => 'フォルダの追加',
-	'LBL_FOLDERS_LIST' => 'フォルダ一覧',
-	'LBL_FOLDERS' => 'フォルダ',
-	'LBL_DOCUMENTS_MOVED_SUCCESSFULLY' => 'ドキュメントを移動しました。',
-	'LBL_DENIED_DOCUMENTS' => 'ドキュメントのアクセスが拒否されました。',
-	'MB' => 'MB',
+    //ListView Actions
+    'LBL_MOVE' => '移動',
+    'LBL_ADD_FOLDER' => 'フォルダの追加',
+    'LBL_FOLDERS_LIST' => 'フォルダ一覧',
+    'LBL_FOLDERS' => 'フォルダ',
+    'LBL_DOCUMENTS_MOVED_SUCCESSFULLY' => 'ドキュメントを移動しました。',
+    'LBL_DENIED_DOCUMENTS' => 'ドキュメントのアクセスが拒否されました。',
+    'MB' => 'MB',
 
-	'LBL_ADD_NEW_FOLDER' => '新しいフォルダを登録',
-	'LBL_FOLDER_NAME' => 'フォルダ名',
-	'LBL_FOLDER_DESCRIPTION' => 'フォルダ詳細',
+    'LBL_ADD_NEW_FOLDER' => '新しいフォルダを登録',
+    'LBL_FOLDER_NAME' => 'フォルダ名',
+    'LBL_FOLDER_DESCRIPTION' => 'フォルダ詳細',
 
-	//Check file integrity messages
-	'LBL_FILE_AVAILABLE' => 'ファイルをダウンロードできます。',
-	'LBL_FILE_NOT_AVAILABLE' => 'このドキュメントはダウンロードできません。',
+    //Check file integrity messages
+    'LBL_FILE_AVAILABLE' => 'ファイルをダウンロードできます。',
+    'LBL_FILE_NOT_AVAILABLE' => 'このドキュメントはダウンロードできません。',
     'LBL_VIEW_FILE' => 'ファイルを表示',
     'LBL_PREVIEW_NOT_AVAILABLE' => 'プレビューを利用できません。',
     'LBL_VIEW_FILE' => 'ファイルを表示',
@@ -94,20 +94,20 @@ $languageStrings = array(
     'LBL_TO_SERVICE' => '%s',
     'LBL_FROM_SERVICE' => '%s',
     'LBL_CREATE_NEW' => '%sを登録',
-	'LBL_SELECT_A_FOLDER_TO_MOVE' => 'フォルダに移動するドキュメントを選択',
-	'LBL_SEARCH_FOR_FOLDER' => 'フォルダから検索',
+    'LBL_SELECT_A_FOLDER_TO_MOVE' => 'フォルダに移動するドキュメントを選択',
+    'LBL_SEARCH_FOR_FOLDER' => 'フォルダから検索',
 );
 
 $jsLanguageStrings = array(
-	'JS_NEW_FOLDER' => '新しいフォルダ',
-	'JS_MOVE_DOCUMENTS' => 'ドキュメントの移動',
-	//Move documents confirmation message
-	'JS_ARE_YOU_SURE_YOU_WANT_TO_MOVE_DOCUMENTS_TO' => 'これらのファイルを移動してよろしいですか',
-	'JS_FOLDER' => 'フォルダ',
-	'JS_OPERATION_DENIED' => '操作が拒否されました',
-	'JS_FOLDER_IS_NOT_EMPTY' => 'フォルダが空ではありません',
-	'JS_SPECIAL_CHARACTERS' => '特殊文字 ',
-	'JS_NOT_ALLOWED' => 'は許可されていません',
+    'JS_NEW_FOLDER' => '新しいフォルダ',
+    'JS_MOVE_DOCUMENTS' => 'ドキュメントの移動',
+    //Move documents confirmation message
+    'JS_ARE_YOU_SURE_YOU_WANT_TO_MOVE_DOCUMENTS_TO' => 'これらのファイルを移動してよろしいですか',
+    'JS_FOLDER' => 'フォルダ',
+    'JS_OPERATION_DENIED' => '操作が拒否されました',
+    'JS_FOLDER_IS_NOT_EMPTY' => 'フォルダが空ではありません',
+    'JS_SPECIAL_CHARACTERS' => '特殊文字 ',
+    'JS_NOT_ALLOWED' => 'は許可されていません',
     'JS_DELETE_AND_TRASH_FILE_IN_DRIVE' => 'Google Driveから削除します',
     'JS_FAILED_TO_UPLOAD_FILE' => 'アップロードに失敗しました',
     'JS_ARE_YOU_SURE_TO_REVOKE_ACCESS' => 'アクセスを解除してもよろしいですか',

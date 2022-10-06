@@ -8,20 +8,21 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class SMSNotifier_CheckStatus_View extends Vtiger_IndexAjax_View {
+class SMSNotifier_CheckStatus_View extends Vtiger_IndexAjax_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-    function process(Vtiger_Request $request) {
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
+        $notifierRecordModel = Vtiger_Record_Model::getInstanceById($request->get('record'), $moduleName);
+        $notifierRecordModel->checkStatus();
 
-		$notifierRecordModel = Vtiger_Record_Model::getInstanceById($request->get('record'), $moduleName);
-		$notifierRecordModel->checkStatus();
-
-		$response = new Vtiger_Response();
-		$response->setResult(array(	'to'		=> $notifierRecordModel->get('tonumber'), 
-									'status'	=> $notifierRecordModel->get('status'),
-									'message'	=> $notifierRecordModel->get('statusmessage')
-							));
-		$response->emit();
-	}
+        $response = new Vtiger_Response();
+        $response->setResult(array(	'to'		=> $notifierRecordModel->get('tonumber'),
+                                    'status'	=> $notifierRecordModel->get('status'),
+                                    'message'	=> $notifierRecordModel->get('statusmessage')
+                            ));
+        $response->emit();
+    }
 }

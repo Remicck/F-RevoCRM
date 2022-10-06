@@ -8,24 +8,24 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_Datetime_UIType extends Vtiger_Datetime_UIType {
-	
-	public function getDisplayValue($value, $record=false, $recordInstance=false) {
-		//Since date_start and due_date fields of calendar can have time appended or removed
-		if($this->hasTimeComponent($value)) {
-			return self::getDisplayDateTimeValue($value);
-		}else{
-			return $this->getDisplayDateValue($value);
-		}
-	}
+class Calendar_Datetime_UIType extends Vtiger_Datetime_UIType
+{
+    public function getDisplayValue($value, $record=false, $recordInstance=false)
+    {
+        //Since date_start and due_date fields of calendar can have time appended or removed
+        if ($this->hasTimeComponent($value)) {
+            return self::getDisplayDateTimeValue($value);
+        } else {
+            return $this->getDisplayDateValue($value);
+        }
+    }
 
-	public function hasTimeComponent($value) {
-		$component = explode(' ', $value);
-		if(!empty($component[1])) {
-			return true;
-		}
-		return false;
-	}
+    public function hasTimeComponent($value)
+    {
+        $component = explode(' ', $value);
+        if (!empty($component[1])) {
+            return true;
+        }
+        return false;
+    }
 }
-
-

@@ -34,4 +34,3 @@ function unlinkRecursive($dir, $deleteRootToo = false)
     }
     return;
 }
-?>

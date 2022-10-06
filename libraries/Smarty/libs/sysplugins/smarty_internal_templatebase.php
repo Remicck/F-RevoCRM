@@ -15,8 +15,8 @@
  * @package Smarty
  * @subpackage Template
  */
-abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
-
+abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data
+{
     /**
      * fetches a rendered Smarty template
      *
@@ -79,7 +79,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         }
         // dummy local smarty variable
         if (!isset($_template->tpl_vars['smarty'])) {
-            $_template->tpl_vars['smarty'] = new Smarty_Variable;
+            $_template->tpl_vars['smarty'] = new Smarty_Variable();
         }
         if (isset($this->smarty->error_reporting)) {
             $_smarty_old_error_level = error_reporting($this->smarty->error_reporting);
@@ -173,7 +173,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                         if (empty($_template->properties['unifunc']) || !is_callable($_template->properties['unifunc'])) {
                             throw new SmartyException("Invalid compiled template for '{$_template->template_resource}'");
                         }
-                        array_unshift($_template->_capture_stack,array());
+                        array_unshift($_template->_capture_stack, array());
                         //
                         // render compiled template
                         //
@@ -274,7 +274,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
             }
             try {
                 ob_start();
-                array_unshift($_template->_capture_stack,array());
+                array_unshift($_template->_capture_stack, array());
                 //
                 // render cached template
                 //
@@ -309,30 +309,30 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                         case 'cgi':         // php-cgi < 5.3
                         case 'cgi-fcgi':    // php-cgi >= 5.3
                         case 'fpm-fcgi':    // php-fpm >= 5.3.3
-                        header('Status: 304 Not Modified');
-                        break;
+                            header('Status: 304 Not Modified');
+                            break;
 
                         case 'cli':
-                        if (/* ^phpunit */!empty($_SERVER['SMARTY_PHPUNIT_DISABLE_HEADERS'])/* phpunit$ */) {
-                            $_SERVER['SMARTY_PHPUNIT_HEADERS'][] = '304 Not Modified';
-                        }
-                        break;
+                            if (/* ^phpunit */!empty($_SERVER['SMARTY_PHPUNIT_DISABLE_HEADERS'])/* phpunit$ */) {
+                                $_SERVER['SMARTY_PHPUNIT_HEADERS'][] = '304 Not Modified';
+                            }
+                            break;
 
                         default:
-                        header('HTTP/1.1 304 Not Modified');
-                        break;
+                            header('HTTP/1.1 304 Not Modified');
+                            break;
                     }
                 } else {
                     switch (PHP_SAPI) {
                         case 'cli':
-                        if (/* ^phpunit */!empty($_SERVER['SMARTY_PHPUNIT_DISABLE_HEADERS'])/* phpunit$ */) {
-                            $_SERVER['SMARTY_PHPUNIT_HEADERS'][] = 'Last-Modified: ' . gmdate('D, d M Y H:i:s', $_template->cached->timestamp) . ' GMT';
-                        }
-                        break;
+                            if (/* ^phpunit */!empty($_SERVER['SMARTY_PHPUNIT_DISABLE_HEADERS'])/* phpunit$ */) {
+                                $_SERVER['SMARTY_PHPUNIT_HEADERS'][] = 'Last-Modified: ' . gmdate('D, d M Y H:i:s', $_template->cached->timestamp) . ' GMT';
+                            }
+                            break;
 
                         default:
-                        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $_template->cached->timestamp) . ' GMT');
-                        break;
+                            header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $_template->cached->timestamp) . ' GMT');
+                            break;
                     }
                     echo $_output;
                 }
@@ -429,7 +429,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         } else {
             $this->smarty->registered_plugins[$type][$tag] = array($callback, (bool) $cacheable, (array) $cache_attr);
         }
-        
+
         return $this;
     }
 
@@ -445,7 +445,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if (isset($this->smarty->registered_plugins[$type][$tag])) {
             unset($this->smarty->registered_plugins[$type][$tag]);
         }
-        
+
         return $this;
     }
 
@@ -473,7 +473,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if (isset($this->smarty->registered_resources[$type])) {
             unset($this->smarty->registered_resources[$type]);
         }
-        
+
         return $this;
     }
 
@@ -501,7 +501,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if (isset($this->smarty->registered_cache_resources[$type])) {
             unset($this->smarty->registered_cache_resources[$type]);
         }
-        
+
         return $this;
     }
 
@@ -537,7 +537,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         }
         // register the object
         $this->smarty->registered_objects[$object_name] =
-        array($object_impl, (array) $allowed, (boolean) $smarty_args, (array) $block_methods);
+        array($object_impl, (array) $allowed, (bool) $smarty_args, (array) $block_methods);
         return $this;
     }
 
@@ -570,7 +570,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if (isset($this->smarty->registered_objects[$name])) {
             unset($this->smarty->registered_objects[$name]);
         }
-        
+
         return $this;
     }
 
@@ -607,7 +607,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         } else {
             throw new SmartyException("Default plugin handler '$callback' not callable");
         }
-        
+
         return $this;
     }
 
@@ -625,7 +625,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         } else {
             throw new SmartyException("Default template handler '$callback' not callable");
         }
-        
+
         return $this;
     }
 
@@ -643,7 +643,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         } else {
             throw new SmartyException("Default config handler '$callback' not callable");
         }
-        
+
         return $this;
     }
 
@@ -673,7 +673,7 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         if (isset($this->smarty->registered_filters[$type][$name])) {
             unset($this->smarty->registered_filters[$type][$name]);
         }
-        
+
         return $this;
     }
 
@@ -728,9 +728,9 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
     {
         $_filter_name = "smarty_{$type}filter_{$name}";
         if (isset($this->smarty->registered_filters[$type][$_filter_name])) {
-            unset ($this->smarty->registered_filters[$type][$_filter_name]);
+            unset($this->smarty->registered_filters[$type][$_filter_name]);
         }
-        
+
         return $this;
     }
 
@@ -740,7 +740,8 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
      * @param string $match match string
      * @return string replacemant
      */
-    private function replaceCamelcase($match) {
+    private function replaceCamelcase($match)
+    {
         return "_" . strtolower($match[1]);
     }
 
@@ -779,21 +780,23 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
                 $_is_this = null;
                 if (property_exists($this, $property_name)) {
                     $_is_this = true;
-                } else if (property_exists($this->smarty, $property_name)) {
+                } elseif (property_exists($this->smarty, $property_name)) {
                     $_is_this = false;
                 }
                 $_resolved_property_source[$property_name] = $_is_this;
             }
             if ($_is_this) {
-                if ($first3 == 'get')
-                return $this->$property_name;
-                else
-                return $this->$property_name = $args[0];
-            } else if ($_is_this === false) {
-                if ($first3 == 'get')
-                return $this->smarty->$property_name;
-                else
-                return $this->smarty->$property_name = $args[0];
+                if ($first3 == 'get') {
+                    return $this->$property_name;
+                } else {
+                    return $this->$property_name = $args[0];
+                }
+            } elseif ($_is_this === false) {
+                if ($first3 == 'get') {
+                    return $this->smarty->$property_name;
+                } else {
+                    return $this->smarty->$property_name = $args[0];
+                }
             } else {
                 throw new SmartyException("property '$property_name' does not exist.");
                 return false;
@@ -805,7 +808,4 @@ abstract class Smarty_Internal_TemplateBase extends Smarty_Internal_Data {
         // must be unknown
         throw new SmartyException("Call of unknown method '$name'.");
     }
-
 }
-
-?>

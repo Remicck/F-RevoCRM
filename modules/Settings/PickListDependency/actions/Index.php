@@ -9,20 +9,22 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_PickListDependency_Index_Action extends Settings_Vtiger_Basic_Action {
-    
-    function __construct() {
+class Settings_PickListDependency_Index_Action extends Settings_Vtiger_Basic_Action
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->exposeMethod('checkCyclicDependency');
     }
-   
-    public function checkCyclicDependency(Vtiger_Request $request) {
+
+    public function checkCyclicDependency(Vtiger_Request $request)
+    {
         $module = $request->get('sourceModule');
         $moduleModel = Vtiger_Module_Model::getInstance($module);
         $sourceField = $request->get('sourcefield');
         $targetField = $request->get('targetfield');
         $result = Vtiger_DependencyPicklist::checkCyclicDependency($module, $sourceField, $targetField);
-        if($result) {
+        if ($result) {
             $currentSourceField = Vtiger_DependencyPicklist::getPicklistSourceField($module, $sourceField, $targetField);
             $currentSourceFieldModel = Vtiger_Field_Model::getInstance($currentSourceField, $moduleModel);
             $targetFieldModel = Vtiger_Field_Model::getInstance($targetField, $moduleModel);

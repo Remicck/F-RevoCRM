@@ -29,26 +29,28 @@
 /** We were expecting a token but it's not found.  The current token
  *  is actually what we wanted next.  Used for tree node errors too.
  */
-class MissingTokenException extends MismatchedTokenException {
-	public $inserted;
-	public function __construct($expecting, $input, $inserted) {
-		parent::__construct($expecting, $input);
-		$this->inserted = $inserted;
-	}
+class MissingTokenException extends MismatchedTokenException
+{
+    public $inserted;
+    public function __construct($expecting, $input, $inserted)
+    {
+        parent::__construct($expecting, $input);
+        $this->inserted = $inserted;
+    }
 
-	public function getMissingType() {
-		return $this->expecting;
-	}
+    public function getMissingType()
+    {
+        return $this->expecting;
+    }
 
-	public function toString() {
-		if ( $this->inserted!=null && $this->token!=null ) {
-			return "MissingTokenException(inserted ".$this->inserted." at ".$this->token->getText()+")";
-		}
-		if ( $this->token!=null ) {
-			return "MissingTokenException(at ".$token->getText().")";
-		}
-		return "MissingTokenException";
-	}
+    public function toString()
+    {
+        if ($this->inserted!=null && $this->token!=null) {
+            return "MissingTokenException(inserted ".$this->inserted." at ".$this->token->getText()+")";
+        }
+        if ($this->token!=null) {
+            return "MissingTokenException(at ".$token->getText().")";
+        }
+        return "MissingTokenException";
+    }
 }
-
-?>

@@ -8,20 +8,20 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-    'Quotes'                       => 'Cotización'                 , 
-	'SINGLE_Quotes'                => 'Cotización'                 , 
-	'LBL_EXPORT_TO_PDF'            => 'Exportar a PDF'              , 
-	'LBL_SEND_MAIL_PDF'            => 'Enviar correo con PDF'         , // TODO: Review
-	'LBL_ADD_RECORD'               => 'Agregar Cotización'         , 
-	'LBL_RECORDS_LIST'             => 'Lista de Cotizaciones'       , 
-	'LBL_QUOTE_INFORMATION'        => 'Información de la Cotización', 
-	'Quote No'                     => 'Id Cotización'              , 
-	'Quote Stage'                  => 'Estado'    , 
-	'Valid Till'                   => 'Validez hasta'               , 
-	'Inventory Manager'            => 'Encargado del inventario'    ,
+    'Quotes'                       => 'Cotización'                 ,
+    'SINGLE_Quotes'                => 'Cotización'                 ,
+    'LBL_EXPORT_TO_PDF'            => 'Exportar a PDF'              ,
+    'LBL_SEND_MAIL_PDF'            => 'Enviar correo con PDF'         , // TODO: Review
+    'LBL_ADD_RECORD'               => 'Agregar Cotización'         ,
+    'LBL_RECORDS_LIST'             => 'Lista de Cotizaciones'       ,
+    'LBL_QUOTE_INFORMATION'        => 'Información de la Cotización',
+    'Quote No'                     => 'Id Cotización'              ,
+    'Quote Stage'                  => 'Estado'    ,
+    'Valid Till'                   => 'Validez hasta'               ,
+    'Inventory Manager'            => 'Encargado del inventario'    ,
     'Created'                      => 'Creada'                    ,
-	'Accepted'                     => 'Aceptada'                    , 
-	'Rejected'                     => 'Rechazada'                   , 
+    'Accepted'                     => 'Aceptada'                    ,
+    'Rejected'                     => 'Rechazada'                   ,
     'Delivered'                    => 'Entregada',
     'Reviewed'                     => 'Revisada',
     'Open Quotes'                  => 'Cotizaciones abiertas',

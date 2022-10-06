@@ -30,14 +30,14 @@ require_once 'Zend/Http/Client.php';
  */
 class Zend_Oauth
 {
-    const REQUEST_SCHEME_HEADER      = 'header';
-    const REQUEST_SCHEME_POSTBODY    = 'postbody';
-    const REQUEST_SCHEME_QUERYSTRING = 'querystring';
-    const GET                        = 'GET';
-    const POST                       = 'POST';
-    const PUT                        = 'PUT';
-    const DELETE                     = 'DELETE';
-    const HEAD                       = 'HEAD';
+    public const REQUEST_SCHEME_HEADER      = 'header';
+    public const REQUEST_SCHEME_POSTBODY    = 'postbody';
+    public const REQUEST_SCHEME_QUERYSTRING = 'querystring';
+    public const GET                        = 'GET';
+    public const POST                       = 'POST';
+    public const PUT                        = 'PUT';
+    public const DELETE                     = 'DELETE';
+    public const HEAD                       = 'HEAD';
 
     /**
      * Singleton instance if required of the HTTP client
@@ -68,7 +68,7 @@ class Zend_Oauth
     public static function getHttpClient()
     {
         if (!isset(self::$httpClient)) {
-            self::$httpClient = new Zend_Http_Client;
+            self::$httpClient = new Zend_Http_Client();
         } else {
             self::$httpClient->setHeaders('Authorization', null);
             self::$httpClient->resetParameters();

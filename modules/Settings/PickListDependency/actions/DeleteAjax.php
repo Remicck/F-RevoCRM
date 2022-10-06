@@ -9,25 +9,27 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_PickListDependency_DeleteAjax_Action extends Settings_Vtiger_Index_Action {
-    
-    public function process(Vtiger_Request $request) {
+class Settings_PickListDependency_DeleteAjax_Action extends Settings_Vtiger_Index_Action
+{
+    public function process(Vtiger_Request $request)
+    {
         $sourceModule = $request->get('sourceModule');
         $sourceField = $request->get('sourcefield');
         $targetField = $request->get('targetfield');
         $recordModel = Settings_PickListDependency_Record_Model::getInstance($sourceModule, $sourceField, $targetField);
-        
+
         $response = new Vtiger_Response();
-        try{
+        try {
             $result = $recordModel->delete();
             $response->setResult(array('success', $result));
-        }catch(Exception $e) {
+        } catch(Exception $e) {
             $response->setError($e->getCode(), $e->getMessage());
         }
         $response->emit();
     }
-    
-    public function validateRequest(Vtiger_Request $request) {
+
+    public function validateRequest(Vtiger_Request $request)
+    {
         $request->validateWriteAccess();
     }
 }

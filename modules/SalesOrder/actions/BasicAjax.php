@@ -8,5 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class SalesOrder_BasicAjax_Action extends Inventory_BasicAjax_Action {
+class SalesOrder_BasicAjax_Action extends Inventory_BasicAjax_Action
+{
 }

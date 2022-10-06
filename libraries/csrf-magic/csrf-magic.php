@@ -137,33 +137,36 @@ $GLOBALS['csrf']['version'] = '1.0.4';
  * Rewrites <form> on the fly to add CSRF tokens to them. This can also
  * inject our JavaScript library.
  */
-function csrf_ob_handler($buffer, $flags) {
+function csrf_ob_handler($buffer, $flags)
+{
     // Even though the user told us to rewrite, we should do a quick heuristic
     // to check if the page is *actually* HTML. We don't begin rewriting until
     // we hit the first <html tag.
     static $is_html = false;
     static $is_partial = false;
-    
+
     if (!$is_html) {
         // not HTML until proven otherwise
         if (stripos($buffer, '<html') !== false) {
             $is_html = true;
         } else {
+            // Customized to take the partial HTML with form
+            $is_html = true;
+            $is_partial = true;
 
-			// Customized to take the partial HTML with form
-			$is_html = true;
-			$is_partial = true;
+            // Determine based on content type.
+            $headers = headers_list();
+            foreach ($headers as $header) {
+                if ($is_html) {
+                    break;
+                } elseif (stripos('Content-type', $header) !== false && stripos('/html', $header) === false) {
+                    $is_html = false;
+                }
+            }
 
-			// Determine based on content type.
-			$headers = headers_list();
-			foreach ($headers as $header) {
-				if ($is_html) break;
-				else if (stripos('Content-type', $header) !== false && stripos('/html', $header) === false) {
-					$is_html = false;
-				}
-			}
-        
-			if (!$is_html) return $buffer;
+            if (!$is_html) {
+                return $buffer;
+            }
         }
     }
     $count=1;
@@ -173,7 +176,7 @@ function csrf_ob_handler($buffer, $flags) {
     $input = "<input type='hidden' name='$name' value=\"$tokens\"$endslash>";
     $buffer = preg_replace('#(<form[^>]*method\s*=\s*["\']post["\'][^>]*>)#i', '$1' . $input, $buffer);
     if ($GLOBALS['csrf']['frame-breaker'] && !$is_partial) {
-        $buffer = preg_replace('/<\/head>/', '<script type="text/javascript">if (top != self) {top.location.href = self.location.href;}</script></head>', $buffer,$count);
+        $buffer = preg_replace('/<\/head>/', '<script type="text/javascript">if (top != self) {top.location.href = self.location.href;}</script></head>', $buffer, $count);
     }
     if (($js = $GLOBALS['csrf']['rewrite-js']) && !$is_partial) {
         $buffer = preg_replace(
@@ -182,10 +185,11 @@ function csrf_ob_handler($buffer, $flags) {
                 'var csrfMagicToken = "'.$tokens.'";'.
                 'var csrfMagicName = "'.$name.'";</script>'.
             '<script src="'.$js.'" type="text/javascript"></script></head>',
-            $buffer,$count
+            $buffer,
+            $count
         );
         $script = '<script type="text/javascript">CsrfMagic.end();</script>';
-        
+
         $buffer = preg_replace('/<\/body>/', $script . '</body>', $buffer, $count);
         if (!$count) {
             $buffer .= $script;
@@ -199,23 +203,32 @@ function csrf_ob_handler($buffer, $flags) {
  * @param bool $fatal Whether or not to fatally error out if there is a problem.
  * @return True if check passes or is not necessary, false if failure.
  */
-function csrf_check($fatal = true) {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') return true;
+function csrf_check($fatal = true)
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        return true;
+    }
     csrf_start();
     $name = $GLOBALS['csrf']['input-name'];
     $ok = false;
     $tokens = '';
     do {
-        if (!isset($_POST[$name])) break;
+        if (!isset($_POST[$name])) {
+            break;
+        }
         // we don't regenerate a token and check it because some token creation
         // schemes are volatile.
         $tokens = $_POST[$name];
-        if (!csrf_check_tokens($tokens)) break;
+        if (!csrf_check_tokens($tokens)) {
+            break;
+        }
         $ok = true;
     } while (false);
     if ($fatal && !$ok) {
         $callback = $GLOBALS['csrf']['callback'];
-        if (trim($tokens, 'A..Za..z0..9:;,') !== '') $tokens = 'hidden';
+        if (trim($tokens, 'A..Za..z0..9:;,') !== '') {
+            $tokens = 'hidden';
+        }
         $callback($tokens);
         exit;
     }
@@ -226,7 +239,8 @@ function csrf_check($fatal = true) {
  * Retrieves a valid token(s) for a particular context. Tokens are separated
  * by semicolons.
  */
-function csrf_get_tokens() {
+function csrf_get_tokens()
+{
     $has_cookies = !empty($_COOKIE);
 
     // $ip implements a composite key, which is sent if the user hasn't sent
@@ -242,15 +256,21 @@ function csrf_get_tokens() {
     csrf_start();
 
     // These are "strong" algorithms that don't require per se a secret
-    if (session_id()) return 'sid:' . csrf_hash(session_id()) . $ip;
+    if (session_id()) {
+        return 'sid:' . csrf_hash(session_id()) . $ip;
+    }
     if ($GLOBALS['csrf']['cookie']) {
         $val = csrf_generate_secret();
         setcookie($GLOBALS['csrf']['cookie'], $val);
         return 'cookie:' . csrf_hash($val) . $ip;
     }
-    if ($GLOBALS['csrf']['key']) return 'key:' . csrf_hash($GLOBALS['csrf']['key']) . $ip;
+    if ($GLOBALS['csrf']['key']) {
+        return 'key:' . csrf_hash($GLOBALS['csrf']['key']) . $ip;
+    }
     // These further algorithms require a server-side secret
-    if (!$secret) return 'invalid';
+    if (!$secret) {
+        return 'invalid';
+    }
     if ($GLOBALS['csrf']['user'] !== false) {
         return 'user:' . csrf_hash($GLOBALS['csrf']['user']);
     }
@@ -260,17 +280,21 @@ function csrf_get_tokens() {
     return 'invalid';
 }
 
-function csrf_flattenpost($data) {
+function csrf_flattenpost($data)
+{
     $ret = array();
-    foreach($data as $n => $v) {
+    foreach ($data as $n => $v) {
         $ret = array_merge($ret, csrf_flattenpost2(1, $n, $v));
     }
     return $ret;
 }
-function csrf_flattenpost2($level, $key, $data) {
-    if(!is_array($data)) return array($key => $data);
+function csrf_flattenpost2($level, $key, $data)
+{
+    if (!is_array($data)) {
+        return array($key => $data);
+    }
     $ret = array();
-    foreach($data as $n => $v) {
+    foreach ($data as $n => $v) {
         $nk = $level >= 1 ? $key."[$n]" : "[$n]";
         $ret = array_merge($ret, csrf_flattenpost2($level+1, $nk, $v));
     }
@@ -280,12 +304,15 @@ function csrf_flattenpost2($level, $key, $data) {
 /**
  * @param $tokens is safe for HTML consumption
  */
-function csrf_callback($tokens) {
+function csrf_callback($tokens)
+{
     // (yes, $tokens is safe to echo without escaping)
     header($_SERVER['SERVER_PROTOCOL'] . ' 403 Forbidden');
     $data = '';
     foreach (csrf_flattenpost($_POST) as $key => $value) {
-        if ($key == $GLOBALS['csrf']['input-name']) continue;
+        if ($key == $GLOBALS['csrf']['input-name']) {
+            continue;
+        }
         $data .= '<input type="hidden" name="'.htmlspecialchars($key).'" value="'.htmlspecialchars($value).'" />';
     }
     echo "<html><head><title>CSRF check failed</title></head>
@@ -302,7 +329,8 @@ function csrf_callback($tokens) {
  * This should be helpful in production. For debigging use csrf_callback().
  * It is configurable by setting $GLOBALS['csrf']['callback'] in this file
  */
-function vtResponseForIllegalAccess() {
+function vtResponseForIllegalAccess()
+{
     echo 'Invalid request';
 }
 
@@ -310,10 +338,15 @@ function vtResponseForIllegalAccess() {
  * Checks if a composite token is valid. Outward facing code should use this
  * instead of csrf_check_token()
  */
-function csrf_check_tokens($tokens) {
-    if (is_string($tokens)) $tokens = explode(';', $tokens);
+function csrf_check_tokens($tokens)
+{
+    if (is_string($tokens)) {
+        $tokens = explode(';', $tokens);
+    }
     foreach ($tokens as $token) {
-        if (csrf_check_token($token)) return true;
+        if (csrf_check_token($token)) {
+            return true;
+        }
     }
     return false;
 }
@@ -321,39 +354,64 @@ function csrf_check_tokens($tokens) {
 /**
  * Checks if a token is valid.
  */
-function csrf_check_token($token) {
-    if (strpos($token, ':') === false) return false;
+function csrf_check_token($token)
+{
+    if (strpos($token, ':') === false) {
+        return false;
+    }
     list($type, $value) = explode(':', $token, 2);
-    if (strpos($value, ',') === false) return false;
+    if (strpos($value, ',') === false) {
+        return false;
+    }
     list($x, $time) = explode(',', $token, 2);
     if ($GLOBALS['csrf']['expires']) {
-        if (time() > $time + $GLOBALS['csrf']['expires']) return false;
+        if (time() > $time + $GLOBALS['csrf']['expires']) {
+            return false;
+        }
     }
     switch ($type) {
         case 'sid':
             return $value === csrf_hash(session_id(), $time);
         case 'cookie':
             $n = $GLOBALS['csrf']['cookie'];
-            if (!$n) return false;
-            if (!isset($_COOKIE[$n])) return false;
+            if (!$n) {
+                return false;
+            }
+            if (!isset($_COOKIE[$n])) {
+                return false;
+            }
             return $value === csrf_hash($_COOKIE[$n], $time);
         case 'key':
-            if (!$GLOBALS['csrf']['key']) return false;
+            if (!$GLOBALS['csrf']['key']) {
+                return false;
+            }
             return $value === csrf_hash($GLOBALS['csrf']['key'], $time);
-        // We could disable these 'weaker' checks if 'key' was set, but
-        // that doesn't make me feel good then about the cookie-based
-        // implementation.
+            // We could disable these 'weaker' checks if 'key' was set, but
+            // that doesn't make me feel good then about the cookie-based
+            // implementation.
         case 'user':
-            if (!csrf_get_secret()) return false;
-            if ($GLOBALS['csrf']['user'] === false) return false;
+            if (!csrf_get_secret()) {
+                return false;
+            }
+            if ($GLOBALS['csrf']['user'] === false) {
+                return false;
+            }
             return $value === csrf_hash($GLOBALS['csrf']['user'], $time);
         case 'ip':
-            if (!csrf_get_secret()) return false;
+            if (!csrf_get_secret()) {
+                return false;
+            }
             // do not allow IP-based checks if the username is set, or if
             // the browser sent cookies
-            if ($GLOBALS['csrf']['user'] !== false) return false;
-            if (!empty($_COOKIE)) return false;
-            if (!$GLOBALS['csrf']['allow-ip']) return false;
+            if ($GLOBALS['csrf']['user'] !== false) {
+                return false;
+            }
+            if (!empty($_COOKIE)) {
+                return false;
+            }
+            if (!$GLOBALS['csrf']['allow-ip']) {
+                return false;
+            }
             return $value === csrf_hash($_SERVER['IP_ADDRESS'], $time);
     }
     return false;
@@ -362,7 +420,8 @@ function csrf_check_token($token) {
 /**
  * Sets a configuration value.
  */
-function csrf_conf($key, $val) {
+function csrf_conf($key, $val)
+{
     if (!isset($GLOBALS['csrf'][$key])) {
         trigger_error('No such configuration ' . $key, E_USER_WARNING);
         return;
@@ -373,7 +432,8 @@ function csrf_conf($key, $val) {
 /**
  * Starts a session if we're allowed to.
  */
-function csrf_start() {
+function csrf_start()
+{
     if ($GLOBALS['csrf']['auto-session'] && !session_id()) {
         session_start();
     }
@@ -382,8 +442,11 @@ function csrf_start() {
 /**
  * Retrieves the secret, and generates one if necessary.
  */
-function csrf_get_secret() {
-    if ($GLOBALS['csrf']['secret']) return $GLOBALS['csrf']['secret'];
+function csrf_get_secret()
+{
+    if ($GLOBALS['csrf']['secret']) {
+        return $GLOBALS['csrf']['secret'];
+    }
     $dir = dirname(__FILE__);
     $file = $dir . '/../../config.csrf-secret.php';
     $secret = '';
@@ -404,7 +467,8 @@ function csrf_get_secret() {
 /**
  * Generates a random string as the hash of time, microtime, and mt_rand.
  */
-function csrf_generate_secret($len = 32) {
+function csrf_generate_secret($len = 32)
+{
     $r = '';
     for ($i = 0; $i < 32; $i++) {
         $r .= chr(mt_rand(0, 255));
@@ -417,14 +481,23 @@ function csrf_generate_secret($len = 32) {
  * Generates a hash/expiry double. If time isn't set it will be calculated
  * from the current time.
  */
-function csrf_hash($value, $time = null) {
-    if (!$time) $time = time();
+function csrf_hash($value, $time = null)
+{
+    if (!$time) {
+        $time = time();
+    }
     return sha1(csrf_get_secret() . $value . $time) . ',' . $time;
 }
 
 // Load user configuration
-if (function_exists('csrf_startup')) csrf_startup();
+if (function_exists('csrf_startup')) {
+    csrf_startup();
+}
 // Initialize our handler
-if ($GLOBALS['csrf']['rewrite'])     ob_start('csrf_ob_handler');
+if ($GLOBALS['csrf']['rewrite']) {
+    ob_start('csrf_ob_handler');
+}
 // Perform check
-if (!$GLOBALS['csrf']['defer'])      csrf_check();
+if (!$GLOBALS['csrf']['defer']) {
+    csrf_check();
+}

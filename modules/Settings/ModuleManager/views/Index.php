@@ -8,26 +8,25 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-Class Settings_ModuleManager_Index_View extends Settings_Vtiger_Index_View {
+class Settings_ModuleManager_Index_View extends Settings_Vtiger_Index_View
+{
+    public function preProcess(Vtiger_Request $request)
+    {
+        parent::preProcess($request);
+    }
 
-	public function  preProcess(Vtiger_Request $request) {
-		parent::preProcess($request);
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
+        $qualifiedModuleName = $request->getModule(false);
 
-	public function process(Vtiger_Request $request) {
-		$viewer = $this->getViewer ($request);
-		$moduleName = $request->getModule();
-		$qualifiedModuleName = $request->getModule(false);
+        $allModules = Settings_ModuleManager_Module_Model::getAll();
 
-		$allModules = Settings_ModuleManager_Module_Model::getAll();
-		
-		$viewer->assign('ALL_MODULES', $allModules);
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+        $viewer->assign('ALL_MODULES', $allModules);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
 
-		echo $viewer->view('IndexContents.tpl', $qualifiedModuleName,true);
-	}
-	
-	
-
+        echo $viewer->view('IndexContents.tpl', $qualifiedModuleName, true);
+    }
 }

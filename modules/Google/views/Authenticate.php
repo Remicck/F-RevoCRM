@@ -8,30 +8,34 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Google_Authenticate_View extends Vtiger_Index_View {
+class Google_Authenticate_View extends Vtiger_Index_View
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        return array();
+    }
 
-    public function requiresPermission(\Vtiger_Request $request) {
-		return array();
-	}
-    
-	public function checkPermission(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
+    public function checkPermission(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
 
-		$recordPermission = Users_Privileges_Model::isPermitted($moduleName, 'index');
-		if(!$recordPermission) {
-			throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
-		}
+        $recordPermission = Users_Privileges_Model::isPermitted($moduleName, 'index');
+        if (!$recordPermission) {
+            throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$oauth2Connector = new Google_Oauth2_Connector($moduleName);
-		$oauth2Connector->authorize();
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $oauth2Connector = new Google_Oauth2_Connector($moduleName);
+        $oauth2Connector->authorize();
+    }
 
-	public function validateRequest(Vtiger_Request $request) {
-		/* Ignore check - as referer could be CRM or Google Accounts */
-	}
+    public function validateRequest(Vtiger_Request $request)
+    {
+        /* Ignore check - as referer could be CRM or Google Accounts */
+    }
 }

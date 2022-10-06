@@ -6,7 +6,6 @@
  * @subpackage PluginsShared
  */
 if (!function_exists('smarty_mb_str_replace')) {
-
     /**
      * Multibyte string replace
      *
@@ -50,6 +49,4 @@ if (!function_exists('smarty_mb_str_replace')) {
         }
         return $subject;
     }
-
 }
-?>

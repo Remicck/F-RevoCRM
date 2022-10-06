@@ -8,118 +8,126 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Products_Detail_View extends Vtiger_Detail_View {
+class Products_Detail_View extends Vtiger_Detail_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('showBundleTotalCostView');
+    }
 
-	public function __construct() {
-		parent::__construct();
-		$this->exposeMethod('showBundleTotalCostView');
-	}
-	
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
-		$mode = $request->getMode();
-		if(!empty($mode)) {
-			switch ($mode) {
-				case 'showBundleTotalCostView':
-					$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-					$permissions[] = array('module_parameter' => 'relatedModule', 'action' => 'DetailView');
-					break;
-			}
-		}
-		return $permissions;
-	}
-	
-	function preProcess(Vtiger_Request $request, $display = true) {
-		$recordId = $request->get('record');
-		$moduleName = $request->getModule();
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $mode = $request->getMode();
+        if (!empty($mode)) {
+            switch ($mode) {
+                case 'showBundleTotalCostView':
+                    $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
+                    $permissions[] = array('module_parameter' => 'relatedModule', 'action' => 'DetailView');
+                    break;
+            }
+        }
+        return $permissions;
+    }
 
-		$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
-		$baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
-		
-		$viewer = $this->getViewer($request);
-		$viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
-		
-		parent::preProcess($request, $display);
-	}
+    public function preProcess(Vtiger_Request $request, $display = true)
+    {
+        $recordId = $request->get('record');
+        $moduleName = $request->getModule();
 
-	public function showModuleDetailView(Vtiger_Request $request) {
-		$recordId = $request->get('record');
-		$moduleName = $request->getModule();
+        $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
+        $baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
 
-		$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
-		$baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
-		
-		$viewer = $this->getViewer($request);
-		$viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
-		$viewer->assign('TAXCLASS_DETAILS', $recordModel->getTaxClassDetails());
-		$viewer->assign('IMAGE_DETAILS', $recordModel->getImageDetails());
+        $viewer = $this->getViewer($request);
+        $viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
 
-		return parent::showModuleDetailView($request);
-	}
+        parent::preProcess($request, $display);
+    }
 
-	public function showModuleBasicView(Vtiger_Request $request) {
-		return $this->showModuleDetailView($request);
-	}
-	
-	public function getOverlayHeaderScripts(Vtiger_Request $request){
-		$moduleName = $request->getModule();
-		$moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
-		$jsFileNames = array(
-			'~libraries/jquery/boxslider/jquery.bxslider.min.js',
-			'modules.PriceBooks.resources.Detail',
-		);
-		$jsFileNames[] = $moduleDetailFile;
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		return $jsScriptInstances;	
-	}
+    public function showModuleDetailView(Vtiger_Request $request)
+    {
+        $recordId = $request->get('record');
+        $moduleName = $request->getModule();
 
-	public function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
-		$moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
-		$moduleRelatedListFile = 'modules.'.$moduleName.'.resources.RelatedList';
-		unset($headerScriptInstances[$moduleDetailFile]);
-		unset($headerScriptInstances[$moduleRelatedListFile]);
+        $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
+        $baseCurrenctDetails = $recordModel->getBaseCurrencyDetails();
 
-		$jsFileNames = array(
-			'~libraries/jquery/jquery.cycle.min.js',
-			'~libraries/jquery/boxslider/jquery.bxslider.min.js', 
-			'modules.PriceBooks.resources.Detail',
-			'modules.PriceBooks.resources.RelatedList',
-		);
-		
-		$jsFileNames[] = $moduleDetailFile;
-		$jsFileNames[] = $moduleRelatedListFile;
+        $viewer = $this->getViewer($request);
+        $viewer->assign('BASE_CURRENCY_SYMBOL', $baseCurrenctDetails['symbol']);
+        $viewer->assign('TAXCLASS_DETAILS', $recordModel->getTaxClassDetails());
+        $viewer->assign('IMAGE_DETAILS', $recordModel->getImageDetails());
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
-	
-	public function showBundleTotalCostView(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$relatedModuleName = $request->get('relatedModule');
-		$parentRecordId = $request->get('record');
-		$tabLabel = $request->get('tabLabel');
+        return parent::showModuleDetailView($request);
+    }
 
-		if ($moduleName === $relatedModuleName && $tabLabel === 'Product Bundles') {//Products && Child Products
-			$parentRecordModel = Vtiger_Record_Model::getInstanceById($parentRecordId, $moduleName);
-			$parentModuleModel = $parentRecordModel->getModule();
-			$parentRecordModel->set('currency_id', getProductBaseCurrency($parentRecordId, $parentModuleModel->getName()));
+    public function showModuleBasicView(Vtiger_Request $request)
+    {
+        return $this->showModuleDetailView($request);
+    }
 
-			$subProductsCostsInfo = $parentRecordModel->getSubProductsCostsAndTotalCostInUserCurrency();
-			$subProductsTotalCost = $subProductsCostsInfo['subProductsTotalCost'];
-			$subProductsCostsInfo = $subProductsCostsInfo['subProductsCosts'];
+    public function getOverlayHeaderScripts(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
+        $jsFileNames = array(
+            '~libraries/jquery/boxslider/jquery.bxslider.min.js',
+            'modules.PriceBooks.resources.Detail',
+        );
+        $jsFileNames[] = $moduleDetailFile;
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        return $jsScriptInstances;
+    }
 
-			$viewer = $this->getViewer($request);
-			$viewer->assign('MODULE', $moduleName);
-			$viewer->assign('TAB_LABEL', $tabLabel);
-			$viewer->assign('PARENT_RECORD', $parentRecordModel);
-			$viewer->assign('SUB_PRODUCTS_TOTAL_COST', $subProductsTotalCost);
-			$viewer->assign('SUB_PRODUCTS_COSTS_INFO', $subProductsCostsInfo);
-			$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
+        $moduleDetailFile = 'modules.'.$moduleName.'.resources.Detail';
+        $moduleRelatedListFile = 'modules.'.$moduleName.'.resources.RelatedList';
+        unset($headerScriptInstances[$moduleDetailFile]);
+        unset($headerScriptInstances[$moduleRelatedListFile]);
 
-			return $viewer->view('BundleCostView.tpl', $moduleName, 'true');
-		}
-	}
+        $jsFileNames = array(
+            '~libraries/jquery/jquery.cycle.min.js',
+            '~libraries/jquery/boxslider/jquery.bxslider.min.js',
+            'modules.PriceBooks.resources.Detail',
+            'modules.PriceBooks.resources.RelatedList',
+        );
+
+        $jsFileNames[] = $moduleDetailFile;
+        $jsFileNames[] = $moduleRelatedListFile;
+
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
+
+    public function showBundleTotalCostView(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $relatedModuleName = $request->get('relatedModule');
+        $parentRecordId = $request->get('record');
+        $tabLabel = $request->get('tabLabel');
+
+        if ($moduleName === $relatedModuleName && $tabLabel === 'Product Bundles') {//Products && Child Products
+            $parentRecordModel = Vtiger_Record_Model::getInstanceById($parentRecordId, $moduleName);
+            $parentModuleModel = $parentRecordModel->getModule();
+            $parentRecordModel->set('currency_id', getProductBaseCurrency($parentRecordId, $parentModuleModel->getName()));
+
+            $subProductsCostsInfo = $parentRecordModel->getSubProductsCostsAndTotalCostInUserCurrency();
+            $subProductsTotalCost = $subProductsCostsInfo['subProductsTotalCost'];
+            $subProductsCostsInfo = $subProductsCostsInfo['subProductsCosts'];
+
+            $viewer = $this->getViewer($request);
+            $viewer->assign('MODULE', $moduleName);
+            $viewer->assign('TAB_LABEL', $tabLabel);
+            $viewer->assign('PARENT_RECORD', $parentRecordModel);
+            $viewer->assign('SUB_PRODUCTS_TOTAL_COST', $subProductsTotalCost);
+            $viewer->assign('SUB_PRODUCTS_COSTS_INFO', $subProductsCostsInfo);
+            $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+
+            return $viewer->view('BundleCostView.tpl', $moduleName, 'true');
+        }
+    }
 }

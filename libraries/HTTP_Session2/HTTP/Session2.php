@@ -114,34 +114,34 @@ class HTTP_Session2
     /**
      * @const STARTED - The session was started with the current request
      */
-    const STARTED = 1;
+    public const STARTED = 1;
 
     /**
      * @const CONTINUE - No new session was started with the current request
      */
-    const CONTINUED = 2;
+    public const CONTINUED = 2;
 
     /**
      * @const ERR_UNKNOWN_CONTAINER - Container not found.
      */
-    const ERR_UNKNOWN_CONTAINER = 667;
+    public const ERR_UNKNOWN_CONTAINER = 667;
 
     /**
      * @const ERR_SYSTEM_PERM - System permissions not sufficient.
      *        E.g. Not enough permissions to override ini-settings.
      */
-    const ERR_SYSTEM_PERM = 668;
-    
+    public const ERR_SYSTEM_PERM = 668;
+
     /**
-     * @const ERR_SYSTEM_PRECONDITION - Precondition failed. E.g. error occured and 
+     * @const ERR_SYSTEM_PRECONDITION - Precondition failed. E.g. error occured and
      *        HTTP_Session2 can't start up, etc..
      */
-    const ERR_SYSTEM_PRECONDITION = 669;
+    public const ERR_SYSTEM_PRECONDITION = 669;
 
     /**
      * @const ERR_NOT_IMPLEMENTED Feature is not yet Implement in the container.
      */
-    const ERR_NOT_IMPLEMENTED = 670;
+    public const ERR_NOT_IMPLEMENTED = 670;
 
     /**
      * Container instance
@@ -163,7 +163,7 @@ class HTTP_Session2
      * @return void
      * @see session_set_save_handler()
      */
-    static function setContainer($container, $container_options = null)
+    public static function setContainer($container, $container_options = null)
     {
         $container_class     = 'HTTP_Session2_Container_' . $container;
         $container_classfile = 'HTTP/Session2/Container/' . $container . '.php';
@@ -174,7 +174,8 @@ class HTTP_Session2
         if (!class_exists($container_class)) {
             throw new HTTP_Session2_Exception(
                 "Container class, $container_class, does not exist",
-                self::ERR_UNKNOWN_CONTAINER);
+                self::ERR_UNKNOWN_CONTAINER
+            );
         }
         self::$container = new $container_class($container_options);
 
@@ -456,7 +457,7 @@ class HTTP_Session2
      *                            parameter, please supply 'boolean'.
      *
      * @return boolean The previous value of the property
-     * 
+     *
      * @throws HTTP_Session2_Exception If ini_set() fails!
      * @see    session_set_cookie_params()
      * @link   http://php.net/manual/en/function.session-set-cookie-params.php
@@ -578,7 +579,7 @@ class HTTP_Session2
      *
      * @return mixed  Value of a local variable
      */
-    static function &getLocal($name, $default = null)
+    public static function &getLocal($name, $default = null)
     {
         $local = md5(self::localName());
         if (!is_array($_SESSION[$local])) {
@@ -599,7 +600,7 @@ class HTTP_Session2
      *
      * @return mixed Old value of a local variable
      */
-    static function setLocal($name, $value)
+    public static function setLocal($name, $value)
     {
         $local = md5(self::localName());
         if (!is_array($_SESSION[$local])) {
@@ -621,7 +622,7 @@ class HTTP_Session2
      *
      * @return boolean
      */
-    static function useTransSID($useTransSID = false)
+    public static function useTransSID($useTransSID = false)
     {
         $return = ini_get('session.use_trans_sid') ? true : false;
         if ($useTransSID === false) {
@@ -637,7 +638,7 @@ class HTTP_Session2
      *
      * @return string Previous local name
      */
-    static function localName($name = null)
+    public static function localName($name = null)
     {
         $return = '';
         if (isset($GLOBALS['__HTTP_Session2_Localname'])) {
@@ -654,7 +655,7 @@ class HTTP_Session2
      *
      * @return void
      */
-    static function init()
+    public static function init()
     {
         // Disable auto-start of a sesion
         ini_set('session.auto_start', 0);
@@ -677,9 +678,8 @@ class HTTP_Session2
         if (function_exists('session_regenerate_id')) {
             return session_regenerate_id($deleteOldSessionData);
 
-            // emulate session_regenerate_id()
+        // emulate session_regenerate_id()
         } else {
-
             do {
                 $newId = uniqid(dechex(rand()));
             } while ($newId === session_id());
@@ -754,7 +754,7 @@ class HTTP_Session2
 
 /**
  * init {@link HTTP_Session2}
- * 
+ *
  * @see HTTP_Session2::init()
  */
 HTTP_Session2::init();

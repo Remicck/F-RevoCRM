@@ -8,21 +8,23 @@
  * All Rights Reserved.
  * ************************************************************************************/
 
-class Portal_SaveAjax_Action extends Vtiger_SaveAjax_Action {
-    
-    public function requiresPermission(\Vtiger_Request $request) {
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		return $permissions;
-	}
-	
-	public function process(Vtiger_Request $request) {
+class Portal_SaveAjax_Action extends Vtiger_SaveAjax_Action
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
+        return $permissions;
+    }
+
+    public function process(Vtiger_Request $request)
+    {
         $module = $request->getModule();
         $recordId = $request->get('record');
         $bookmarkName = $request->get('bookmarkName');
         $bookmarkUrl = $request->get('bookmarkUrl');
-        
+
         Portal_Module_Model::saveRecord($recordId, $bookmarkName, $bookmarkUrl);
-		
+
         $response = new Vtiger_Response();
         $result = array('message' => vtranslate('LBL_BOOKMARK_SAVED_SUCCESSFULLY', $module));
         $response->setResult($result);

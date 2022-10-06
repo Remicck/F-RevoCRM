@@ -8,9 +8,10 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Services_ServicesPopupAjax_View extends Inventory_ServicesPopupAjax_View {
-
-	function process (Vtiger_Request $request) {
-		parent::process($request);
-	}
+class Services_ServicesPopupAjax_View extends Inventory_ServicesPopupAjax_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        parent::process($request);
+    }
 }

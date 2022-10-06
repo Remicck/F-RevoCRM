@@ -8,12 +8,14 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-Class Google_Config_Connector {
-	static $clientId = '';
-	static $clientSecret = '';
+class Google_Config_Connector
+{
+    public static $clientId = '';
+    public static $clientSecret = '';
 
-	static function getRedirectUrl() {
-		global $site_URL;
-		return $site_URL.'index.php?module=Google&view=Authenticate&service=Google';
-	}
+    public static function getRedirectUrl()
+    {
+        global $site_URL;
+        return $site_URL.'index.php?module=Google&view=Authenticate&service=Google';
+    }
 }

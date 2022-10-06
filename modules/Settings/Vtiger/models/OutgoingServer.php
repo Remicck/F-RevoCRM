@@ -8,78 +8,86 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Vtiger_OutgoingServer_Model extends Settings_Vtiger_Systems_Model {
-    
+class Settings_Vtiger_OutgoingServer_Model extends Settings_Vtiger_Systems_Model
+{
     private $defaultLoaded = false;
 
 
-    public function getSubject() {
+    public function getSubject()
+    {
         return '[F-RevoCRM] Test mail about the mail server configuration.';
     }
-    
-    public function getBody() {
+
+    public function getBody()
+    {
         $currentUser = Users_Record_Model::getCurrentUserModel();
         return $currentUser->get('user_name').'さん <br><br><b> これは、設定したSMTPサーバーを介してメールが実際に送信され
                 ているかどうかを確認するために送信されるテストメールです。 </b><br>削除していただいてかまいません。
                 <br><br>よろしくお願いいたします。<br> F-RevoCRM <br><br>';
     }
-    
-	public function loadDefaultValues() {
+
+    public function loadDefaultValues()
+    {
         $defaultOutgoingServerDetails = VtigerConfig::getOD('DEFAULT_OUTGOING_SERVER_DETAILS');
         if (empty($defaultOutgoingServerDetails)) {
             $db = PearDatabase::getInstance();
             $db->pquery('DELETE FROM vtiger_systems WHERE server_type = ?', array('email'));
             return;
         }
-        foreach ($defaultOutgoingServerDetails as $key=>$value){
-            $this->set($key,$value);
+        foreach ($defaultOutgoingServerDetails as $key=>$value) {
+            $this->set($key, $value);
         }
 
         $this->defaultLoaded = true;
     }
-	
-	/**
-	 * Function to get CompanyDetails Menu item
-	 * @return menu item Model
-	 */
-	public function getMenuItem() {
-		$menuItem = Settings_Vtiger_MenuItem_Model::getInstance('LBL_MAIL_SERVER_SETTINGS');
-		return $menuItem;
-	}
-    
-	public function getEditViewUrl() {
-		$menuItem = $this->getMenuItem();
-		return '?module=Vtiger&parent=Settings&view=OutgoingServerEdit&block='.$menuItem->get('blockid').'&fieldid='.$menuItem->get('fieldid');
-	}
-	
-	public function getDetailViewUrl() {
-		$menuItem = $this->getMenuItem();
-		return '?module=Vtiger&parent=Settings&view=OutgoingServerDetail&block='.$menuItem->get('blockid').'&fieldid='.$menuItem->get('fieldid');
-	}
-	
-    public function isDefaultSettingLoaded() {
+
+    /**
+     * Function to get CompanyDetails Menu item
+     * @return menu item Model
+     */
+    public function getMenuItem()
+    {
+        $menuItem = Settings_Vtiger_MenuItem_Model::getInstance('LBL_MAIL_SERVER_SETTINGS');
+        return $menuItem;
+    }
+
+    public function getEditViewUrl()
+    {
+        $menuItem = $this->getMenuItem();
+        return '?module=Vtiger&parent=Settings&view=OutgoingServerEdit&block='.$menuItem->get('blockid').'&fieldid='.$menuItem->get('fieldid');
+    }
+
+    public function getDetailViewUrl()
+    {
+        $menuItem = $this->getMenuItem();
+        return '?module=Vtiger&parent=Settings&view=OutgoingServerDetail&block='.$menuItem->get('blockid').'&fieldid='.$menuItem->get('fieldid');
+    }
+
+    public function isDefaultSettingLoaded()
+    {
         return $this->defaultLoaded;
     }
-    
-    public function save($request){
+
+    public function save($request)
+    {
         vimport('~~/modules/Emails/mail.php');
         $currentUser = Users_Record_Model::getCurrentUserModel();
 
         $from_email =  $request->get('from_email_field');
-        $to_email = getUserEmailId('id',$currentUser->getId());
-        
+        $to_email = getUserEmailId('id', $currentUser->getId());
+
         $subject = $this->getSubject();
         $description = $this->getBody();
-		// This is added so that send_mail API will treat it as user initiated action
+        // This is added so that send_mail API will treat it as user initiated action
         $olderAction = $_REQUEST['action'];
-		$_REQUEST['action'] = 'Save';
-        if($to_email != ''){
-            $mail_status = send_mail('Users',$to_email,$currentUser->get('user_name'),$from_email,$subject,$description,'','','','','',true);
+        $_REQUEST['action'] = 'Save';
+        if ($to_email != '') {
+            $mail_status = send_mail('Users', $to_email, $currentUser->get('user_name'), $from_email, $subject, $description, '', '', '', '', '', true);
         }
-		$_REQUEST['action'] = $olderAction;
-        if($mail_status != 1 && !$this->isDefaultSettingLoaded()) {
+        $_REQUEST['action'] = $olderAction;
+        if ($mail_status != 1 && !$this->isDefaultSettingLoaded()) {
             throw new Exception('Error occurred while sending mail');
-        } 
+        }
         return parent::save($request);
     }
 }

@@ -9,8 +9,10 @@
  ************************************************************************************/
 vimport('~~/modules/WSAPP/SyncServer.php');
 
-class Google_SyncServer_Controller extends SyncServer{
-	function getDestinationHandleDetails(){
-		return wsapp_getHandler('Google_vtigerHandler');
-	}
+class Google_SyncServer_Controller extends SyncServer
+{
+    public function getDestinationHandleDetails()
+    {
+        return wsapp_getHandler('Google_vtigerHandler');
+    }
 }

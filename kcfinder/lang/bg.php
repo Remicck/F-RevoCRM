@@ -234,5 +234,3 @@ $lang = array(
     "Download files" => "Свали файловете",
     "Clipboard" => "Клипборд",
 );
-
-?>

@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -18,12 +18,12 @@
  * @package    Zend_Gdata
  * @subpackage Contacts
  */
-ini_set('error_reporting',6135);
-ini_set('dispaly_errors',On);
+ini_set('error_reporting', 6135);
+ini_set('dispaly_errors', On);
 
 require_once 'Zend/Gdata/Contacts/Extension.php';
 
-class Zend_Gdata_Contacts_Extension_Pobox extends Zend_Gdata_Contacts_ExtensionElement {
-	protected $_rootElement = 'pobox';
-	
+class Zend_Gdata_Contacts_Extension_Pobox extends Zend_Gdata_Contacts_ExtensionElement
+{
+    protected $_rootElement = 'pobox';
 }

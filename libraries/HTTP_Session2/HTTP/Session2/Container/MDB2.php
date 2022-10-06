@@ -53,7 +53,6 @@ require_once 'MDB2.php';
  */
 class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
 {
-
     /**
      * MDB2 connection object
      *
@@ -105,23 +104,31 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
         }
         if (is_string($dsn) || is_array($dsn)) {
             if (MDB2::isError($this->db = MDB2::connect($dsn))) {
-                throw new HTTP_Session2_Exception($this->db->getDebugInfo(),
-                    $this->db->getCode());
+                throw new HTTP_Session2_Exception(
+                    $this->db->getDebugInfo(),
+                    $this->db->getCode()
+                );
             }
-        } else if (is_object($dsn) && ($dsn instanceof MDB2_Driver_Common)) {
+        } elseif (is_object($dsn) && ($dsn instanceof MDB2_Driver_Common)) {
             $this->db = $dsn;
-        } else if (MDB2::isError($dsn)) {
-            throw new HTTP_Session2_Exception($dsn->getDebugInfo(),
-                $dsn->getCode());
+        } elseif (MDB2::isError($dsn)) {
+            throw new HTTP_Session2_Exception(
+                $dsn->getDebugInfo(),
+                $dsn->getCode()
+            );
         } else {
             $msg  = "The given dsn was not valid in file ";
             $msg .= __FILE__ . " at line " . __LINE__;
-            throw new HTTP_Session2_Exception($msg,
-                HTTP_Session2::ERR_SYSTEM_PRECONDITION);
+            throw new HTTP_Session2_Exception(
+                $msg,
+                HTTP_Session2::ERR_SYSTEM_PRECONDITION
+            );
         }
         if (MDB2::isError($this->db)) {
-            throw new HTTP_Session2_Exception($this->db->getMessage(),
-                $this->db->getCode());
+            throw new HTTP_Session2_Exception(
+                $this->db->getMessage(),
+                $this->db->getCode()
+            );
         }
         return true;
     }
@@ -177,15 +184,19 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
      */
     public function read($id)
     {
-        $query = sprintf("SELECT data FROM %s WHERE id = %s AND expiry >= %d",
+        $query = sprintf(
+            "SELECT data FROM %s WHERE id = %s AND expiry >= %d",
             $this->options['table'],
             $this->db->quote(md5($id)),
-            time());
+            time()
+        );
 
         $result = $this->db->queryOne($query);
         if (MDB2::isError($result)) {
-            throw new HTTP_Session2_Exception($result->getMessage(),
-                $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getMessage(),
+                $result->getCode()
+            );
         }
         $this->crc = strlen($result) . crc32($result);
         return $result;
@@ -206,46 +217,58 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
             && ($this->crc === strlen($data) . crc32($data))) {
             /* $_SESSION hasn't been touched, no need to update the blob column */
             $query = "UPDATE %s SET expiry = %d WHERE id = %s AND expiry >= %d";
-            $query = sprintf($query,
+            $query = sprintf(
+                $query,
                 $this->options['table'],
                 time() + ini_get('session.gc_maxlifetime'),
                 $this->db->quote(md5($id)),
-                time());
+                time()
+            );
         } else {
             /* Check if table row already exists */
-            $query = sprintf("SELECT COUNT(id) FROM %s WHERE id = '%s'",
+            $query = sprintf(
+                "SELECT COUNT(id) FROM %s WHERE id = '%s'",
                 $this->options['table'],
-                md5($id));
+                md5($id)
+            );
 
             $result = $this->db->queryOne($query);
             if (MDB2::isError($result)) {
-                throw new HTTP_Session2_Exception($result->getUserInfo(),
-                    $result->getCode());
+                throw new HTTP_Session2_Exception(
+                    $result->getUserInfo(),
+                    $result->getCode()
+                );
             }
             if (0 == intval($result)) {
                 /* Insert new row into table */
                 $query = "INSERT INTO %s (id, expiry, data) VALUES (%s, %d, %s)";
-                $query = sprintf($query,
+                $query = sprintf(
+                    $query,
                     $this->options['table'],
                     $this->db->quote(md5($id)),
                     time() + ini_get('session.gc_maxlifetime'),
-                    $this->db->quote($data));
+                    $this->db->quote($data)
+                );
             } else {
                 /* Update existing row */
                 $query  = "UPDATE %s SET expiry = %d, data = %s";
                 $query .= " WHERE id = %s AND expiry >= %d";
-                $query  = sprintf($query,
+                $query  = sprintf(
+                    $query,
                     $this->options['table'],
                     time() + ini_get('session.gc_maxlifetime'),
                     $this->db->quote($data),
                     $this->db->quote(md5($id)),
-                    time());
+                    time()
+                );
             }
         }
         $result = $this->db->query($query);
         if (MDB2::isError($result)) {
-            throw new HTTP_Session2_Exception($result->getUserInfo(),
-                    $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getUserInfo(),
+                $result->getCode()
+            );
         }
         return true;
     }
@@ -260,14 +283,18 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
      */
     public function destroy($id)
     {
-        $query = sprintf("DELETE FROM %s WHERE id = %s",
+        $query = sprintf(
+            "DELETE FROM %s WHERE id = %s",
             $this->options['table'],
-            $this->db->quote(md5($id)));
+            $this->db->quote(md5($id))
+        );
 
         $result = $this->db->query($query);
         if (MDB2::isError($result)) {
-            throw new HTTP_Session2_Exception ($result->getMessage(),
-                $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getMessage(),
+                $result->getCode()
+            );
         }
         return true;
     }
@@ -285,22 +312,28 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
      */
     public function gc($maxlifetime)
     {
-        $query = sprintf("DELETE FROM %s WHERE expiry < %d",
+        $query = sprintf(
+            "DELETE FROM %s WHERE expiry < %d",
             $this->options['table'],
-            time());
+            time()
+        );
 
         $result = $this->db->query($query);
         if (MDB2::isError($result)) {
-            throw new HTTP_Session2_Exception($result->getMessage(),
-                $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getMessage(),
+                $result->getCode()
+            );
         }
 
         if ($this->options['autooptimize']) {
             $this->db->loadModule('Manager');
             $result = $this->db->vacuum($this->options['table']);
             if (MDB2::isError($result)) {
-                throw new HTTP_Session2_Exception($result->getMessage(),
-                    $result->getCode());
+                throw new HTTP_Session2_Exception(
+                    $result->getMessage(),
+                    $result->getCode()
+                );
             }
         }
         return true;
@@ -327,17 +360,20 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
         $query .= " WHERE id = " . $this->db->quote(md5($id), 'text');
         $result = $this->db->queryOne($query);
         if (MDB2::isError($result)) {
-            throw new HTTP_Session2_Exception($result->getDebugInfo(),
-                $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getDebugInfo(),
+                $result->getCode()
+            );
         }
 
         // Insert new row into dest table
         if (0 == intval($result)) {
-            $query = sprintf("INSERT INTO %s SELECT * FROM %s WHERE id = %s",
+            $query = sprintf(
+                "INSERT INTO %s SELECT * FROM %s WHERE id = %s",
                 $target,
                 $this->options['table'],
-                $this->db->quote(md5($id), 'text'));
-
+                $this->db->quote(md5($id), 'text')
+            );
         } else {
             // Update existing row
             $query  = "UPDATE $target dst, " . $this->options['table'];
@@ -349,8 +385,10 @@ class HTTP_Session2_Container_MDB2 extends HTTP_Session2_Container
 
         $result = $this->db->query($query);
         if (MDB2::isError($result)) {
-            throw new HTTP_Session2_Exception($result->getDebugInfo(),
-                $result->getCode());
+            throw new HTTP_Session2_Exception(
+                $result->getDebugInfo(),
+                $result->getCode()
+            );
         }
 
         return true;

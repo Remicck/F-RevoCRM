@@ -1,8 +1,9 @@
 <?php
+
 // Vivu Esperanto ĉiam!
 // Traduko fare de Antono Vasiljev (anders[#]brainactive.org)
 
-$ADODB_LANG_ARRAY = array (
+$ADODB_LANG_ARRAY = array(
              'LANG'                      => 'eo',
             DB_ERROR                    => 'nekonata eraro',
             DB_ERROR_ALREADY_EXISTS     => 'jam ekzistas',

@@ -9,16 +9,18 @@
  * All Rights Reserved.
  * *********************************************************************************** */
 
-class Google_MapAjax_Action extends Vtiger_BasicAjax_Action {
+class Google_MapAjax_Action extends Vtiger_BasicAjax_Action
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        return array();
+    }
 
-    public function requiresPermission(\Vtiger_Request $request) {
-		return array();
-	}
-    
-    public function process(Vtiger_Request $request) {
+    public function process(Vtiger_Request $request)
+    {
         switch ($request->get("mode")) {
-            case 'getLocation'	:	$result = $this->getLocation($request);
-									break;
+            case 'getLocation':	$result = $this->getLocation($request);
+                break;
         }
         echo json_encode($result);
     }
@@ -26,16 +28,16 @@ class Google_MapAjax_Action extends Vtiger_BasicAjax_Action {
     /**
      * get address for the record, based on the module type.
      * @param Vtiger_Request $request
-     * @return type 
+     * @return type
      */
-    function getLocation(Vtiger_Request $request) {
+    public function getLocation(Vtiger_Request $request)
+    {
         $result = Google_Map_Helper::getLocation($request);
         return $result;
     }
-    
-    public function validateRequest(Vtiger_Request $request) {
+
+    public function validateRequest(Vtiger_Request $request)
+    {
         $request->validateReadAccess();
     }
 }
-
-?>

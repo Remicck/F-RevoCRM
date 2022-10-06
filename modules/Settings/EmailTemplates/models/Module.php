@@ -11,31 +11,33 @@
 /**
  * Email Template Model Class
  */
-class Settings_EmailTemplates_Module_Model extends Settings_Vtiger_Module_Model {
+class Settings_EmailTemplates_Module_Model extends Settings_Vtiger_Module_Model
+{
+    /**
+     * Function retruns List of Email Templates
+     * @return string
+     */
+    public function getListViewUrl()
+    {
+        return 'module=EmailTemplates&parent=Settings&view=List';
+    }
 
-	/**
-	 * Function retruns List of Email Templates
-	 * @return string
-	 */
-	function getListViewUrl() {
-		return 'module=EmailTemplates&parent=Settings&view=List';
-	}
+    /**
+     * Function returns all the Email Template Models
+     * @return <Array of EmailTemplates_Record_Model>
+     */
+    public function getAll()
+    {
+        $db = PearDatabase::getInstance();
+        $result = $db->pquery('SELECT * FROM vtiger_emailtemplates WHERE deleted = 0', array());
 
-	/**
-	 * Function returns all the Email Template Models
-	 * @return <Array of EmailTemplates_Record_Model>
-	 */
-	function getAll() {
-		$db = PearDatabase::getInstance();
-		$result = $db->pquery('SELECT * FROM vtiger_emailtemplates WHERE deleted = 0', array());
+        $emailTemplateModels = array();
+        for ($i=0; $i<$db->num_rows($result); $i++) {
+            $emailTemplateModel = Settings_EmailTemplates_Record_Model::getInstance();
+            $emailTemplateModel->setData($db->query_result_rowdata($result, $i));
+            $emailTemplateModels[] = $emailTemplateModel;
+        }
 
-		$emailTemplateModels = array();
-		for($i=0; $i<$db->num_rows($result); $i++) {
-			$emailTemplateModel = Settings_EmailTemplates_Record_Model::getInstance();
-			$emailTemplateModel->setData($db->query_result_rowdata($result, $i));
-			$emailTemplateModels[] = $emailTemplateModel;
-		}
-
-		return $emailTemplateModels;
-	}
+        return $emailTemplateModels;
+    }
 }

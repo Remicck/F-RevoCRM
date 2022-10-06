@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Quotes_List_View extends Inventory_List_View {
+class Quotes_List_View extends Inventory_List_View
+{
 }

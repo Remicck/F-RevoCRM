@@ -11,37 +11,39 @@
 /**
  * Roles Record Model Class
  */
-abstract class Settings_Vtiger_Record_Model extends Vtiger_Base_Model {
-
-	abstract function getId();
-	abstract function getName();
+abstract class Settings_Vtiger_Record_Model extends Vtiger_Base_Model
+{
+    abstract public function getId();
+    abstract public function getName();
 
     /**
-	 * Function to get the instance of Settings module model
-	 * @return Settings_Vtiger_Module_Model instance
-	 */
-	 public static function getInstance() {
-                list($name) = func_get_args();
-                if(empty($name)){
-                    $name='Settings:Vtiger';
-                }
-		$modelClassName  = Vtiger_Loader::getComponentClassName('Model', 'Record', $name);
-		 return new $modelClassName();
-	 }
-    
-    
-	public function getRecordLinks() {
+     * Function to get the instance of Settings module model
+     * @return Settings_Vtiger_Module_Model instance
+     */
+    public static function getInstance()
+    {
+        list($name) = func_get_args();
+        if (empty($name)) {
+            $name='Settings:Vtiger';
+        }
+        $modelClassName  = Vtiger_Loader::getComponentClassName('Model', 'Record', $name);
+        return new $modelClassName();
+    }
 
-		$links = array();
-		$recordLinks = array();
-		foreach ($recordLinks as $recordLink) {
-			$links[] = Vtiger_Link_Model::getInstanceFromValues($recordLink);
-		}
 
-		return $links;
-	}
-	
-	public function getDisplayValue($key) {
-		return $this->get($key);
-	}
+    public function getRecordLinks()
+    {
+        $links = array();
+        $recordLinks = array();
+        foreach ($recordLinks as $recordLink) {
+            $links[] = Vtiger_Link_Model::getInstanceFromValues($recordLink);
+        }
+
+        return $links;
+    }
+
+    public function getDisplayValue($key)
+    {
+        return $this->get($key);
+    }
 }

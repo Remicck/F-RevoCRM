@@ -8,27 +8,28 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_DeleteAjax_Action extends Vtiger_Delete_Action {
+class Vtiger_DeleteAjax_Action extends Vtiger_Delete_Action
+{
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        if ($commentId = $request->get('commentId')) {
+            $recordModel = Vtiger_Record_Model::getInstanceById($commentId, $moduleName);
+            $recordModel->delete();
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		if($commentId = $request->get('commentId')){
-			$recordModel = Vtiger_Record_Model::getInstanceById($commentId, $moduleName);
-			$recordModel->delete();
-			
-			$response = new Vtiger_Response();
-			$response->setResult(array('result'=>'true'));
-		} else{
-			$recordId = $request->get('record');
+            $response = new Vtiger_Response();
+            $response->setResult(array('result'=>'true'));
+        } else {
+            $recordId = $request->get('record');
 
-			$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
-			$recordModel->delete();
+            $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $moduleName);
+            $recordModel->delete();
 
-			$cvId = $request->get('viewname');
-			deleteRecordFromDetailViewNavigationRecords($recordId, $cvId, $moduleName);
-			$response = new Vtiger_Response();
-			$response->setResult(array('viewname'=>$cvId, 'module'=>$moduleName));		
-		}
-		$response->emit();
-		}
-	}
+            $cvId = $request->get('viewname');
+            deleteRecordFromDetailViewNavigationRecords($recordId, $cvId, $moduleName);
+            $response = new Vtiger_Response();
+            $response->setResult(array('viewname'=>$cvId, 'module'=>$moduleName));
+        }
+        $response->emit();
+    }
+}

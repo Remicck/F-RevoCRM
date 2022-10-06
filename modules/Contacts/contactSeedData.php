@@ -1,7 +1,7 @@
 <?php
 /*********************************************************************************
  * The contents of this file are subject to the SugarCRM Public License Version 1.1.2
- * ("License"); You may not use this file except in compliance with the 
+ * ("License"); You may not use this file except in compliance with the
  * License. You may obtain a copy of the License at http://www.sugarcrm.com/SPL
  * Software distributed under the License is distributed on an  "AS IS"  basis,
  * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License for
@@ -16,7 +16,7 @@
  * $Header: /advent/projects/wesat/vtiger_crm/sugarcrm/modules/Contacts/contactSeedData.php,v 1.4 2005/03/05 08:11:44 jack Exp $
  * Description:  TODO: To be written.
  ********************************************************************************/
-$last_name_array = Array(
+$last_name_array = array(
 "SMITH",
 "JOHNSON",
 "WILLIAMS",
@@ -18858,7 +18858,7 @@ $last_name_array = Array(
 "ACRES"
 );
 
-$first_name_array = Array(
+$first_name_array = array(
 "MARY",
 "PATRICIA",
 "LINDA",
@@ -21135,7 +21135,7 @@ $first_name_array = Array(
 "ALONSO"
 );
 require_once('include/database/PearDatabase.php');
-$company_name_array = Array(
+$company_name_array = array(
 "vtiger",
 "t3M Invest A/S",
 "EDFG Group Limited",
@@ -21148,43 +21148,39 @@ $company_name_array = Array(
 "samplevtiger"
 );
 
-$street_address_array = Array(
+$street_address_array = array(
  "123 Anywhere Street",
  "345 Sugar Blvd.",
  "1715 Scott Dr",
  "999 Baker Way");
 
-$city_array = Array(
+$city_array = array(
  "San Jose",
  "San Francisco",
  "Sunnyvale",
  "San Mateo");
 
-$campaign_name_array = Array(
+$campaign_name_array = array(
 "User Conference",
 "International Electrical Engineers Association Trade Show",
 "DM Campaign to Top Customers",
 );
 
-$campaign_type_array = Array(
+$campaign_type_array = array(
 "Conference",
 "Trade Show",
 "Direct Mail",
 );
 
-$campaign_status_array = Array(
+$campaign_status_array = array(
 "Planning",
 "Planning",
 "Completed",
 );
- 
+
 
 $last_name_count = count($last_name_array);
 $first_name_count = count($first_name_array);
 $company_name_count = count($company_name_array);
 $street_address_count = count($street_address_array);
 $city_array_count = count($city_array);
-
-
-
-?>

@@ -8,42 +8,45 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Potentials_MappingEdit_View extends Settings_Vtiger_Index_View {
+class Settings_Potentials_MappingEdit_View extends Settings_Vtiger_Index_View
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-    public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
-    
-	public function process(Vtiger_Request $request) {
-		$qualifiedModuleName = $request->getModule(false);
-		$viewer = $this->getViewer($request);
-		
-		$viewer->assign('MODULE_MODEL', Settings_Potentials_Mapping_Model::getInstance());
-		$viewer->assign('POTENTIALS_MODULE_MODEL', Settings_Potentials_Module_Model::getInstance('Potentials'));
-		$viewer->assign('PROJECT_MODULE_MODEL', Settings_Potentials_Module_Model::getInstance('Project'));
+    public function process(Vtiger_Request $request)
+    {
+        $qualifiedModuleName = $request->getModule(false);
+        $viewer = $this->getViewer($request);
 
-		$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
-		$viewer->assign('RESTRICTED_FIELD_IDS_LIST', Settings_Potentials_Mapping_Model::getRestrictedFieldIdsList());
-		$viewer->view('PotentialMappingEdit.tpl', $qualifiedModuleName);
-	}
-	
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+        $viewer->assign('MODULE_MODEL', Settings_Potentials_Mapping_Model::getInstance());
+        $viewer->assign('POTENTIALS_MODULE_MODEL', Settings_Potentials_Module_Model::getInstance('Potentials'));
+        $viewer->assign('PROJECT_MODULE_MODEL', Settings_Potentials_Module_Model::getInstance('Project'));
 
-		$jsFileNames = array(
-			"modules.Settings.$moduleName.resources.PotentialMapping"
-		);
+        $viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
+        $viewer->assign('RESTRICTED_FIELD_IDS_LIST', Settings_Potentials_Mapping_Model::getRestrictedFieldIdsList());
+        $viewer->view('PotentialMappingEdit.tpl', $qualifiedModuleName);
+    }
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
+
+        $jsFileNames = array(
+            "modules.Settings.$moduleName.resources.PotentialMapping"
+        );
+
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

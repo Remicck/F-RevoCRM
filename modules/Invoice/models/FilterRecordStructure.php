@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Invoice_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model {
+class Invoice_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model
+{
 }

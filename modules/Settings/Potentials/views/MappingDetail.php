@@ -8,45 +8,49 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Potentials_MappingDetail_View extends Settings_Vtiger_Index_View {
+class Settings_Potentials_MappingDetail_View extends Settings_Vtiger_Index_View
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $qualifiedModuleName = $request->getModule(false);
 
-	public function process(Vtiger_Request $request) {
-		$qualifiedModuleName = $request->getModule(false);
+        $viewer = $this->getViewer($request);
+        $viewer->assign('MODULE_MODEL', Settings_Potentials_Mapping_Model::getInstance());
+        $viewer->assign('ERROR_MESSAGE', $request->get('errorMessage'));
+        $viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
+        $viewer->view('MappingDetail.tpl', $qualifiedModuleName);
+    }
 
-		$viewer = $this->getViewer($request);
-		$viewer->assign('MODULE_MODEL', Settings_Potentials_Mapping_Model::getInstance());
-		$viewer->assign('ERROR_MESSAGE', $request->get('errorMessage'));
-		$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
-		$viewer->view('MappingDetail.tpl', $qualifiedModuleName);
-	}
-	
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-		$jsFileNames = array(
-			"modules.Settings.$moduleName.resources.PotentialMapping",
+        $jsFileNames = array(
+            "modules.Settings.$moduleName.resources.PotentialMapping",
             "~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/floatThead/jquery.floatThead.js",
             "~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/perfect-scrollbar/js/perfect-scrollbar.jquery.js",
-		);
+        );
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
-        
-        public function getHeaderCss(Vtiger_Request $request) {
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
+
+        public function getHeaderCss(Vtiger_Request $request)
+        {
             $headerCssInstances = parent::getHeaderCss($request);
             $cssFileNames = array(
                 "~layouts/".Vtiger_Viewer::getDefaultLayoutName()."/lib/jquery/perfect-scrollbar/css/perfect-scrollbar.css",

@@ -8,42 +8,44 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Email_UIType extends Vtiger_Base_UIType {
+class Vtiger_Email_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Email.tpl';
+    }
 
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Email.tpl';
-	}
-
-	public function getDisplayValue($value, $recordId = false, $recordInstance=false) {
-		$currentUser = Users_Record_Model::getCurrentUserModel();
-		$internalMailer = $currentUser->get('internal_mailer');
-		if($value){
+    public function getDisplayValue($value, $recordId = false, $recordInstance=false)
+    {
+        $currentUser = Users_Record_Model::getCurrentUserModel();
+        $internalMailer = $currentUser->get('internal_mailer');
+        if ($value) {
             $moduleName = $this->get('field')->get('block')->module->name;
             $fieldName = $this->get('field')->get('name');
-			if ($internalMailer == 1) {
-				/**
+            if ($internalMailer == 1) {
+                /**
                  *  We should not add "emailField" class to user name field.
-                 *  If we do so, for sending mail from list view is taking that value as a TO field. 
+                 *  If we do so, for sending mail from list view is taking that value as a TO field.
                  */
-                if($moduleName == "Users" && $fieldName == "user_name"){
+                if ($moduleName == "Users" && $fieldName == "user_name") {
                     $value = "<a class='cursorPointer' onclick=\"Vtiger_Helper_Js.getInternalMailer($recordId," .
-                    		"'$fieldName','$moduleName');\">" . ($value) . "</a>";
-                }else{
-                	$value = "<a class='emailField cursorPointer' onclick=\"Vtiger_Helper_Js.getInternalMailer($recordId," .
-                    		"'$fieldName','$moduleName');\">" . ($value) . "</a>";
+                            "'$fieldName','$moduleName');\">" . ($value) . "</a>";
+                } else {
+                    $value = "<a class='emailField cursorPointer' onclick=\"Vtiger_Helper_Js.getInternalMailer($recordId," .
+                            "'$fieldName','$moduleName');\">" . ($value) . "</a>";
                 }
-			} else {
-                if($moduleName == "Users" && $fieldName == "user_name"){
+            } else {
+                if ($moduleName == "Users" && $fieldName == "user_name") {
                     $value = "<a class='cursorPointer'  href='mailto:" . $value . "'>" . ($value) . "</a>";
-                }else{
+                } else {
                     $value = "<a class='emailField cursorPointer'  href='mailto:" . $value . "'>" . ($value) . "</a>";
                 }
-			}
-		}
-		return $value;
-	}
+            }
+        }
+        return $value;
+    }
 }

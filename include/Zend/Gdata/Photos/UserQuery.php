@@ -42,7 +42,6 @@ require_once('Zend/Gdata/Gapps/Query.php');
  */
 class Zend_Gdata_Photos_UserQuery extends Zend_Gdata_Query
 {
-
     /**
      * Indicates the format of data returned in Atom feeds. Can be either
      * 'api' or 'base'. Default value is 'api'.
@@ -327,7 +326,8 @@ class Zend_Gdata_Photos_UserQuery extends Zend_Gdata_Query
         } else {
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';
             throw new Zend_Gdata_App_InvalidArgumentException(
-                    'Type must be feed or entry, not null');
+                'Type must be feed or entry, not null'
+            );
         }
 
         if ($this->getProjection() !== null) {
@@ -335,7 +335,8 @@ class Zend_Gdata_Photos_UserQuery extends Zend_Gdata_Query
         } else {
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';
             throw new Zend_Gdata_App_InvalidArgumentException(
-                    'Projection must not be null');
+                'Projection must not be null'
+            );
         }
 
         if ($this->getUser() !== null) {
@@ -344,12 +345,12 @@ class Zend_Gdata_Photos_UserQuery extends Zend_Gdata_Query
             // Should never occur due to setter behavior
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';
             throw new Zend_Gdata_App_InvalidArgumentException(
-                    'User must not be null');
+                'User must not be null'
+            );
         }
 
         $uri .= $incomingUri;
         $uri .= $this->getQueryString();
         return $uri;
     }
-
 }

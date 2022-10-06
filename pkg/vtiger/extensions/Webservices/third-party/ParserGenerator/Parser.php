@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -23,7 +23,7 @@
  */
 /**
  * The grammar parser for lemon grammar files.
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -32,25 +32,25 @@
  */
 class PHP_ParserGenerator_Parser
 {
-    const INITIALIZE = 1;
-    const WAITING_FOR_DECL_OR_RULE = 2;
-    const WAITING_FOR_DECL_KEYWORD = 3;
-    const WAITING_FOR_DECL_ARG = 4;
-    const WAITING_FOR_PRECEDENCE_SYMBOL = 5;
-    const WAITING_FOR_ARROW = 6;
-    const IN_RHS = 7;
-    const LHS_ALIAS_1 = 8;
-    const LHS_ALIAS_2 = 9;
-    const LHS_ALIAS_3 = 10;
-    const RHS_ALIAS_1 = 11;
-    const RHS_ALIAS_2 = 12;
-    const PRECEDENCE_MARK_1 = 13;
-    const PRECEDENCE_MARK_2 = 14;
-    const RESYNC_AFTER_RULE_ERROR = 15;
-    const RESYNC_AFTER_DECL_ERROR = 16;
-    const WAITING_FOR_DESTRUCTOR_SYMBOL = 17;
-    const WAITING_FOR_DATATYPE_SYMBOL = 18;
-    const WAITING_FOR_FALLBACK_ID = 19;
+    public const INITIALIZE = 1;
+    public const WAITING_FOR_DECL_OR_RULE = 2;
+    public const WAITING_FOR_DECL_KEYWORD = 3;
+    public const WAITING_FOR_DECL_ARG = 4;
+    public const WAITING_FOR_PRECEDENCE_SYMBOL = 5;
+    public const WAITING_FOR_ARROW = 6;
+    public const IN_RHS = 7;
+    public const LHS_ALIAS_1 = 8;
+    public const LHS_ALIAS_2 = 9;
+    public const LHS_ALIAS_3 = 10;
+    public const RHS_ALIAS_1 = 11;
+    public const RHS_ALIAS_2 = 12;
+    public const PRECEDENCE_MARK_1 = 13;
+    public const PRECEDENCE_MARK_2 = 14;
+    public const RESYNC_AFTER_RULE_ERROR = 15;
+    public const RESYNC_AFTER_DECL_ERROR = 16;
+    public const WAITING_FOR_DESTRUCTOR_SYMBOL = 17;
+    public const WAITING_FOR_DATATYPE_SYMBOL = 18;
+    public const WAITING_FOR_FALLBACK_ID = 19;
 
     /**
      * Name of the input file
@@ -140,7 +140,7 @@ class PHP_ParserGenerator_Parser
     public $prevrule;
     /**
      * Keyword of a declaration
-     * 
+     *
      * This is one of the %keyword keywords in the grammar file
      * @var string
      */
@@ -154,7 +154,7 @@ class PHP_ParserGenerator_Parser
     public $declargslot = array();
     /**
      * Where the declaration linenumber is put
-     * 
+     *
      * This is assigned as a reference to an internal variable
      * @var mixed
      */
@@ -176,7 +176,7 @@ class PHP_ParserGenerator_Parser
      */
     private $lemon;
 
-    function __construct(PHP_ParserGenerator $lem)
+    public function __construct(PHP_ParserGenerator $lem)
     {
         $this->lemon = $lem;
     }
@@ -203,7 +203,9 @@ class PHP_ParserGenerator_Parser
                     $exclude--;
                     if ($exclude === 0) {
                         for ($j = $start; $j < $i; $j++) {
-                            if ($z[$j] != "\n") $z[$j] = ' ';
+                            if ($z[$j] != "\n") {
+                                $z[$j] = ' ';
+                            }
                         }
                     }
                 }
@@ -246,21 +248,21 @@ class PHP_ParserGenerator_Parser
 
     /**
      * In spite of its name, this function is really a scanner.
-     * 
+     *
      * It reads in the entire input file (all at once) then tokenizes it.
      * Each token is passed to the function "parseonetoken" which builds all
      * the appropriate data structures in the global state vector "gp".
      * @param PHP_ParserGenerator_Data
      */
-    function Parse(PHP_ParserGenerator_Data $gp)
+    public function Parse(PHP_ParserGenerator_Data $gp)
     {
         $startline = 0;
-    
+
         $this->gp = $gp;
         $this->filename = $gp->filename;
         $this->errorcnt = 0;
         $this->state = self::INITIALIZE;
-    
+
         /* Begin by reading the input file */
         $filebuf = file_get_contents($this->filename);
         if (!$filebuf) {
@@ -269,20 +271,26 @@ class PHP_ParserGenerator_Parser
             return;
         }
         if (filesize($this->filename) != strlen($filebuf)) {
-            ErrorMsg($this->filename, 0, "Can't read in all %d bytes of this file.",
-                filesize($this->filename));
+            ErrorMsg(
+                $this->filename,
+                0,
+                "Can't read in all %d bytes of this file.",
+                filesize($this->filename)
+            );
             $gp->errorcnt++;
             return;
         }
 
         /* Make an initial pass through the file to handle %ifdef and %ifndef */
         $this->preprocess_input($filebuf);
-    
+
         /* Now scan the text of the input file */
         $lineno = 1;
         for ($cp = 0, $c = $filebuf[0]; $cp < strlen($filebuf); $cp++) {
             $c = $filebuf[$cp];
-            if ($c == "\n") $lineno++;              /* Keep track of the line number */
+            if ($c == "\n") {
+                $lineno++;
+            }              /* Keep track of the line number */
             if (trim($c) === '') {
                 continue;
             }  /* Skip all white space */
@@ -315,8 +323,11 @@ class PHP_ParserGenerator_Parser
                 $oldcp = $cp;
                 $test = strpos(substr($filebuf, $cp), '"');
                 if ($test === false) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $startline,
-                    "String starting on this line is not terminated before the end of the file.");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $startline,
+                        "String starting on this line is not terminated before the end of the file."
+                    );
                     $this->errorcnt++;
                     $nextcp = $cp = strlen($filebuf);
                 } else {
@@ -369,8 +380,11 @@ class PHP_ParserGenerator_Parser
                     }
                 }
                 if ($cp >= strlen($filebuf)) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "PHP code starting on this line is not terminated before the end of the file.");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "PHP code starting on this line is not terminated before the end of the file."
+                    );
                     $this->errorcnt++;
                     $nextcp = $cp;
                 } else {
@@ -397,8 +411,11 @@ class PHP_ParserGenerator_Parser
                 $cp ++;
                 $nextcp = $cp;
             }
-            $this->parseonetoken(substr($filebuf, $this->tokenstart,
-                $cp - $this->tokenstart)); /* Parse the token */
+            $this->parseonetoken(substr(
+                $filebuf,
+                $this->tokenstart,
+                $cp - $this->tokenstart
+            )); /* Parse the token */
             $cp = $nextcp - 1;
         }
         $gp->rule = $this->firstrule;
@@ -409,13 +426,18 @@ class PHP_ParserGenerator_Parser
      * Parse a single token
      * @param string token
      */
-    function parseonetoken($token)
+    public function parseonetoken($token)
     {
         $x = $token;
         $this->a = 0; // for referencing in WAITING_FOR_DECL_KEYWORD
         if (PHP_ParserGenerator::DEBUG) {
-            printf("%s:%d: Token=[%s] state=%d\n",
-                $this->filename, $this->tokenlineno, $token, $this->state);
+            printf(
+                "%s:%d: Token=[%s] state=%d\n",
+                $this->filename,
+                $this->tokenlineno,
+                $token,
+                $this->state
+            );
         }
         switch ($this->state) {
             case self::INITIALIZE:
@@ -424,6 +446,7 @@ class PHP_ParserGenerator_Parser
                 $this->firstrule = $this->lastrule = 0;
                 $this->gp->nrule = 0;
                 /* Fall thru to next case */
+                // no break
             case self::WAITING_FOR_DECL_OR_RULE:
                 if ($x[0] == '%') {
                     $this->state = self::WAITING_FOR_DECL_KEYWORD;
@@ -434,14 +457,20 @@ class PHP_ParserGenerator_Parser
                     $this->state = self::WAITING_FOR_ARROW;
                 } elseif ($x[0] == '{') {
                     if ($this->prevrule === 0) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
                             "There is no prior rule opon which to attach the code
-                             fragment which begins on this line.");
+                             fragment which begins on this line."
+                        );
                         $this->errorcnt++;
                     } elseif ($this->prevrule->code != 0) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
                             "Code fragment beginning on this line is not the first \
-                             to follow the previous rule.");
+                             to follow the previous rule."
+                        );
                         $this->errorcnt++;
                     } else {
                         $this->prevrule->line = $this->tokenlineno;
@@ -450,24 +479,37 @@ class PHP_ParserGenerator_Parser
                 } elseif ($x[0] == '[') {
                     $this->state = self::PRECEDENCE_MARK_1;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                    "Token \"%s\" should be either \"%%\" or a nonterminal name.",
-                    $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Token \"%s\" should be either \"%%\" or a nonterminal name.",
+                        $x
+                    );
                     $this->errorcnt++;
                 }
                 break;
             case self::PRECEDENCE_MARK_1:
                 if (!preg_match('/[A-Z]/', $x[0])) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "The precedence symbol must be a terminal.");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "The precedence symbol must be a terminal."
+                    );
                     $this->errorcnt++;
                 } elseif ($this->prevrule === 0) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "There is no prior rule to assign precedence \"[%s]\".", $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "There is no prior rule to assign precedence \"[%s]\".",
+                        $x
+                    );
                     $this->errorcnt++;
                 } elseif ($this->prevrule->precsym != 0) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Precedence mark on this line is not the first to follow the previous rule.");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Precedence mark on this line is not the first to follow the previous rule."
+                    );
                     $this->errorcnt++;
                 } else {
                     $this->prevrule->precsym = PHP_ParserGenerator_Symbol::Symbol_new($x);
@@ -476,8 +518,11 @@ class PHP_ParserGenerator_Parser
                 break;
             case self::PRECEDENCE_MARK_2:
                 if ($x[0] != ']') {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Missing \"]\" on precedence mark.");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Missing \"]\" on precedence mark."
+                    );
                     $this->errorcnt++;
                 }
                 $this->state = self::WAITING_FOR_DECL_OR_RULE;
@@ -488,9 +533,12 @@ class PHP_ParserGenerator_Parser
                 } elseif ($x[0] == '(') {
                     $this->state = self::LHS_ALIAS_1;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
                         "Expected to see a \":\" following the LHS symbol \"%s\".",
-                    $this->lhs->name);
+                        $this->lhs->name
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
@@ -500,9 +548,13 @@ class PHP_ParserGenerator_Parser
                     $this->lhsalias = $x;
                     $this->state = self::LHS_ALIAS_2;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
                         "\"%s\" is not a valid alias for the LHS \"%s\"\n",
-                        $x, $this->lhs->name);
+                        $x,
+                        $this->lhs->name
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
@@ -511,8 +563,12 @@ class PHP_ParserGenerator_Parser
                 if ($x[0] == ')') {
                     $this->state = self::LHS_ALIAS_3;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Missing \")\" following LHS alias name \"%s\".",$this->lhsalias);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Missing \")\" following LHS alias name \"%s\".",
+                        $this->lhsalias
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
@@ -521,16 +577,20 @@ class PHP_ParserGenerator_Parser
                 if ($x == '::=') {
                     $this->state = self::IN_RHS;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
                         "Missing \"->\" following: \"%s(%s)\".",
-                    $this->lhs->name, $this->lhsalias);
+                        $this->lhs->name,
+                        $this->lhsalias
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
                 break;
             case self::IN_RHS:
                 if ($x[0] == '.') {
-                    $rp = new PHP_ParserGenerator_Rule;
+                    $rp = new PHP_ParserGenerator_Rule();
                     $rp->ruleline = $this->tokenlineno;
                     for ($i = 0; $i < $this->nrhs; $i++) {
                         $rp->rhs[$i] = $this->rhs[$i];
@@ -555,22 +615,30 @@ class PHP_ParserGenerator_Parser
                     $this->state = self::WAITING_FOR_DECL_OR_RULE;
                 } elseif (preg_match('/[a-zA-Z]/', $x[0])) {
                     if ($this->nrhs >= PHP_ParserGenerator::MAXRHS) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
                             "Too many symbols on RHS or rule beginning at \"%s\".",
-                            $x);
+                            $x
+                        );
                         $this->errorcnt++;
                         $this->state = self::RESYNC_AFTER_RULE_ERROR;
                     } else {
                         if (isset($this->rhs[$this->nrhs - 1])) {
                             $msp = $this->rhs[$this->nrhs - 1];
                             if ($msp->type == PHP_ParserGenerator_Symbol::MULTITERMINAL) {
-                                $inf = array_reduce($msp->subsym,
-                                    array($this, '_printmulti'), '');
-                                PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                                $inf = array_reduce(
+                                    $msp->subsym,
+                                    array($this, '_printmulti'),
+                                    ''
+                                );
+                                PHP_ParserGenerator::ErrorMsg(
+                                    $this->filename,
+                                    $this->tokenlineno,
                                     'WARNING: symbol ' . $x . ' will not' .
                                     ' be part of previous multiterminal %s',
                                     substr($inf, 0, strlen($inf) - 1)
-                                    );
+                                );
                             }
                         }
                         $this->rhs[$this->nrhs] = PHP_ParserGenerator_Symbol::Symbol_new($x);
@@ -581,7 +649,7 @@ class PHP_ParserGenerator_Parser
                     $msp = $this->rhs[$this->nrhs - 1];
                     if ($msp->type != PHP_ParserGenerator_Symbol::MULTITERMINAL) {
                         $origsp = $msp;
-                        $msp = new PHP_ParserGenerator_Symbol;
+                        $msp = new PHP_ParserGenerator_Symbol();
                         $msp->type = PHP_ParserGenerator_Symbol::MULTITERMINAL;
                         $msp->nsubsym = 1;
                         $msp->subsym = array($origsp);
@@ -592,15 +660,22 @@ class PHP_ParserGenerator_Parser
                     $msp->subsym[$msp->nsubsym - 1] = PHP_ParserGenerator_Symbol::Symbol_new(substr($x, 1));
                     if (preg_match('/[a-z]/', $x[1]) ||
                           preg_match('/[a-z]/', $msp->subsym[0]->name[0])) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Cannot form a compound containing a non-terminal");
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
+                            "Cannot form a compound containing a non-terminal"
+                        );
                         $this->errorcnt++;
                     }
                 } elseif ($x[0] == '(' && $this->nrhs > 0) {
                     $this->state = self::RHS_ALIAS_1;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Illegal character on RHS of rule: \"%s\".", $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Illegal character on RHS of rule: \"%s\".",
+                        $x
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
@@ -610,9 +685,13 @@ class PHP_ParserGenerator_Parser
                     $this->alias[$this->nrhs - 1] = $x;
                     $this->state = self::RHS_ALIAS_2;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
                         "\"%s\" is not a valid alias for the RHS symbol \"%s\"\n",
-                        $x, $this->rhs[$this->nrhs - 1]->name);
+                        $x,
+                        $this->rhs[$this->nrhs - 1]->name
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
@@ -621,14 +700,18 @@ class PHP_ParserGenerator_Parser
                 if ($x[0] == ')') {
                     $this->state = self::IN_RHS;
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Missing \")\" following LHS alias name \"%s\".", $this->lhsalias);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Missing \")\" following LHS alias name \"%s\".",
+                        $this->lhsalias
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_RULE_ERROR;
                 }
                 break;
             case self::WAITING_FOR_DECL_KEYWORD:
-                if(preg_match('/[A-Za-z]/', $x[0])) {
+                if (preg_match('/[A-Za-z]/', $x[0])) {
                     $this->declkeyword = $x;
                     $this->declargslot = &$this->a;
                     $this->decllnslot = &$this->a;
@@ -695,22 +778,33 @@ class PHP_ParserGenerator_Parser
                         $this->fallback = 0;
                         $this->state = self::WAITING_FOR_FALLBACK_ID;
                     } else {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Unknown declaration keyword: \"%%%s\".", $x);
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
+                            "Unknown declaration keyword: \"%%%s\".",
+                            $x
+                        );
                         $this->errorcnt++;
                         $this->state = self::RESYNC_AFTER_DECL_ERROR;
                     }
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Illegal declaration keyword: \"%s\".", $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Illegal declaration keyword: \"%s\".",
+                        $x
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
                 }
                 break;
             case self::WAITING_FOR_DESTRUCTOR_SYMBOL:
                 if (!preg_match('/[A-Za-z]/', $x[0])) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Symbol name missing after %destructor keyword");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Symbol name missing after %destructor keyword"
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
                 } else {
@@ -722,8 +816,11 @@ class PHP_ParserGenerator_Parser
                 break;
             case self::WAITING_FOR_DATATYPE_SYMBOL:
                 if (!preg_match('/[A-Za-z]/', $x[0])) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Symbol name missing after %destructor keyword");
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Symbol name missing after %destructor keyword"
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
                 } else {
@@ -738,25 +835,37 @@ class PHP_ParserGenerator_Parser
                 } elseif (preg_match('/[A-Z]/', $x[0])) {
                     $sp = PHP_ParserGenerator_Symbol::Symbol_new($x);
                     if ($sp->prec >= 0) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                            "Symbol \"%s\" has already been given a precedence.", $x);
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
+                            "Symbol \"%s\" has already been given a precedence.",
+                            $x
+                        );
                         $this->errorcnt++;
                     } else {
                         $sp->prec = $this->preccounter;
                         $sp->assoc = $this->declassoc;
                     }
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Can't assign a precedence to \"%s\".", $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Can't assign a precedence to \"%s\".",
+                        $x
+                    );
                     $this->errorcnt++;
                 }
                 break;
             case self::WAITING_FOR_DECL_ARG:
                 if (preg_match('/[A-Za-z0-9{"]/', $x[0])) {
                     if ($this->declargslot != 0) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
                             "The argument \"%s\" to declaration \"%%%s\" is not the first.",
-                            $x[0] == '"' ? substr($x, 1) : $x, $this->declkeyword);
+                            $x[0] == '"' ? substr($x, 1) : $x,
+                            $this->declkeyword
+                        );
                         $this->errorcnt++;
                         $this->state = self::RESYNC_AFTER_DECL_ERROR;
                     } else {
@@ -768,8 +877,13 @@ class PHP_ParserGenerator_Parser
                         $this->state = self::WAITING_FOR_DECL_OR_RULE;
                     }
                 } else {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "Illegal argument to %%%s: %s",$this->declkeyword, $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "Illegal argument to %%%s: %s",
+                        $this->declkeyword,
+                        $x
+                    );
                     $this->errorcnt++;
                     $this->state = self::RESYNC_AFTER_DECL_ERROR;
                 }
@@ -778,16 +892,24 @@ class PHP_ParserGenerator_Parser
                 if ($x[0] == '.') {
                     $this->state = self::WAITING_FOR_DECL_OR_RULE;
                 } elseif (!preg_match('/[A-Z]/', $x[0])) {
-                    PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                    "%%fallback argument \"%s\" should be a token", $x);
+                    PHP_ParserGenerator::ErrorMsg(
+                        $this->filename,
+                        $this->tokenlineno,
+                        "%%fallback argument \"%s\" should be a token",
+                        $x
+                    );
                     $this->errorcnt++;
                 } else {
                     $sp = PHP_ParserGenerator_Symbol::Symbol_new($x);
                     if ($this->fallback === 0) {
                         $this->fallback = $sp;
                     } elseif (is_object($sp->fallback)) {
-                        PHP_ParserGenerator::ErrorMsg($this->filename, $this->tokenlineno,
-                        "More than one fallback assigned to token %s", $x);
+                        PHP_ParserGenerator::ErrorMsg(
+                            $this->filename,
+                            $this->tokenlineno,
+                            "More than one fallback assigned to token %s",
+                            $x
+                        );
                         $this->errorcnt++;
                     } else {
                         $sp->fallback = $this->fallback;
@@ -796,8 +918,8 @@ class PHP_ParserGenerator_Parser
                 }
                 break;
             case self::RESYNC_AFTER_RULE_ERROR:
-            /*      if ($x[0] == '.') $this->state = self::WAITING_FOR_DECL_OR_RULE;
-            **      break; */
+                /*      if ($x[0] == '.') $this->state = self::WAITING_FOR_DECL_OR_RULE;
+                **      break; */
             case self::RESYNC_AFTER_DECL_ERROR:
                 if ($x[0] == '.') {
                     $this->state = self::WAITING_FOR_DECL_OR_RULE;

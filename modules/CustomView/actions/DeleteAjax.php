@@ -8,37 +8,43 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class CustomView_DeleteAjax_Action extends Vtiger_Action_Controller {
+class CustomView_DeleteAjax_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'sourceModule', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'sourceModule', 'action' => 'DetailView');
-		return $permissions;
-	}
-	
-	public function checkPermission(Vtiger_Request $request) {
-		return parent::checkPermission($request);
-	}
-	
-	function preProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function checkPermission(Vtiger_Request $request)
+    {
+        return parent::checkPermission($request);
+    }
 
-	function postProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function preProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$customViewModel = CustomView_Record_Model::getInstanceById($request->get('record'));
-		$customViewOwner = $customViewModel->getOwnerId();
-		$currentUser = Users_Record_Model::getCurrentUserModel();
-		if ((!$currentUser->isAdminUser()) && ($customViewOwner != $currentUser->getId())) {
-			throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
-		}
-		$customViewModel->delete();
-	}
-    
-    public function validateRequest(Vtiger_Request $request) {
+    public function postProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
+
+    public function process(Vtiger_Request $request)
+    {
+        $customViewModel = CustomView_Record_Model::getInstanceById($request->get('record'));
+        $customViewOwner = $customViewModel->getOwnerId();
+        $currentUser = Users_Record_Model::getCurrentUserModel();
+        if ((!$currentUser->isAdminUser()) && ($customViewOwner != $currentUser->getId())) {
+            throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
+        }
+        $customViewModel->delete();
+    }
+
+    public function validateRequest(Vtiger_Request $request)
+    {
         $request->validateWriteAccess();
     }
 }

@@ -8,28 +8,30 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Text_UIType extends Vtiger_Base_UIType {
-
-	/**
-	 * Function to get the Display Value, for the current field type with given DB Insert Value
-	 * @param <Object> $value
-	 * @return <Object>
-	 */
-	public function getDisplayValue($value, $record=false, $recordInstance = false,$removeTags = false) {
-		if(in_array($this->get('field')->getFieldName(),array('signature','commentcontent'))) {
-			return $value;
-		}
-                if($removeTags){
-                    $value = strip_tags($value,'<br>');
-                }
-		return nl2br(purifyHtmlEventAttributes($value, true));
-	}
-    
+class Vtiger_Text_UIType extends Vtiger_Base_UIType
+{
     /**
-	 * Function to get the Template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Text.tpl';
-	}
+     * Function to get the Display Value, for the current field type with given DB Insert Value
+     * @param <Object> $value
+     * @return <Object>
+     */
+    public function getDisplayValue($value, $record=false, $recordInstance = false, $removeTags = false)
+    {
+        if (in_array($this->get('field')->getFieldName(), array('signature','commentcontent'))) {
+            return $value;
+        }
+        if ($removeTags) {
+            $value = strip_tags($value, '<br>');
+        }
+        return nl2br(purifyHtmlEventAttributes($value, true));
+    }
+
+    /**
+     * Function to get the Template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Text.tpl';
+    }
 }

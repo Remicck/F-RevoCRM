@@ -22,5 +22,3 @@ $failureURL = '';
 $defaultSuccessAction = 'HTML';
 
 $defaultSuccessMessage = 'LBL_SUCCESS';
-
-?>

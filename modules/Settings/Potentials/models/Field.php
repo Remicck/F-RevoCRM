@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Potentials_Field_Model extends Settings_Leads_Field_Model {
+class Settings_Potentials_Field_Model extends Settings_Leads_Field_Model
+{
 }

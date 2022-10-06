@@ -6,10 +6,9 @@
  */
 class HTMLPurifier_UnitConverter
 {
-
-    const ENGLISH = 1;
-    const METRIC = 2;
-    const DIGITAL = 3;
+    public const ENGLISH = 1;
+    public const METRIC = 2;
+    public const DIGITAL = 3;
 
     /**
      * Units information array. Units are grouped into measuring systems
@@ -120,7 +119,6 @@ class HTMLPurifier_UnitConverter
         $cp = ($log < 0) ? $this->internalPrecision - $log : $this->internalPrecision; // internal precision
 
         for ($i = 0; $i < 2; $i++) {
-
             // Determine what unit IN THIS SYSTEM we need to convert to
             if ($dest_state === $state) {
                 // Simple conversion
@@ -163,7 +161,6 @@ class HTMLPurifier_UnitConverter
             $state = $dest_state;
 
             // One more loop around to convert the unit in the new system.
-
         }
 
         // Post-condition: $unit == $to_unit

@@ -8,15 +8,15 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Documents_Text_UIType extends Vtiger_Text_UIType {
-
-	/**
-	 * Function to get the Display Value, for the current field type with given DB Insert Value
-	 * @param <Object> $value
-	 * @return <Object>
-	 */
-	public function getDisplayValue($value, $record=false, $recordInstance=false,$removeTags = false) {
-		return $value;
-	}
-    
+class Documents_Text_UIType extends Vtiger_Text_UIType
+{
+    /**
+     * Function to get the Display Value, for the current field type with given DB Insert Value
+     * @param <Object> $value
+     * @return <Object>
+     */
+    public function getDisplayValue($value, $record=false, $recordInstance=false, $removeTags = false)
+    {
+        return $value;
+    }
 }

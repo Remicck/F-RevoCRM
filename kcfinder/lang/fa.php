@@ -244,5 +244,3 @@ $lang = array(
     "Select Thumbnails" => "انتخاب عکس های کوچک",
     "Download files" => "دریافت فایل ها",
 );
-
-?>

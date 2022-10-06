@@ -9,8 +9,8 @@
  *********************************************************************************/
 
 if (defined('VTIGER_UPGRADE')) {
-	global $current_user, $adb;
-	$db = PearDatabase::getInstance();
+    global $current_user, $adb;
+    $db = PearDatabase::getInstance();
 
     //"Canceled"が"Canceled[スペース]"で登録されていた箇所の修正
     $db->query("UPDATE vtiger_projecttaskstatus SET projecttaskstatus = 'Canceled' WHERE projecttaskstatus = 'Canceled '");

@@ -8,15 +8,16 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class HelpDesk_RecipientPreferences_View extends Project_RecipientPreferences_View {
-
-	public function process(Vtiger_Request $request) {
-		$sourceModule = $request->getModule();
-		$emailFieldsInfo = $this->getEmailFieldsInfo($sourceModule);
-		$viewer = $this->getViewer($request);
-		$viewer->assign('EMAIL_FIELDS_LIST', $emailFieldsInfo);
-		$viewer->assign('MODULE', $request->getModule());
-		$viewer->assign('SOURCE_MODULE', $sourceModule);
-		echo $viewer->view('RecipientPreferences.tpl', 'Project', true);
-	}
+class HelpDesk_RecipientPreferences_View extends Project_RecipientPreferences_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $sourceModule = $request->getModule();
+        $emailFieldsInfo = $this->getEmailFieldsInfo($sourceModule);
+        $viewer = $this->getViewer($request);
+        $viewer->assign('EMAIL_FIELDS_LIST', $emailFieldsInfo);
+        $viewer->assign('MODULE', $request->getModule());
+        $viewer->assign('SOURCE_MODULE', $sourceModule);
+        echo $viewer->view('RecipientPreferences.tpl', 'Project', true);
+    }
 }

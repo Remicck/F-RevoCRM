@@ -12,9 +12,9 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class file {
-
-    static $MIME = array(
+class file
+{
+    public static $MIME = array(
         'ai'    => 'application/postscript',
         'aif'   => 'audio/x-aiff',
         'aifc'  => 'audio/x-aiff',
@@ -100,15 +100,17 @@ class file {
         'zip'   => 'application/x-zip'
     );
 
-  /** Checks if the given file is really writable. The standard PHP function
-    * is_writable() does not work properly on Windows servers.
-    * @param string $dir
-    * @return bool */
+    /** Checks if the given file is really writable. The standard PHP function
+      * is_writable() does not work properly on Windows servers.
+      * @param string $dir
+      * @return bool */
 
-    static function isWritable($filename) {
+    public static function isWritable($filename)
+    {
         $filename = path::normalize($filename);
-        if (!is_file($filename) || (false === ($fp = @fopen($filename, 'a+'))))
+        if (!is_file($filename) || (false === ($fp = @fopen($filename, 'a+')))) {
             return false;
+        }
         fclose($fp);
         return true;
     }
@@ -118,7 +120,8 @@ class file {
     * @param bool $toLower
     * @return string */
 
-    static function getExtension($filename, $toLower=true) {
+    public static function getExtension($filename, $toLower=true)
+    {
         return preg_match('/^.*\.([^\.]*)$/s', $filename, $patt)
             ? ($toLower ? strtolower($patt[1]) : $patt[1]) : "";
     }
@@ -134,7 +137,8 @@ class file {
     * @param string $magic
     * @return string */
 
-    static function getMimeType($filename, $magic=null) {
+    public static function getMimeType($filename, $magic=null)
+    {
         if (class_exists("finfo")) {
             $finfo = ($magic === null)
                 ? new finfo(FILEINFO_MIME)
@@ -170,12 +174,15 @@ class file {
     * @param string $tpl
     * @return string */
 
-    static function getInexistantFilename($filename, $dir=null, $tpl=null) {
-        if ($tpl === null)  $tpl = "{name}({sufix}){ext}";
+    public static function getInexistantFilename($filename, $dir=null, $tpl=null)
+    {
+        if ($tpl === null) {
+            $tpl = "{name}({sufix}){ext}";
+        }
         $fullPath = ($dir === null);
-        if ($fullPath)
+        if ($fullPath) {
             $dir = path::normalize(dirname($filename));
-        else {
+        } else {
             $fdir = dirname($filename);
             $dir = strlen($fdir)
                 ? path::normalize("$dir/$fdir")
@@ -186,9 +193,11 @@ class file {
         $name = strlen($ext) ? substr($filename, 0, -strlen($ext) - 1) : $filename;
         $tpl = str_replace('{name}', $name, $tpl);
         $tpl = str_replace('{ext}', (strlen($ext) ? ".$ext" : ""), $tpl);
-        $i = 1; $file = "$dir/$filename";
-        while (file_exists($file))
+        $i = 1;
+        $file = "$dir/$filename";
+        while (file_exists($file)) {
             $file = "$dir/" . str_replace('{sufix}', $i++, $tpl);
+        }
 
         return $fullPath
             ? $file
@@ -196,8 +205,9 @@ class file {
                 ? "$fdir/" . basename($file)
                 : basename($file));
     }
-    
-    static function sanitizeFileName($filename){
+
+    public static function sanitizeFileName($filename)
+    {
         $sanitizedFilename = vtlib_purify($filename);
         $sanitizedFilename = str_replace('/', "", $sanitizedFilename);
         $sanitizedFilename = str_replace('"', "", $sanitizedFilename);
@@ -209,4 +219,3 @@ class file {
         return $sanitizedFilename;
     }
 }
-?>

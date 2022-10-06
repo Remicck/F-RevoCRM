@@ -8,26 +8,26 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	
+
     //Blocks
     'LBL_PBXMANAGER_INFORMATION' => 'Detalii suna',
     'LBL_CUSTOM_INFORMATION'=>'Informaţii personalizate',
-    
+
     // list view settings links
     'LBL_SERVER_CONFIGURATION' => 'Furnizor Configurare',
-    
+
     //Detail view header title
     'LBL_CALL_FROM' => 'Suna la',
     'LBL_CALL_TO' => 'Apel La',
-    
-    //Incoming call pop-up 
-    'LBL_HIDDEN' => '(Ascuns)', 
-  
+
+    //Incoming call pop-up
+    'LBL_HIDDEN' => '(Ascuns)',
+
     // Fields
     'Total Duration' => 'Durata (sec)',
     'Bill Duration'  => 'Bill Durata (sec)',
     'Recording URL' => 'Înregistrare',
-    
+
     'SINGLE_PBXManager' => 'Call Record' ,
 
 );

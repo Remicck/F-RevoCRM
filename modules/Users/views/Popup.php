@@ -8,17 +8,19 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Users_Popup_View extends Vtiger_Popup_View {
-    
-    public function requiresPermission(\Vtiger_Request $request) {
-		return array();
-	}
-    
-    function checkPermission(Vtiger_Request $request) {
+class Users_Popup_View extends Vtiger_Popup_View
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        return array();
+    }
+
+    public function checkPermission(Vtiger_Request $request)
+    {
         $moduleName = $request->getModule();
         $sourceModuleName = $request->get('src_module');
         $sourceFieldName = $request->get('src_field');
-        if( $moduleName == 'Users' && $sourceModuleName == 'Quotes' && $sourceFieldName == 'assigned_user_id1' ) {
+        if ($moduleName == 'Users' && $sourceModuleName == 'Quotes' && $sourceFieldName == 'assigned_user_id1') {
             return true;
         }
         return parent::checkPermission($request);

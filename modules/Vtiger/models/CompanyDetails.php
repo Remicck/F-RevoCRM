@@ -11,30 +11,32 @@
 /**
  * CompanyDetails Record Model class
  */
-class Vtiger_CompanyDetails_Model extends Vtiger_Base_Model {
-
-	/**
-	 * Function to get the Company Logo
-	 * @return Vtiger_Image_Model instance
-	 */
-	public function getLogo(){
-		$logoName = decode_html($this->get('logoname'));
-		$logoModel = new Vtiger_Image_Model();
-		if(!empty($logoName)) {
-			$companyLogo = array();
-			$companyLogo['imagepath'] = "test/logo/$logoName";
-			$companyLogo['alt'] = $companyLogo['title'] = $companyLogo['imagename'] = $logoName;
-			$logoModel->setData($companyLogo);
-		}
-		return $logoModel;
-	}
+class Vtiger_CompanyDetails_Model extends Vtiger_Base_Model
+{
+    /**
+     * Function to get the Company Logo
+     * @return Vtiger_Image_Model instance
+     */
+    public function getLogo()
+    {
+        $logoName = decode_html($this->get('logoname'));
+        $logoModel = new Vtiger_Image_Model();
+        if (!empty($logoName)) {
+            $companyLogo = array();
+            $companyLogo['imagepath'] = "test/logo/$logoName";
+            $companyLogo['alt'] = $companyLogo['title'] = $companyLogo['imagename'] = $logoName;
+            $logoModel->setData($companyLogo);
+        }
+        return $logoModel;
+    }
 
     /**
      * Function to get the instance of the CompanyDetails model for a given organization id
      * @param <Number> $id
      * @return Vtiger_CompanyDetails_Model instance
      */
-    public static function getInstanceById($id = 1) {
+    public static function getInstanceById($id = 1)
+    {
         $companyDetails = Vtiger_Cache::get('vtiger', 'organization');
         if (!$companyDetails) {
             $db = PearDatabase::getInstance();
@@ -46,9 +48,8 @@ class Vtiger_CompanyDetails_Model extends Vtiger_Base_Model {
                 $resultRow = $db->query_result_rowdata($result, 0);
                 $companyDetails->setData($resultRow);
             }
-            Vtiger_Cache::set('vtiger','organization',$companyDetails);
+            Vtiger_Cache::set('vtiger', 'organization', $companyDetails);
         }
         return $companyDetails;
     }
-
 }

@@ -10,41 +10,41 @@
 include_once 'include/Webservices/Query.php';
 include_once dirname(__FILE__) . '/FetchAllAlerts.php';
 
-class Mobile_WS_AlertDetailsWithMessage extends Mobile_WS_FetchAllAlerts {
-	
-	function process(Mobile_API_Request $request) {
-		global $current_user;
+class Mobile_WS_AlertDetailsWithMessage extends Mobile_WS_FetchAllAlerts
+{
+    public function process(Mobile_API_Request $request)
+    {
+        global $current_user;
 
-		$response = new Mobile_API_Response();
+        $response = new Mobile_API_Response();
 
-		$alertid = $request->get('alertid');
-		$current_user = $this->getActiveUser();
+        $alertid = $request->get('alertid');
+        $current_user = $this->getActiveUser();
 
-		$alert = $this->getAlertDetails($alertid);
-		if(empty($alert)) {
-			$response->setError(1401, 'Alert not found');
-		} else {
-			$result = array();
-			$result['alert'] = $this->getAlertDetails($alertid);
-			$response->setResult($result);			
-		}
+        $alert = $this->getAlertDetails($alertid);
+        if (empty($alert)) {
+            $response->setError(1401, 'Alert not found');
+        } else {
+            $result = array();
+            $result['alert'] = $this->getAlertDetails($alertid);
+            $response->setResult($result);
+        }
 
-		return $response;
-	}
-	
-	function getAlertDetails($alertid) {
-		
-		$alertModel = Mobile_WS_AlertModel::modelWithId($alertid);
-		
-		$alert = false;
-		if($alertModel) {
-			$alert = $alertModel->serializeToSend();
-			
-			$alertModel->setUser($this->getActiveUser());
-			$alert['message'] = $alertModel->message();
-		}
-		
-		return $alert;
-	}
-	
+        return $response;
+    }
+
+    public function getAlertDetails($alertid)
+    {
+        $alertModel = Mobile_WS_AlertModel::modelWithId($alertid);
+
+        $alert = false;
+        if ($alertModel) {
+            $alert = $alertModel->serializeToSend();
+
+            $alertModel->setUser($this->getActiveUser());
+            $alert['message'] = $alertModel->message();
+        }
+
+        return $alert;
+    }
 }

@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,39 +12,41 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  * @subpackage helpers
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+}
 
 require_once(LOG4PHP_DIR . '/LoggerLevel.php');
 
-define('LOG4PHP_OPTION_CONVERTER_DELIM_START',      '${');
-define('LOG4PHP_OPTION_CONVERTER_DELIM_STOP',       '}');
-define('LOG4PHP_OPTION_CONVERTER_DELIM_START_LEN',  2);
-define('LOG4PHP_OPTION_CONVERTER_DELIM_STOP_LEN',   1);
+define('LOG4PHP_OPTION_CONVERTER_DELIM_START', '${');
+define('LOG4PHP_OPTION_CONVERTER_DELIM_STOP', '}');
+define('LOG4PHP_OPTION_CONVERTER_DELIM_START_LEN', 2);
+define('LOG4PHP_OPTION_CONVERTER_DELIM_STOP_LEN', 1);
 
 /**
  * A convenience class to convert property values to specific types.
  *
  * @author VxR <vxr@vxr.it>
- * @version $Revision: 1.6 $ 
+ * @version $Revision: 1.6 $
  * @package log4php
  * @subpackage helpers
  * @static
  * @since 0.5
  */
-class LoggerOptionConverter {
-
-    /** 
-     * OptionConverter is a static class. 
+class LoggerOptionConverter
+{
+    /**
+     * OptionConverter is a static class.
      */
-    function OptionConverter() 
+    public function OptionConverter()
     {
         return;
     }
@@ -56,7 +58,7 @@ class LoggerOptionConverter {
      *
      * @static
      */
-    function concatanateArrays($l, $r)
+    public function concatanateArrays($l, $r)
     {
         return array_merge($l, $r);
     }
@@ -67,7 +69,7 @@ class LoggerOptionConverter {
     * It returns a value referenced by <var>$key</var> using this search criteria:
     * - if <var>$key</var> is a constant then return it. Else
     * - if <var>$key</var> is set in <var>$_ENV</var> then return it. Else
-    * - return <var>$def</var>. 
+    * - return <var>$def</var>.
     *
     * @param string $key The key to search for.
     * @param string $def The default value to return.
@@ -76,7 +78,7 @@ class LoggerOptionConverter {
     *
     * @static
     */
-    function getSystemProperty($key, $def)
+    public function getSystemProperty($key, $def)
     {
         LoggerLog::debug("LoggerOptionConverter::getSystemProperty():key=[{$key}]:def=[{$def}].");
 
@@ -103,17 +105,21 @@ class LoggerOptionConverter {
      *
      * @static
      */
-    function toBoolean($value, $default)
+    public function toBoolean($value, $default)
     {
-        if($value === null)
+        if ($value === null) {
             return $default;
-        if ($value == 1)
+        }
+        if ($value == 1) {
             return true;
+        }
         $trimmedVal = strtolower(trim($value));
-        if ("true" == $trimmedVal or "yes" == $trimmedVal)
+        if ("true" == $trimmedVal or "yes" == $trimmedVal) {
             return true;
-        if ("false" == $trimmedVal)
+        }
+        if ("false" == $trimmedVal) {
             return false;
+        }
         return $default;
     }
 
@@ -123,7 +129,7 @@ class LoggerOptionConverter {
      * @return integer
      * @static
      */
-    function toInt($value, $default)
+    public function toInt($value, $default)
     {
         $value = trim($value);
         if (is_numeric($value)) {
@@ -160,18 +166,19 @@ class LoggerOptionConverter {
      * @return LoggerLevel a {@link LoggerLevel} or null
      * @static
      */
-    function toLevel($value, $defaultValue)
+    public function toLevel($value, $defaultValue)
     {
-        if($value === null)
+        if ($value === null) {
             return $defaultValue;
+        }
 
         $hashIndex = strpos($value, '#');
         if ($hashIndex === false) {
-            if("NULL" == strtoupper($value)) {
-	            return null;
+            if ("NULL" == strtoupper($value)) {
+                return null;
             } else {
-	            // no class name specified : use standard Level class
-	            return LoggerLevel::toLevel($value, $defaultValue);
+                // no class name specified : use standard Level class
+                return LoggerLevel::toLevel($value, $defaultValue);
             }
         }
 
@@ -181,21 +188,22 @@ class LoggerOptionConverter {
         $levelName = substr($value, 0, $hashIndex);
 
         // This is degenerate case but you never know.
-        if("NULL" == strtoupper($levelName)) {
-        	return null;
+        if ("NULL" == strtoupper($levelName)) {
+            return null;
         }
 
         LoggerLog::debug("LoggerOptionConverter::toLevel():class=[{$clazz}]:pri=[{$levelName}]");
 
-        if (!class_exists($clazz))
+        if (!class_exists($clazz)) {
             @include_once("{$clazz}.php");
+        }
 
         $clazz = basename($clazz);
 
         if (class_exists($clazz)) {
             $result = @call_user_func(array($clazz, 'toLevel'), $value, $defaultValue);
             if (!is_a($result, 'loggerlevel')) {
-                LoggerLog::debug("LoggerOptionConverter::toLevel():class=[{$clazz}] cannot call toLevel(). Returning default.");            
+                LoggerLog::debug("LoggerOptionConverter::toLevel():class=[{$clazz}] cannot call toLevel(). Returning default.");
                 $result = $defaultValue;
             }
         } else {
@@ -211,24 +219,25 @@ class LoggerOptionConverter {
      *
      * @static
      */
-    function toFileSize($value, $default)
+    public function toFileSize($value, $default)
     {
-        if ($value === null)
+        if ($value === null) {
             return $default;
+        }
 
         $s = strtoupper(trim($value));
         $multiplier = (float)1;
-        if(($index = strpos($s, 'KB')) !== false) {
+        if (($index = strpos($s, 'KB')) !== false) {
             $multiplier = 1024;
             $s = substr($s, 0, $index);
-        } elseif(($index = strpos($s, 'MB')) !== false) {
+        } elseif (($index = strpos($s, 'MB')) !== false) {
             $multiplier = 1024 * 1024;
             $s = substr($s, 0, $index);
-        } elseif(($index = strpos($s, 'GB')) !== false) {
+        } elseif (($index = strpos($s, 'GB')) !== false) {
             $multiplier = 1024 * 1024 * 1024;
             $s = substr($s, 0, $index);
         }
-        if(is_numeric($s)) {
+        if (is_numeric($s)) {
             return (float)$s * $multiplier;
         } else {
             LoggerLog::warn("LoggerOptionConverter::toFileSize() [{$s}] is not in proper form.");
@@ -247,10 +256,10 @@ class LoggerOptionConverter {
      *
      * @static
      */
-    function findAndSubst($key, $props)
+    public function findAndSubst($key, $props)
     {
         $value = @$props[$key];
-        if(empty($value)) {
+        if (empty($value)) {
             return null;
         }
         return LoggerOptionConverter::substVars($value, $props);
@@ -259,92 +268,89 @@ class LoggerOptionConverter {
     /**
      * Perform variable substitution in string <var>$val</var> from the
      * values of keys found with the {@link getSystemProperty()} method.
-     * 
+     *
      * <p>The variable substitution delimeters are <b>${</b> and <b>}</b>.
-     * 
+     *
      * <p>For example, if the "MY_CONSTANT" contains "value", then
      * the call
      * <code>
      * $s = LoggerOptionConverter::substituteVars("Value of key is ${MY_CONSTANT}.");
      * </code>
      * will set the variable <i>$s</i> to "Value of key is value.".</p>
-     * 
+     *
      * <p>If no value could be found for the specified key, then the
      * <var>$props</var> parameter is searched, if the value could not
      * be found there, then substitution defaults to the empty string.</p>
-     * 
+     *
      * <p>For example, if {@link getSystemProperty()} cannot find any value for the key
      * "inexistentKey", then the call
      * <code>
      * $s = LoggerOptionConverter::substVars("Value of inexistentKey is [${inexistentKey}]");
      * </code>
      * will set <var>$s</var> to "Value of inexistentKey is []".</p>
-     * 
-     * <p>A warn is thrown if <var>$val</var> contains a start delimeter "${" 
+     *
+     * <p>A warn is thrown if <var>$val</var> contains a start delimeter "${"
      * which is not balanced by a stop delimeter "}" and an empty string is returned.</p>
-     * 
+     *
      * @log4j-author Avy Sharell
-     * 
+     *
      * @param string $val The string on which variable substitution is performed.
      * @param array $props
      * @return string
      *
      * @static
      */
-    function substVars($val, $props = null)
+    public function substVars($val, $props = null)
     {
         LoggerLog::debug("LoggerOptionConverter::substVars():val=[{$val}]");
-        
+
         $sbuf = '';
         $i = 0;
-        while(true) {
+        while (true) {
             $j = strpos($val, LOG4PHP_OPTION_CONVERTER_DELIM_START, $i);
             if ($j === false) {
                 LoggerLog::debug("LoggerOptionConverter::substVars() no more variables");
-	            // no more variables
-	            if ($i == 0) { // this is a simple string
+                // no more variables
+                if ($i == 0) { // this is a simple string
                     LoggerLog::debug("LoggerOptionConverter::substVars() simple string");
-	                return $val;
-            	} else { // add the tail string which contails no variables and return the result.
+                    return $val;
+                } else { // add the tail string which contails no variables and return the result.
                     $sbuf .= substr($val, $i);
-                    LoggerLog::debug("LoggerOptionConverter::substVars():sbuf=[{$sbuf}]. Returning sbuf");                    
+                    LoggerLog::debug("LoggerOptionConverter::substVars():sbuf=[{$sbuf}]. Returning sbuf");
                     return $sbuf;
-	            }
+                }
             } else {
-            
-	            $sbuf .= substr($val, $i, $j-$i);
+                $sbuf .= substr($val, $i, $j-$i);
                 LoggerLog::debug("LoggerOptionConverter::substVars():sbuf=[{$sbuf}]:i={$i}:j={$j}.");
-            	$k = strpos($val, LOG4PHP_OPTION_CONVERTER_DELIM_STOP, $j);
-            	if ($k === false) {
+                $k = strpos($val, LOG4PHP_OPTION_CONVERTER_DELIM_STOP, $j);
+                if ($k === false) {
                     LoggerLog::warn(
                         "LoggerOptionConverter::substVars() " .
                         "'{$val}' has no closing brace. Opening brace at position {$j}."
                     );
                     return '';
-	            } else {
-	                $j += LOG4PHP_OPTION_CONVERTER_DELIM_START_LEN;
-	                $key = substr($val, $j, $k - $j);
+                } else {
+                    $j += LOG4PHP_OPTION_CONVERTER_DELIM_START_LEN;
+                    $key = substr($val, $j, $k - $j);
                     // first try in System properties
-	                $replacement = LoggerOptionConverter::getSystemProperty($key, null);
-	                // then try props parameter
-	                if($replacement == null and $props !== null) {
-            	        $replacement = @$props[$key];
-	                }
+                    $replacement = LoggerOptionConverter::getSystemProperty($key, null);
+                    // then try props parameter
+                    if ($replacement == null and $props !== null) {
+                        $replacement = @$props[$key];
+                    }
 
-                    if(!empty($replacement)) {
-	                    // Do variable substitution on the replacement string
-                	    // such that we can solve "Hello ${x2}" as "Hello p1" 
+                    if (!empty($replacement)) {
+                        // Do variable substitution on the replacement string
+                        // such that we can solve "Hello ${x2}" as "Hello p1"
                         // the where the properties are
-                	    // x1=p1
+                        // x1=p1
                         // x2=${x1}
-	                    $recursiveReplacement = LoggerOptionConverter::substVars($replacement, $props);
-                	    $sbuf .= $recursiveReplacement;
-	                }
-	                $i = $k + LOG4PHP_OPTION_CONVERTER_DELIM_STOP_LEN;
-	            }
+                        $recursiveReplacement = LoggerOptionConverter::substVars($replacement, $props);
+                        $sbuf .= $recursiveReplacement;
+                    }
+                    $i = $k + LOG4PHP_OPTION_CONVERTER_DELIM_STOP_LEN;
+                }
             }
         }
     }
-
 }
-?>

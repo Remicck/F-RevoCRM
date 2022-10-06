@@ -9,7 +9,8 @@
  *************************************************************************************/
 require_once 'modules/WSAPP/SyncServer.php';
 
-function wsapp_register ($type,$syncType, $user) {
-	$instance = new SyncServer();
-	return $instance->register($type,$syncType,$user);
+function wsapp_register($type, $syncType, $user)
+{
+    $instance = new SyncServer();
+    return $instance->register($type, $syncType, $user);
 }

@@ -8,119 +8,129 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Webforms_Module_Model extends Settings_Vtiger_Module_Model {
+class Settings_Webforms_Module_Model extends Settings_Vtiger_Module_Model
+{
+    public $baseTable = 'vtiger_webforms';
+    public $baseIndex = 'id';
+    public $nameFields = array('name');
+    public $listFields = array('name'=>'WebForm Name', 'targetmodule' => 'Module', 'publicid'=>'Public Id', 'returnurl' => 'Return Url', 'enabled' => 'Status');
+    public $name = 'Webforms';
+    public $allowedAllFilesSize = 52428800; //50MB
 
-	var $baseTable = 'vtiger_webforms';
-	var $baseIndex = 'id';
-	var $nameFields = array('name');
-	var $listFields = array('name'=>'WebForm Name', 'targetmodule' => 'Module', 'publicid'=>'Public Id', 'returnurl' => 'Return Url', 'enabled' => 'Status');
-	var $name = 'Webforms';
-	var $allowedAllFilesSize = 52428800; //50MB
+    public static function getSupportedModulesList()
+    {
+        $webformModules = array('Contacts', 'Accounts', 'Leads', 'Potentials', 'HelpDesk', 'Vendors');
+        $sourceModule = array();
+        foreach ($webformModules as $key => $moduleName) {
+            $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+            $presenceValues = array(0,2);
+            if ($moduleModel && in_array($moduleModel->presence, $presenceValues)) {
+                $sourceModule[$moduleName] = vtranslate($moduleName, $moduleName);
+            }
+        }
+        return $sourceModule;
+    }
 
-	public static function getSupportedModulesList() {
-		$webformModules = array('Contacts', 'Accounts', 'Leads', 'Potentials', 'HelpDesk', 'Vendors');
-		$sourceModule = array();
-		foreach ($webformModules as $key => $moduleName) {
-			$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-			$presenceValues = array(0,2);
-			if($moduleModel && in_array($moduleModel->presence, $presenceValues)){
-				$sourceModule[$moduleName] = vtranslate($moduleName, $moduleName);
-			}
-		}
-		return $sourceModule;
-	}
+    /**
+     * Function to get Create view url
+     * @return <String> Url
+     */
+    public function getCreateRecordUrl()
+    {
+        return "index.php?module=".$this->getName()."&parent=".$this->getParentName()."&view=Edit";
+    }
 
-	/**
-	 * Function to get Create view url
-	 * @return <String> Url
-	 */
-	public function getCreateRecordUrl() {
-		return "index.php?module=".$this->getName()."&parent=".$this->getParentName()."&view=Edit";
-	}
+    /**
+     * Function to get List view url
+     * @return <String> Url
+     */
+    public function getListViewUrl()
+    {
+        return "index.php?module=".$this->getName()."&parent=".$this->getParentName()."&view=List";
+    }
 
-	/**
-	 * Function to get List view url
-	 * @return <String> Url
-	 */
-	public function getListViewUrl() {
-		return "index.php?module=".$this->getName()."&parent=".$this->getParentName()."&view=List";
-	}
+    /**
+     * Function to get list of Blocks
+     * @return <Array> list of Block models <Settings_Webforms_Block_Model>
+     */
+    public function getBlocks()
+    {
+        if (empty($this->blocks)) {
+            $this->blocks =  Settings_Webforms_Block_Model::getAllForModule($this);
+        }
+        return $this->blocks;
+    }
 
-	/**
-	 * Function to get list of Blocks
-	 * @return <Array> list of Block models <Settings_Webforms_Block_Model>
-	 */
-	public function getBlocks() {
-		if(empty($this->blocks)) {
-			$this->blocks =  Settings_Webforms_Block_Model::getAllForModule($this);
-		}
-		return $this->blocks;
-	}
+    /**
+     * Function to get list of fields
+     * @return <Array> list of Field models <Settings_Webforms_Field_Model>
+     */
+    public function getFields()
+    {
+        if (!$this->fields) {
+            $fieldsList = array();
+            $blocks = $this->getBlocks();
+            foreach ($blocks as $blockModel) {
+                $fieldsList = array_merge($fieldsList, $blockModel->getFields());
+            }
+            $this->fields = $fieldsList;
+        }
+        return $this->fields;
+    }
 
-	/**
-	 * Function to get list of fields
-	 * @return <Array> list of Field models <Settings_Webforms_Field_Model>
-	 */
-	public function getFields() {
-		if (!$this->fields) {
-			$fieldsList = array();
-			$blocks = $this->getBlocks();
-			foreach ($blocks as $blockModel) {
-				$fieldsList = array_merge($fieldsList, $blockModel->getFields());
-			}
-			$this->fields = $fieldsList;
-		}
-		return $this->fields;
-	}
+    /**
+     * Function to get field using field name
+     * @param <String> $fieldName
+     * @return <Settings_Webforms_Field_Model>
+     */
+    public function getField($fieldName)
+    {
+        $fields = $this->getFields();
+        return $fields[$fieldName];
+    }
 
-	/**
-	 * Function to get field using field name
-	 * @param <String> $fieldName
-	 * @return <Settings_Webforms_Field_Model>
-	 */
-	public function getField($fieldName) {
-		$fields = $this->getFields();
-		return $fields[$fieldName];
-	}
+    /**
+     * Function to delete record
+     * @param <Settings_Webforms_Record_Model> $recordModel
+     * @return <boolean> true
+     */
+    public function deleteRecord($recordModel)
+    {
+        $recordId = $recordModel->getId();
+        $db = PearDatabase::getInstance();
 
-	/**
-	 * Function to delete record
-	 * @param <Settings_Webforms_Record_Model> $recordModel
-	 * @return <boolean> true
-	 */
-	public function deleteRecord($recordModel) {
-		$recordId = $recordModel->getId();
-		$db = PearDatabase::getInstance();
+        $db->pquery("DELETE from vtiger_webforms_field WHERE webformid = ?", array($recordId));
+        $db->pquery("DELETE from vtiger_webforms WHERE id = ?", array($recordId));
+        return true;
+    }
 
-		$db->pquery("DELETE from vtiger_webforms_field WHERE webformid = ?", array($recordId));
-		$db->pquery("DELETE from vtiger_webforms WHERE id = ?", array($recordId));
-		return true;
-	}
+    /**
+     * Function to get Module Header Links (for Vtiger7)
+     * @return array
+     */
+    public function getModuleBasicLinks()
+    {
+        $createPermission = Users_Privileges_Model::isPermitted($this->getName(), 'CreateView');
+        $moduleName = $this->getName();
+        $basicLinks = array();
+        if ($createPermission) {
+            $basicLinks[] = array(
+                'linktype' => 'BASIC',
+                'linklabel' => 'LBL_ADD_RECORD',
+                'linkurl' => $this->getCreateRecordUrl(),
+                'linkicon' => 'fa-plus'
+            );
+        }
+        return $basicLinks;
+    }
 
-	/**
-	 * Function to get Module Header Links (for Vtiger7)
-	 * @return array
-	 */
-	public function getModuleBasicLinks(){
-	   $createPermission = Users_Privileges_Model::isPermitted($this->getName(), 'CreateView');
-		$moduleName = $this->getName();
-		$basicLinks = array();
-		if($createPermission) {
-		   $basicLinks[] = array(
-			   'linktype' => 'BASIC',
-			   'linklabel' => 'LBL_ADD_RECORD',
-			   'linkurl' => $this->getCreateRecordUrl(),
-			   'linkicon' => 'fa-plus'
-		   );
-		}
-		 return $basicLinks;
-	}
+    public function isStarredEnabled()
+    {
+        return false;
+    }
 
-	function isStarredEnabled(){
-		return false;
-	}
-
-	public function allowedAllFilesSize() {
-		return $this->allowedAllFilesSize;
-	}
+    public function allowedAllFilesSize()
+    {
+        return $this->allowedAllFilesSize;
+    }
 }

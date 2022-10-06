@@ -7,6 +7,6 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  *************************************************************************************/
-class Events_Time_UIType extends Calendar_Time_UIType {
-
+class Events_Time_UIType extends Calendar_Time_UIType
+{
 }

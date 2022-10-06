@@ -8,14 +8,15 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-Class ModComments_Edit_View extends Vtiger_Edit_View {
-
-	public function checkPermission(Vtiger_Request $request) {
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		$moduleName = $request->getModule();
-		$record = $request->get('record');
-		if (!empty($record) || !Users_Privileges_Model::isPermitted($moduleName, 'EditView')) {
-			throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
-		}
-	}
+class ModComments_Edit_View extends Vtiger_Edit_View
+{
+    public function checkPermission(Vtiger_Request $request)
+    {
+        $currentUserModel = Users_Record_Model::getCurrentUserModel();
+        $moduleName = $request->getModule();
+        $record = $request->get('record');
+        if (!empty($record) || !Users_Privileges_Model::isPermitted($moduleName, 'EditView')) {
+            throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
+        }
+    }
 }

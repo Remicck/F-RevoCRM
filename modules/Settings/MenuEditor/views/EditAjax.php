@@ -8,30 +8,32 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class Settings_MenuEditor_EditAjax_View extends Settings_Vtiger_Index_View {
+class Settings_MenuEditor_EditAjax_View extends Settings_Vtiger_Index_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('showAddModule');
+    }
 
-	public function __construct() {
-		parent::__construct();
-		$this->exposeMethod('showAddModule');
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->getMode();
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
 
-	public function process(Vtiger_Request $request) {
-		$mode = $request->getMode();
-		if (!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
+    public function showAddModule(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $qualifiedModuleName = $request->getModule(false);
+        $appName = $request->get('appname');
 
-	function showAddModule(Vtiger_Request $request) {
-		$viewer = $this->getViewer($request);
-		$qualifiedModuleName = $request->getModule(false);
-		$appName = $request->get('appname');
-
-		$viewer->assign('SELECTED_APP_NAME', $appName);
-		$viewer->assign('MODULE', $request->getModule());
-		$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
-		$viewer->view('AddModule.tpl', $qualifiedModuleName);
-	}
-
+        $viewer->assign('SELECTED_APP_NAME', $appName);
+        $viewer->assign('MODULE', $request->getModule());
+        $viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
+        $viewer->view('AddModule.tpl', $qualifiedModuleName);
+    }
 }

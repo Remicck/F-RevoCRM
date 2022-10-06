@@ -8,26 +8,27 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_SharedCalendar_View extends Calendar_Calendar_View {
-	
-	public function process(Vtiger_Request $request) {
-		$viewer = $this->getViewer($request);
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
-		
-		$viewer->assign('CURRENT_USER', $currentUserModel);
-		$viewer->assign('IS_CREATE_PERMITTED', isPermitted('Calendar', 'CreateView'));
-		$viewer->view('SharedCalendarView.tpl', $request->getModule());
-	}
-	
-	public function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$jsFileNames = array(
-			'modules.Calendar.resources.SharedCalendar',
-		);
+class Calendar_SharedCalendar_View extends Calendar_Calendar_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $currentUserModel = Users_Record_Model::getCurrentUserModel();
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
-	
+        $viewer->assign('CURRENT_USER', $currentUserModel);
+        $viewer->assign('IS_CREATE_PERMITTED', isPermitted('Calendar', 'CreateView'));
+        $viewer->view('SharedCalendarView.tpl', $request->getModule());
+    }
+
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $jsFileNames = array(
+            'modules.Calendar.resources.SharedCalendar',
+        );
+
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 }

@@ -15,8 +15,8 @@
  * @package Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Eval extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Eval extends Smarty_Internal_CompileBase
+{
     /**
      * Attribute definition: Overwrites base class.
      *
@@ -53,7 +53,7 @@ class Smarty_Internal_Compile_Eval extends Smarty_Internal_CompileBase {
         // check and get attributes
         $_attr = $this->getAttributes($compiler, $args);
         if (isset($_attr['assign'])) {
-              // output will be stored in a smarty variable instead of beind displayed
+            // output will be stored in a smarty variable instead of beind displayed
             $_assign = $_attr['assign'];
         }
 
@@ -67,7 +67,4 @@ class Smarty_Internal_Compile_Eval extends Smarty_Internal_CompileBase {
         }
         return "<?php $_output ?>";
     }
-
 }
-
-?>

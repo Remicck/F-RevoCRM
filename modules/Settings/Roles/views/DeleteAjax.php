@@ -8,20 +8,21 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Roles_DeleteAjax_View extends Settings_Roles_IndexAjax_View {
+class Settings_Roles_DeleteAjax_View extends Settings_Roles_IndexAjax_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
+        $qualifiedModuleName = $request->getModule(false);
+        $recordId = $request->get('record');
 
-	public function process(Vtiger_Request $request) {
-		$viewer = $this->getViewer ($request);
-		$moduleName = $request->getModule();
-		$qualifiedModuleName = $request->getModule(false);
-		$recordId = $request->get('record');
+        $recordModel = Settings_Roles_Record_Model::getInstanceById($recordId);
 
-		$recordModel = Settings_Roles_Record_Model::getInstanceById($recordId);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
+        $viewer->assign('RECORD_MODEL', $recordModel);
 
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->assign('QUALIFIED_MODULE', $qualifiedModuleName);
-		$viewer->assign('RECORD_MODEL', $recordModel);
-
-		echo $viewer->view('DeleteTransferForm.tpl', $qualifiedModuleName, true);
-	}
+        echo $viewer->view('DeleteTransferForm.tpl', $qualifiedModuleName, true);
+    }
 }

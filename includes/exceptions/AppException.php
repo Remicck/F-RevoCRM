@@ -7,6 +7,6 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-class AppException extends Exception {	
-
+class AppException extends Exception
+{
 }

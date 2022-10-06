@@ -38,4 +38,3 @@ $record->save();
 //             ,array(4, 'tax4', '消費税', 10.000, 0, 'Simple', 'Fixed', '[]', '[]'));
 
 $adb->pquery("INSERT INTO vtiger_taxregions(regionid, name)values(?, ?)", array('1', '日本'));
-

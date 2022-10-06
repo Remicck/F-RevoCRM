@@ -8,15 +8,13 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
-	'ModuleName' => 'Module Name',
-	'SINGLE_ModuleName' => 'Module Name',
-	'ModuleName ID' => 'Module Name ID',
+$languageStrings = array(
+    'ModuleName' => 'Module Name',
+    'SINGLE_ModuleName' => 'Module Name',
+    'ModuleName ID' => 'Module Name ID',
 
-	'LBL_CUSTOM_INFORMATION' => 'Custom Information',
-	'LBL_MODULEBLOCK_INFORMATION' => 'ModuleBlock Information',
+    'LBL_CUSTOM_INFORMATION' => 'Custom Information',
+    'LBL_MODULEBLOCK_INFORMATION' => 'ModuleBlock Information',
 
-	'ModuleFieldLabel' => 'ModuleFieldLabel Text',
+    'ModuleFieldLabel' => 'ModuleFieldLabel Text',
 );
-
-?>

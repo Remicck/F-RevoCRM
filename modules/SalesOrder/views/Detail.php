@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class SalesOrder_Detail_View extends Inventory_Detail_View {
-
+class SalesOrder_Detail_View extends Inventory_Detail_View
+{
 }

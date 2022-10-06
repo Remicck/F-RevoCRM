@@ -8,16 +8,17 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Events_QuickCreateAjax_View extends Calendar_QuickCreateAjax_View {
+class Events_QuickCreateAjax_View extends Calendar_QuickCreateAjax_View
+{
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $jsFileNames = array(
+            "modules.Calendar.resources.Edit",
+            "modules.$moduleName.resources.Edit"
+        );
 
-	public function getHeaderScripts(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$jsFileNames = array(
-			"modules.Calendar.resources.Edit",
-			"modules.$moduleName.resources.Edit"
-		);
-
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		return $jsScriptInstances;
-	}
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        return $jsScriptInstances;
+    }
 }

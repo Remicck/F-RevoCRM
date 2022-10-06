@@ -44,7 +44,6 @@ require_once 'Zend/Gdata/YouTube/ContactEntry.php';
  */
 class Zend_Gdata_YouTube_ContactFeed extends Zend_Gdata_Media_Feed
 {
-
     /**
      * The classname for individual feed elements.
      *
@@ -64,5 +63,4 @@ class Zend_Gdata_YouTube_ContactFeed extends Zend_Gdata_Media_Feed
         $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct($element);
     }
-
 }

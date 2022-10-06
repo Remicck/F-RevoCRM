@@ -19,11 +19,10 @@ $languageStrings = array(
     'LBL_MENU_EDITOR_INFO' => 'モジュールをドラッグ＆ドロップして、移動/並べ替えます。メニューからモジュールを削除して、後で再び追加することができます。',
 );
 
-$jsLanguageStrings = Array (
+$jsLanguageStrings = array(
     'JS_MODULE_NOT_DRAGGABLE' => 'モジュールが移動できませんでした',
     'JS_MODULE_SEQUENCE_SAVED' => 'モジュールの並び順を保存しました',
     'JS_MODULE_REMOVED' => 'モジュールを取り除きました',
     'JS_MODULE_ADD_SUCCESS' => 'モジュールを追加しました',
     'JS_PLEASE_SELECT_A_MODULE' => 'モジュールを選択してください',
-)
-?>
+);

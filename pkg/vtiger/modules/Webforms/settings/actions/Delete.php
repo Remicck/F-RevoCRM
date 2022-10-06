@@ -8,38 +8,40 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Webforms_Delete_Action extends Settings_Vtiger_Index_Action {
+class Settings_Webforms_Delete_Action extends Settings_Vtiger_Index_Action
+{
+    public function checkPermission(Vtiger_Request $request)
+    {
+        parent::checkPermission($request);
 
-	public function checkPermission(Vtiger_Request $request) {
-		parent::checkPermission($request);
+        $recordId = $request->get('record');
+        $moduleModel = Vtiger_Module_Model::getInstance($request->getModule());
 
-		$recordId = $request->get('record');
-		$moduleModel = Vtiger_Module_Model::getInstance($request->getModule());
-
-		$currentUserPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
-		if(!$recordId || !$currentUserPrivilegesModel->hasModulePermission($moduleModel->getId())) {
-			throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
-		}
+        $currentUserPrivilegesModel = Users_Privileges_Model::getCurrentUserPrivilegesModel();
+        if (!$recordId || !$currentUserPrivilegesModel->hasModulePermission($moduleModel->getId())) {
+            throw new AppException(vtranslate('LBL_PERMISSION_DENIED'));
+        }
         return true;
-	}
+    }
 
-	public function process(Vtiger_Request $request) {
-		$recordId = $request->get('record');
-		$qualifiedModuleName = $request->getModule(false);
+    public function process(Vtiger_Request $request)
+    {
+        $recordId = $request->get('record');
+        $qualifiedModuleName = $request->getModule(false);
 
-		$recordModel = Settings_Webforms_Record_Model::getInstanceById($recordId, $qualifiedModuleName);
-		$moduleModel = $recordModel->getModule();
+        $recordModel = Settings_Webforms_Record_Model::getInstanceById($recordId, $qualifiedModuleName);
+        $moduleModel = $recordModel->getModule();
 
-		$recordModel->delete();
+        $recordModel->delete();
 
-		$returnUrl = $moduleModel->getListViewUrl();
-		$response = new Vtiger_Response();
-		$response->setResult($returnUrl);
-		return $response;
-	}
+        $returnUrl = $moduleModel->getListViewUrl();
+        $response = new Vtiger_Response();
+        $response->setResult($returnUrl);
+        return $response;
+    }
 
-	public function validateRequest(Vtiger_Request $request) {
-		$request->validateWriteAccess();
-	}
-
+    public function validateRequest(Vtiger_Request $request)
+    {
+        $request->validateWriteAccess();
+    }
 }

@@ -12,13 +12,14 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class text {
+class text
+{
+    /** Replace repeated white spaces to single space
+      * @param string $string
+      * @return string */
 
-  /** Replace repeated white spaces to single space
-    * @param string $string
-    * @return string */
-
-    static function clearWhitespaces($string) {
+    public static function clearWhitespaces($string)
+    {
         return trim(preg_replace('/\s+/s', " ", $string));
     }
 
@@ -26,7 +27,8 @@ class text {
     * @param string $string
     * @return string */
 
-    static function htmlValue($string) {
+    public static function htmlValue($string)
+    {
         return str_replace('"', "&quot;", $string);
     }
 
@@ -34,7 +36,8 @@ class text {
     * @param string $string
     * @return string */
 
-    static function jsValue($string) {
+    public static function jsValue($string)
+    {
         return preg_replace('/\r?\n/', "\\n", str_replace('"', "\\\"", str_replace("'", "\\'", $string)));
     }
 
@@ -42,10 +45,12 @@ class text {
     * @param string $string
     * @param bool $cdata */
 
-    static function xmlData($string, $cdata=false) {
+    public static function xmlData($string, $cdata=false)
+    {
         $string = str_replace("]]>", "]]]]><![CDATA[>", $string);
-        if (!$cdata)
+        if (!$cdata) {
             $string = "<![CDATA[$string]]>";
+        }
         return $string;
     }
 
@@ -53,7 +58,8 @@ class text {
     * @param string $code
     * @return string */
 
-    static function compressCSS($code) {
+    public static function compressCSS($code)
+    {
         $code = self::clearWhitespaces($code);
         $code = preg_replace('/ ?\{ ?/', "{", $code);
         $code = preg_replace('/ ?\} ?/', "}", $code);
@@ -65,5 +71,3 @@ class text {
         return $code;
     }
 }
-
-?>

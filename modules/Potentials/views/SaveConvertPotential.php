@@ -9,105 +9,109 @@
  *************************************************************************************/
 vimport('~~/include/Webservices/ConvertPotential.php');
 
-class Potentials_SaveConvertPotential_View extends Vtiger_View_Controller {
+class Potentials_SaveConvertPotential_View extends Vtiger_View_Controller
+{
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
+        $permissions[] = array('module_parameter' => 'custom_module', 'action' => 'CreateView');
+        $request->set('custom_module', 'Project');
 
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		$permissions[] = array('module_parameter' => 'custom_module', 'action' => 'CreateView');
-		$request->set('custom_module', 'Project');
-		
-		return $permissions;
-	}
-	
-	public function process(Vtiger_Request $request) {
-		$recordId = $request->get('record');
-		$modules = $request->get('modules');
-		$assignId = $request->get('assigned_user_id');
-		$currentUser = Users_Record_Model::getCurrentUserModel();
+        return $permissions;
+    }
 
-		$entityValues = array();
+    public function process(Vtiger_Request $request)
+    {
+        $recordId = $request->get('record');
+        $modules = $request->get('modules');
+        $assignId = $request->get('assigned_user_id');
+        $currentUser = Users_Record_Model::getCurrentUserModel();
 
-		$entityValues['assignedTo'] = vtws_getWebserviceEntityId(vtws_getOwnerType($assignId), $assignId);
-		$entityValues['potentialId'] = vtws_getWebserviceEntityId($request->getModule(), $recordId);
+        $entityValues = array();
 
-		$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $request->getModule());
-		$convertPotentialFields = $recordModel->getConvertPotentialFields();
+        $entityValues['assignedTo'] = vtws_getWebserviceEntityId(vtws_getOwnerType($assignId), $assignId);
+        $entityValues['potentialId'] = vtws_getWebserviceEntityId($request->getModule(), $recordId);
 
-		$availableModules = array('Project');
-		foreach ($availableModules as $module) {
-			if(vtlib_isModuleActive($module)&& in_array($module, $modules)) {
-				$entityValues['entities'][$module]['create'] = true;
-				$entityValues['entities'][$module]['name'] = $module;
+        $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $request->getModule());
+        $convertPotentialFields = $recordModel->getConvertPotentialFields();
 
-				// Converting lead should save records source as CRM instead of WEBSERVICE
-				$entityValues['entities'][$module]['source'] = 'CRM';
-				foreach ($convertPotentialFields[$module] as $fieldModel) {
-					$fieldName = $fieldModel->getName();
-					$fieldValue = $request->get($fieldName);
+        $availableModules = array('Project');
+        foreach ($availableModules as $module) {
+            if (vtlib_isModuleActive($module)&& in_array($module, $modules)) {
+                $entityValues['entities'][$module]['create'] = true;
+                $entityValues['entities'][$module]['name'] = $module;
 
-					//Potential Amount Field value converting into DB format
-					if ($fieldModel->getFieldDataType() === 'currency') {
-						if($fieldModel->get('uitype') == 72){
-							// Some of the currency fields like Unit Price, Totoal , Sub-total - doesn't need currency conversion during save
-							$fieldValue = Vtiger_Currency_UIType::convertToDBFormat($fieldValue, null, true);
-						} else {
-							$fieldValue = Vtiger_Currency_UIType::convertToDBFormat($fieldValue);
-						}
-					} elseif ($fieldModel->getFieldDataType() === 'date') {
-						$fieldValue = DateTimeField::convertToDBFormat($fieldValue);
-					} elseif ($fieldModel->getFieldDataType() === 'reference' && $fieldValue) {
-						$ids = vtws_getIdComponents($fieldValue);
-						if (count($ids) === 1) {
-							$fieldValue = vtws_getWebserviceEntityId(getSalesEntityType($fieldValue), $fieldValue);
-						}
-					}
-					$entityValues['entities'][$module][$fieldName] = $fieldValue;
-				}
-			}
-		}
-		try {
-			$result = vtws_convertpotential($entityValues, $currentUser);
-		} catch(Exception $e) {
-			$this->showError($request, $e);
-			exit;
-		}
+                // Converting lead should save records source as CRM instead of WEBSERVICE
+                $entityValues['entities'][$module]['source'] = 'CRM';
+                foreach ($convertPotentialFields[$module] as $fieldModel) {
+                    $fieldName = $fieldModel->getName();
+                    $fieldValue = $request->get($fieldName);
 
-		if(!empty($result['Project'])) {
-			$projectIdComponents = vtws_getIdComponents($result['Project']);
-			$projectId = $projectIdComponents[1];
-		}
+                    //Potential Amount Field value converting into DB format
+                    if ($fieldModel->getFieldDataType() === 'currency') {
+                        if ($fieldModel->get('uitype') == 72) {
+                            // Some of the currency fields like Unit Price, Totoal , Sub-total - doesn't need currency conversion during save
+                            $fieldValue = Vtiger_Currency_UIType::convertToDBFormat($fieldValue, null, true);
+                        } else {
+                            $fieldValue = Vtiger_Currency_UIType::convertToDBFormat($fieldValue);
+                        }
+                    } elseif ($fieldModel->getFieldDataType() === 'date') {
+                        $fieldValue = DateTimeField::convertToDBFormat($fieldValue);
+                    } elseif ($fieldModel->getFieldDataType() === 'reference' && $fieldValue) {
+                        $ids = vtws_getIdComponents($fieldValue);
+                        if (count($ids) === 1) {
+                            $fieldValue = vtws_getWebserviceEntityId(getSalesEntityType($fieldValue), $fieldValue);
+                        }
+                    }
+                    $entityValues['entities'][$module][$fieldName] = $fieldValue;
+                }
+            }
+        }
+        try {
+            $result = vtws_convertpotential($entityValues, $currentUser);
+        } catch(Exception $e) {
+            $this->showError($request, $e);
+            exit;
+        }
 
-		if(!empty($projectId)) {
-			header("Location: index.php?view=Detail&module=Project&record=$projectId");
-		} else {
-			$this->showError($request);
-			exit;
-		}
-	}
+        if (!empty($result['Project'])) {
+            $projectIdComponents = vtws_getIdComponents($result['Project']);
+            $projectId = $projectIdComponents[1];
+        }
 
-	function showError($request, $exception=false) {
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
+        if (!empty($projectId)) {
+            header("Location: index.php?view=Detail&module=Project&record=$projectId");
+        } else {
+            $this->showError($request);
+            exit;
+        }
+    }
 
-		$isDupicatesFailure = false;
-		if($exception != false) {
-			$viewer->assign('EXCEPTION', $exception->getMessage());
-			if ($exception instanceof DuplicateException) {
-				$isDupicatesFailure = true;
-				$viewer->assign('EXCEPTION', $exception->getDuplicationMessage());
-			}
-		}
+    public function showError($request, $exception=false)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-		$currentUser = Users_Record_Model::getCurrentUserModel();
+        $isDupicatesFailure = false;
+        if ($exception != false) {
+            $viewer->assign('EXCEPTION', $exception->getMessage());
+            if ($exception instanceof DuplicateException) {
+                $isDupicatesFailure = true;
+                $viewer->assign('EXCEPTION', $exception->getDuplicationMessage());
+            }
+        }
 
-		$viewer->assign('IS_DUPICATES_FAILURE', $isDupicatesFailure);
-		$viewer->assign('CURRENT_USER', $currentUser);
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->view('ConvertPotentialError.tpl', $moduleName);
-	}
+        $currentUser = Users_Record_Model::getCurrentUserModel();
 
-	public function validateRequest(Vtiger_Request $request) {
-		$request->validateWriteAccess();
-	}
+        $viewer->assign('IS_DUPICATES_FAILURE', $isDupicatesFailure);
+        $viewer->assign('CURRENT_USER', $currentUser);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->view('ConvertPotentialError.tpl', $moduleName);
+    }
+
+    public function validateRequest(Vtiger_Request $request)
+    {
+        $request->validateWriteAccess();
+    }
 }

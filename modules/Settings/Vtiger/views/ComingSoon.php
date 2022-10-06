@@ -8,12 +8,14 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Vtiger_ComingSoon_View extends Settings_Vtiger_Index_View {
-    protected function preProcessTplName(Vtiger_Request $request) {
+class Settings_Vtiger_ComingSoon_View extends Settings_Vtiger_Index_View
+{
+    protected function preProcessTplName(Vtiger_Request $request)
+    {
         return 'ComingSoon.tpl';
-	}
+    }
 
-    public function process(Vtiger_Request $request) {
-        
+    public function process(Vtiger_Request $request)
+    {
     }
 }

@@ -44,7 +44,6 @@ require_once('Zend/Gdata/Query.php');
  */
 class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
 {
-
     /**
      * Create Gdata_YouTube_VideoQuery object
      */
@@ -63,55 +62,58 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
     public function setFeedType($feedType, $videoId = null, $entry = null)
     {
         switch ($feedType) {
-        case 'top rated':
-            $this->_url = Zend_Gdata_YouTube::STANDARD_TOP_RATED_URI;
-            break;
-        case 'most viewed':
-            $this->_url = Zend_Gdata_YouTube::STANDARD_MOST_VIEWED_URI;
-            break;
-        case 'recently featured':
-            $this->_url = Zend_Gdata_YouTube::STANDARD_RECENTLY_FEATURED_URI;
-            break;
-        case 'mobile':
-            $this->_url = Zend_Gdata_YouTube::STANDARD_WATCH_ON_MOBILE_URI;
-            break;
-        case 'related':
-            if ($videoId === null) {
-                require_once 'Zend/Gdata/App/InvalidArgumentException.php';
-                throw new Zend_Gdata_App_InvalidArgumentException(
-                    'Video ID must be set for feed of type: ' . $feedType);
-            } else {
-                $this->_url = Zend_Gdata_YouTube::VIDEO_URI . '/' . $videoId .
-                    '/related';
-            }
-            break;
-        case 'responses':
-            if ($videoId === null) {
-                require_once 'Zend/Gdata/App/InvalidArgumentException.php';
-                throw new Zend_Gdata_App_Exception(
-                    'Video ID must be set for feed of type: ' . $feedType);
-            } else {
-                $this->_url = Zend_Gdata_YouTube::VIDEO_URI . '/' . $videoId .
-                    'responses';
-            }
-            break;
-        case 'comments':
-            if ($videoId === null) {
-                require_once 'Zend/Gdata/App/InvalidArgumentException.php';
-                throw new Zend_Gdata_App_Exception(
-                    'Video ID must be set for feed of type: ' . $feedType);
-            } else {
-                $this->_url = Zend_Gdata_YouTube::VIDEO_URI . '/' .
-                    $videoId . 'comments';
-                if ($entry !== null) {
-                    $this->_url .= '/' . $entry;
+            case 'top rated':
+                $this->_url = Zend_Gdata_YouTube::STANDARD_TOP_RATED_URI;
+                break;
+            case 'most viewed':
+                $this->_url = Zend_Gdata_YouTube::STANDARD_MOST_VIEWED_URI;
+                break;
+            case 'recently featured':
+                $this->_url = Zend_Gdata_YouTube::STANDARD_RECENTLY_FEATURED_URI;
+                break;
+            case 'mobile':
+                $this->_url = Zend_Gdata_YouTube::STANDARD_WATCH_ON_MOBILE_URI;
+                break;
+            case 'related':
+                if ($videoId === null) {
+                    require_once 'Zend/Gdata/App/InvalidArgumentException.php';
+                    throw new Zend_Gdata_App_InvalidArgumentException(
+                        'Video ID must be set for feed of type: ' . $feedType
+                    );
+                } else {
+                    $this->_url = Zend_Gdata_YouTube::VIDEO_URI . '/' . $videoId .
+                        '/related';
                 }
-            }
-            break;
-        default:
-            require_once 'Zend/Gdata/App/Exception.php';
-            throw new Zend_Gdata_App_Exception('Unknown feed type');
-            break;
+                break;
+            case 'responses':
+                if ($videoId === null) {
+                    require_once 'Zend/Gdata/App/InvalidArgumentException.php';
+                    throw new Zend_Gdata_App_Exception(
+                        'Video ID must be set for feed of type: ' . $feedType
+                    );
+                } else {
+                    $this->_url = Zend_Gdata_YouTube::VIDEO_URI . '/' . $videoId .
+                        'responses';
+                }
+                break;
+            case 'comments':
+                if ($videoId === null) {
+                    require_once 'Zend/Gdata/App/InvalidArgumentException.php';
+                    throw new Zend_Gdata_App_Exception(
+                        'Video ID must be set for feed of type: ' . $feedType
+                    );
+                } else {
+                    $this->_url = Zend_Gdata_YouTube::VIDEO_URI . '/' .
+                        $videoId . 'comments';
+                    if ($entry !== null) {
+                        $this->_url .= '/' . $entry;
+                    }
+                }
+                break;
+            default:
+                require_once 'Zend/Gdata/App/Exception.php';
+                throw new Zend_Gdata_App_Exception('Unknown feed type');
+                break;
         }
     }
 
@@ -127,16 +129,18 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
         switch($value) {
             case null:
                 unset($this->_params['location']);
+                // no break
             default:
                 $parameters = explode(',', $value);
                 if (count($parameters) != 2) {
                     require_once 'Zend/Gdata/App/InvalidArgumentException.php';
                     throw new Zend_Gdata_App_InvalidArgumentException(
                         'You must provide 2 coordinates to the location ' .
-                        'URL parameter');
+                        'URL parameter'
+                    );
                 }
 
-                foreach($parameters as $param) {
+                foreach ($parameters as $param) {
                     $temp = trim($param);
                     // strip off the optional exclamation mark for numeric check
                     if (substr($temp, -1) == '!') {
@@ -146,7 +150,8 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
                         require_once 'Zend/Gdata/App/InvalidArgumentException.php';
                         throw new Zend_Gdata_App_InvalidArgumentException(
                             'Value provided to location parameter must' .
-                            ' be in the form of two coordinates');
+                            ' be in the form of two coordinates'
+                        );
                     }
                 }
                 $this->_params['location'] = $value;
@@ -179,6 +184,7 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
         switch($value) {
             case null:
                 unset($this->_params['location-radius']);
+                // no break
             default:
                 $this->_params['location-radius'] = $value;
         }
@@ -223,10 +229,12 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
                 break;
             case null:
                 unset($this->_params['time']);
+                // no break
             default:
                 require_once 'Zend/Gdata/App/InvalidArgumentException.php';
                 throw new Zend_Gdata_App_InvalidArgumentException(
-                    'Unknown time value');
+                    'Unknown time value'
+                );
                 break;
         }
         return $this;
@@ -252,7 +260,8 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
             default:
                 require_once 'Zend/Gdata/App/InvalidArgumentException.php';
                 throw new Zend_Gdata_App_InvalidArgumentException(
-                    'Unknown value for uploader');
+                    'Unknown value for uploader'
+                );
         }
         return $this;
     }
@@ -347,11 +356,13 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
                 break;
             case null:
                 unset($this->_params['safeSearch']);
+                // no break
             default:
                 require_once 'Zend/Gdata/App/InvalidArgumentException.php';
                 throw new Zend_Gdata_App_InvalidArgumentException(
                     'The safeSearch parameter only supports the values '.
-                    '\'none\', \'moderate\' or \'strict\'.');
+                    '\'none\', \'moderate\' or \'strict\'.'
+                );
         }
     }
 
@@ -451,8 +462,10 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
      * @throws Zend_Gdata_App_VersionException
      * @return string querystring
      */
-    public function getQueryString($majorProtocolVersion = null,
-        $minorProtocolVersion = null)
+    public function getQueryString(
+        $majorProtocolVersion = null,
+        $minorProtocolVersion = null
+    )
     {
         $queryArray = array();
 
@@ -504,7 +517,6 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
             }
 
             $queryArray[] = urlencode($name) . '=' . urlencode($value);
-
         }
         if (count($queryArray) > 0) {
             return '?' . implode('&', $queryArray);
@@ -521,8 +533,10 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
      * @param integer $minorProtocolVersion The minor protocol version
      * @return string The URL
      */
-    public function getQueryUrl($majorProtocolVersion = null,
-        $minorProtocolVersion = null)
+    public function getQueryUrl(
+        $majorProtocolVersion = null,
+        $minorProtocolVersion = null
+    )
     {
         if (isset($this->_url)) {
             $url = $this->_url;
@@ -532,9 +546,10 @@ class Zend_Gdata_YouTube_VideoQuery extends Zend_Gdata_Query
         if ($this->getCategory() !== null) {
             $url .= '/-/' . $this->getCategory();
         }
-        $url = $url . $this->getQueryString($majorProtocolVersion,
-            $minorProtocolVersion);
+        $url = $url . $this->getQueryString(
+            $majorProtocolVersion,
+            $minorProtocolVersion
+        );
         return $url;
     }
-
 }

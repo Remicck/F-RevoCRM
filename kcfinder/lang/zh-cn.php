@@ -240,5 +240,3 @@ $lang = array(
     "Select Thumbnails" => "选择缩略图",
     "Download files" => "下载文件",
 );
-
-?>

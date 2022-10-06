@@ -19,11 +19,10 @@ $languageStrings = array(
     'LBL_MENU_EDITOR_INFO' => 'Arraste e Solte um Módulo para movê-lo/reordená-lo. Você pode Remover um Módulo a partir da Aplicação e Adicioná-lo mais tarde.',
 );
 
-$jsLanguageStrings = Array (
+$jsLanguageStrings = array(
     'JS_MODULE_NOT_DRAGGABLE' => 'O Módulo não pode ser movido',
     'JS_MODULE_SEQUENCE_SAVED' => 'A sequência do Módulo foi slava com sucesso',
     'JS_MODULE_REMOVED' => 'O Módulo foi removido com sucesso',
     'JS_MODULE_ADD_SUCCESS' => 'O(s) Módulo(s) foi adicionado(s) com sucesso',
     'JS_PLEASE_SELECT_A_MODULE' => 'Por favor, seleciona um Módulo',
-)
-?>
+);

@@ -8,79 +8,79 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-chdir (dirname(__FILE__) . '/..');
+chdir(dirname(__FILE__) . '/..');
 include_once 'vtigerversion.php';
 include_once 'data/CRMEntity.php';
 include_once 'includes/main/WebUI.php';
 
 $errorMessage = $_REQUEST['error'];
 if (!$errorMessage) {
-	/* 7.x module compatability check when coming from earlier version */
-	if (version_compare($vtiger_current_version, '7.0.0') < 0) {
-		/* NOTE: Add list-of modules that you own / sure to upgrade later */
-		$skipCheckForModules = array();
+    /* 7.x module compatability check when coming from earlier version */
+    if (version_compare($vtiger_current_version, '7.0.0') < 0) {
+        /* NOTE: Add list-of modules that you own / sure to upgrade later */
+        $skipCheckForModules = array();
 
-		$extensionStoreInstance = Settings_ExtensionStore_Extension_Model::getInstance();
-		$vtigerStandardModules = array('Accounts', 'Assets', 'Calendar', 'Campaigns', 'Contacts', 'CustomerPortal', 
-			'Dashboard', 'Emails', 'EmailTemplates', 'Events', 'ExtensionStore',
-			'Faq', 'Google', 'HelpDesk', 'Home', 'Import', 'Invoice', 'Leads', 
-			'MailManager', 'Mobile', 'ModComments', 'ModTracker',
-			'PBXManager', 'Portal', 'Potentials', 'PriceBooks', 'Products', 'Project', 'ProjectMilestone', 
-			'ProjectTask', 'PurchaseOrder', 'Quotes', 'RecycleBin', 'Reports', 'Rss', 'SalesOrder', 
-			'ServiceContracts', 'Services', 'SMSNotifier', 'Users', 'Vendors',
-			'Webforms', 'Webmails', 'WSAPP');
+        $extensionStoreInstance = Settings_ExtensionStore_Extension_Model::getInstance();
+        $vtigerStandardModules = array('Accounts', 'Assets', 'Calendar', 'Campaigns', 'Contacts', 'CustomerPortal',
+            'Dashboard', 'Emails', 'EmailTemplates', 'Events', 'ExtensionStore',
+            'Faq', 'Google', 'HelpDesk', 'Home', 'Import', 'Invoice', 'Leads',
+            'MailManager', 'Mobile', 'ModComments', 'ModTracker',
+            'PBXManager', 'Portal', 'Potentials', 'PriceBooks', 'Products', 'Project', 'ProjectMilestone',
+            'ProjectTask', 'PurchaseOrder', 'Quotes', 'RecycleBin', 'Reports', 'Rss', 'SalesOrder',
+            'ServiceContracts', 'Services', 'SMSNotifier', 'Users', 'Vendors',
+            'Webforms', 'Webmails', 'WSAPP');
 
-		$skipCheckForModules = array_merge($skipCheckForModules, $vtigerStandardModules);
+        $skipCheckForModules = array_merge($skipCheckForModules, $vtigerStandardModules);
 
-		$nonPortedExtns = array();
-		$moduleModelsList = array();
-		$db = PearDatabase::getInstance();
-		$result = $db->pquery('SELECT name FROM vtiger_tab WHERE isentitytype != ? AND presence != ? AND trim(name) NOT IN ('.generateQuestionMarks($skipCheckForModules).')', array(1, 1, $skipCheckForModules));
-		if ($db->num_rows($result)) {
-			$moduleModelsList = $extensionStoreInstance->getListings();
-		}
+        $nonPortedExtns = array();
+        $moduleModelsList = array();
+        $db = PearDatabase::getInstance();
+        $result = $db->pquery('SELECT name FROM vtiger_tab WHERE isentitytype != ? AND presence != ? AND trim(name) NOT IN ('.generateQuestionMarks($skipCheckForModules).')', array(1, 1, $skipCheckForModules));
+        if ($db->num_rows($result)) {
+            $moduleModelsList = $extensionStoreInstance->getListings();
+        }
 
-		$moduleModelsListByName = array();
-		$moduleModelsListByLabel = array();
-		foreach ($moduleModelsList as $moduleId => $moduleModel) {
-			if ($moduleModel->get('name') != $moduleModel->get('label')) {
-				$moduleModelsListByName[$moduleModel->get('name')] = $moduleModel;
-			} else {
-				$moduleModelsListByLabel[$moduleModel->get('label')] = $moduleModel;
-			}
-		}
+        $moduleModelsListByName = array();
+        $moduleModelsListByLabel = array();
+        foreach ($moduleModelsList as $moduleId => $moduleModel) {
+            if ($moduleModel->get('name') != $moduleModel->get('label')) {
+                $moduleModelsListByName[$moduleModel->get('name')] = $moduleModel;
+            } else {
+                $moduleModelsListByLabel[$moduleModel->get('label')] = $moduleModel;
+            }
+        }
 
-		if ($moduleModelsList) {
-			while($row = $db->fetch_row($result)) {
-				$moduleName = $row['name'];//label
-				if ($moduleName) {
-					unset($moduleModel);
-					if (array_key_exists($moduleName, $moduleModelsListByName)) {
-						$moduleModel = $moduleModelsListByName[$moduleName];
-					} else if (array_key_exists($moduleName, $moduleModelsListByLabel)) {
-						$moduleModel = $moduleModelsListByLabel[$moduleName];
-					}
+        if ($moduleModelsList) {
+            while ($row = $db->fetch_row($result)) {
+                $moduleName = $row['name'];//label
+                if ($moduleName) {
+                    unset($moduleModel);
+                    if (array_key_exists($moduleName, $moduleModelsListByName)) {
+                        $moduleModel = $moduleModelsListByName[$moduleName];
+                    } elseif (array_key_exists($moduleName, $moduleModelsListByLabel)) {
+                        $moduleModel = $moduleModelsListByLabel[$moduleName];
+                    }
 
-					if ($moduleModel) {
-						$vtigerVersion = $moduleModel->get('vtigerVersion');
-						$vtigerMaxVersion = $moduleModel->get('vtigerMaxVersion');
-						if (($vtigerVersion && strpos($vtigerVersion, '7.') === false)
-								&& ($vtigerMaxVersion && strpos($vtigerMaxVersion, '7.') === false)) {
-							$nonPortedExtns[] = $moduleName;
-						}
-					}
-				}
-			}
+                    if ($moduleModel) {
+                        $vtigerVersion = $moduleModel->get('vtigerVersion');
+                        $vtigerMaxVersion = $moduleModel->get('vtigerMaxVersion');
+                        if (($vtigerVersion && strpos($vtigerVersion, '7.') === false)
+                                && ($vtigerMaxVersion && strpos($vtigerMaxVersion, '7.') === false)) {
+                            $nonPortedExtns[] = $moduleName;
+                        }
+                    }
+                }
+            }
 
-			if ($nonPortedExtns) {
-				$portingMessage = 'Following custom modules are not compatible with Vtiger 7. Please disable these modules to proceed.';
-				foreach ($nonPortedExtns as $moduleName) {
-					$portingMessage .= "<li>$moduleName</li>";
-				}
-				$portingMessage .= '</ul>';
-			}
-		}
-	}
+            if ($nonPortedExtns) {
+                $portingMessage = 'Following custom modules are not compatible with Vtiger 7. Please disable these modules to proceed.';
+                foreach ($nonPortedExtns as $moduleName) {
+                    $portingMessage .= "<li>$moduleName</li>";
+                }
+                $portingMessage .= '</ul>';
+            }
+        }
+    }
 }
 ?>
 <!doctype>
@@ -126,8 +126,8 @@ if (!$errorMessage) {
 							<img src="resources/images/migration_screen.png" alt="Vtiger Logo" style="width: 100%; margin-left: 15px;"/>
 						</div>
 						<?php
-							$currentVersion = explode('.', $vtiger_current_version);
-							 if ($portingMessage) { ?>
+                            $currentVersion = explode('.', $vtiger_current_version);
+if ($portingMessage) { ?>
 								<div class="col-lg-1"></div>
 								<div class="col-lg-7">
 									<h3><font color="red">WARNING : Cannot continue with Migration</font></h3><br>
@@ -142,11 +142,11 @@ if (!$errorMessage) {
 										<input type="button" onclick="window.location.href='../index.php'" class="btn btn-default" value="Close"/>
 									</form>
 								</div>
-						<?php } else if($currentVersion[0] >= 6 && $currentVersion[1] >= 0) { ?>
+						<?php } elseif ($currentVersion[0] >= 6 && $currentVersion[1] >= 0) { ?>
 							<div class="col-lg-8" style="padding-left: 30px;">
 								<h3> Welcome to Vtiger Migration</h3>
-								<?php if(isset($errorMessage)) {
-									echo '<span><font color="red"><b>'.filter_var($errorMessage, FILTER_SANITIZE_STRING).'</b></font></span><br><br>';
+								<?php if (isset($errorMessage)) {
+								    echo '<span><font color="red"><b>'.filter_var($errorMessage, FILTER_SANITIZE_STRING).'</b></font></span><br><br>';
 								} ?>
 								<p>We have detected that you have <strong>Vtiger <?php echo $vtiger_current_version ?></strong> installation.<br><br></p>
 								<p>
@@ -171,16 +171,16 @@ if (!$errorMessage) {
 									</div>
 								</form>
 							</div>
-						<?php } else if($currentVersion[0] < 6) { ?>
+						<?php } elseif ($currentVersion[0] < 6) { ?>
 							<div class="col-lg-1"></div>
 							<div class="col-lg-7">
 								<h3><font color="red">WARNING : Cannot continue with Migration</font></h3><br>
 								<p>We detected that this installation is running <strong>Vtiger CRM</strong>
 										<?php
-											if($vtiger_current_version < 6 ) {
-												echo '<b>'.$vtiger_current_version.'</b>';
-											}
-										?>.
+								            if ($vtiger_current_version < 6) {
+								                echo '<b>'.$vtiger_current_version.'</b>';
+								            }
+						    ?>.
 									Please upgrade to <strong>5.4.0</strong> first before continuing with this wizard.
 								</p>
 							</div>

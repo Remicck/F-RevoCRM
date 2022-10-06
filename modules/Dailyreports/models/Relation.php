@@ -8,15 +8,17 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Dailyreports_Relation_Model extends Vtiger_Relation_Model{
-	/**
-	 * Function which will specify whether the relation is deletable
-	 * @return <Boolean>
-	 */
-	public function isDeletable() {
-		if($this->getRelationModuleName() == "Calendar") {
-			return false;
-		}
-		return $this->getRelationModuleModel()->isPermitted('Delete');
-	}
+class Dailyreports_Relation_Model extends Vtiger_Relation_Model
+{
+    /**
+     * Function which will specify whether the relation is deletable
+     * @return <Boolean>
+     */
+    public function isDeletable()
+    {
+        if ($this->getRelationModuleName() == "Calendar") {
+            return false;
+        }
+        return $this->getRelationModuleModel()->isPermitted('Delete');
+    }
 }

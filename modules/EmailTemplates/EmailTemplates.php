@@ -8,6 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class EmailTemplates extends CRMEntity {
-    
+class EmailTemplates extends CRMEntity
+{
 }

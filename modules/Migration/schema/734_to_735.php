@@ -9,8 +9,8 @@
  *********************************************************************************/
 
 if (defined('VTIGER_UPGRADE')) {
-	global $current_user, $adb;
-	$db = PearDatabase::getInstance();
+    global $current_user, $adb;
+    $db = PearDatabase::getInstance();
 
     // 使用単位項目を追加
     $modulearray = array("Quotes","PurchaseOrder","SalesOrder","Invoice");
@@ -42,7 +42,7 @@ if (defined('VTIGER_UPGRADE')) {
     // 日報モジュールの作成日時と更新日時のtype_of_dataをDTに変更する
     $dailyReportsModuleInstance = Vtiger_Module::getInstance('Dailyreports');
     $dailyreportsId = $dailyReportsModuleInstance->getId();
-    if(!empty($dailyreportsId)){
+    if (!empty($dailyreportsId)) {
         $db->pquery("update vtiger_field set typeofdata = 'DT~O' where fieldname = 'createdtime' and tabid = ?", array($dailyreportsId));
         $db->pquery("update vtiger_field set typeofdata = 'DT~O' where fieldname = 'modifiedtime' and tabid = ?", array($dailyreportsId));
     }

@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Services_MassSave_Action extends Products_MassSave_Action {
-
+class Services_MassSave_Action extends Products_MassSave_Action
+{
 }

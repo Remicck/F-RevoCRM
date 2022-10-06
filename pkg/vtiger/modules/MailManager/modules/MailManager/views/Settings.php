@@ -8,89 +8,84 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class MailManager_Settings_View extends MailManager_MainUI_View {
-
-	/**
-	 * Process the request for Settings Operations
-	 * @param Vtiger_Request $request
-	 * @return MailManager_Response
-	 */
-	public function process(Vtiger_Request $request) {
-		$response = new MailManager_Response();
-		$module = $request->getModule();
-		if ('edit' == $this->getOperationArg($request)) {
-
-			$model = $this->getMailBoxModel();
+class MailManager_Settings_View extends MailManager_MainUI_View
+{
+    /**
+     * Process the request for Settings Operations
+     * @param Vtiger_Request $request
+     * @return MailManager_Response
+     */
+    public function process(Vtiger_Request $request)
+    {
+        $response = new MailManager_Response();
+        $module = $request->getModule();
+        if ('edit' == $this->getOperationArg($request)) {
+            $model = $this->getMailBoxModel();
             $connector = $this->getConnector();
-			$serverName = $model->serverName();
+            $serverName = $model->serverName();
 
             if ($connector->isConnected()) {
                 $folders = $connector->folders();
             }
-			$viewer = $this->getViewer($request);
-			$viewer->assign('MODULE', $module);
-			$viewer->assign('MAILBOX', $model);
-			$viewer->assign('SERVERNAME', $serverName);
+            $viewer = $this->getViewer($request);
+            $viewer->assign('MODULE', $module);
+            $viewer->assign('MAILBOX', $model);
+            $viewer->assign('SERVERNAME', $serverName);
             $viewer->assign('FOLDERS', $folders);
-			$response->setResult($viewer->view('SettingsEdit.tpl', $module, true));
-
-		} else if ('save' == $this->getOperationArg($request)) {
-
-			$model = $this->getMailBoxModel();
-			$model->setServer($request->get('_mbox_server'));
-			$model->setUsername($request->get('_mbox_user'));
+            $response->setResult($viewer->view('SettingsEdit.tpl', $module, true));
+        } elseif ('save' == $this->getOperationArg($request)) {
+            $model = $this->getMailBoxModel();
+            $model->setServer($request->get('_mbox_server'));
+            $model->setUsername($request->get('_mbox_user'));
             // MailManager_Request->get($key) is give urldecoded value which is replacing + with space
-			$model->setPassword($request->getRaw('_mbox_pwd'));
-			$model->setProtocol($request->get('_mbox_protocol', 'IMAP4'));
-			$model->setSSLType($request->get('_mbox_ssltype', 'ssl'));
-			$model->setCertValidate($request->get('_mbox_certvalidate', 'novalidate-cert'));
-			$model->setRefreshTimeOut($request->get('_mbox_refresh_timeout'));
-			$connector = $this->getConnector();
+            $model->setPassword($request->getRaw('_mbox_pwd'));
+            $model->setProtocol($request->get('_mbox_protocol', 'IMAP4'));
+            $model->setSSLType($request->get('_mbox_ssltype', 'ssl'));
+            $model->setCertValidate($request->get('_mbox_certvalidate', 'novalidate-cert'));
+            $model->setRefreshTimeOut($request->get('_mbox_refresh_timeout'));
+            $connector = $this->getConnector();
             $sentFolder = $request->get('_mbox_sent_folder');
-            if($connector->isConnected() && empty($sentFolder)) {
+            if ($connector->isConnected() && empty($sentFolder)) {
                 $folderInstaces = $connector->folders();
-                foreach($folderInstaces as $folder) {
+                foreach ($folderInstaces as $folder) {
                     if (strpos(strtolower($folder->name()), 'sent') !== false) {
                         $sentFolder = $folder->name();
                     }
                 }
             }
             $model->setFolder($sentFolder);
-			if ($connector->isConnected()) {
-				$model->save();
+            if ($connector->isConnected()) {
+                $model->save();
 
-				$request->set('_operation', 'mainui');
-				return parent::process($request);
-			} else if($connector->hasError()) {
+                $request->set('_operation', 'mainui');
+                return parent::process($request);
+            } elseif ($connector->hasError()) {
                 $error = $connector->lastError();
-				$response->isJSON(true);
-				$response->setError(101, $error);
-			}
-		} else if ('remove' == $this->getOperationArg($request)) {
+                $response->isJSON(true);
+                $response->setError(101, $error);
+            }
+        } elseif ('remove' == $this->getOperationArg($request)) {
+            $model = $this->getMailBoxModel();
+            $model->delete();
 
-			$model = $this->getMailBoxModel();
-			$model->delete();
+            $response->isJSON(true);
+            $response->setResult(array('status' => true));
+        } elseif ('detail' == $this->getOperationArg($request)) {
+            $model = $this->getMailBoxModel();
+            $serverName = $model->serverName();
 
-			$response->isJSON(true);
-			$response->setResult(array('status' => true));
+            $viewer = $this->getViewer($request);
+            $viewer->assign('MODULE', $module);
+            $viewer->assign('MAILBOX', $model);
+            $viewer->assign('SERVERNAME', $serverName);
+            $response->setResult($viewer->view('SettingsDetail.tpl', $module, true));
+        }
 
-		} else if ('detail' == $this->getOperationArg($request)) {
+        return $response;
+    }
 
-			$model = $this->getMailBoxModel();
-			$serverName = $model->serverName();
-
-			$viewer = $this->getViewer($request);
-			$viewer->assign('MODULE', $module);
-			$viewer->assign('MAILBOX', $model);
-			$viewer->assign('SERVERNAME', $serverName);
-			$response->setResult($viewer->view('SettingsDetail.tpl', $module, true));
-		}
-
-		return $response;
-	}
-    
-    public function validateRequest(Vtiger_Request $request) {
+    public function validateRequest(Vtiger_Request $request)
+    {
         return $request->validateWriteAccess();
     }
 }
-?>

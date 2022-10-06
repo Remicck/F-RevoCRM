@@ -8,61 +8,62 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Potentials_Forecast_Dashboard extends Vtiger_IndexAjax_View {
+class Potentials_Forecast_Dashboard extends Vtiger_IndexAjax_View
+{
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $jsFileNames = array(
+            '~/libraries/jquery/jqplot/plugins/jqplot.cursor.min.js',
+            '~/libraries/jquery/jqplot/plugins/jqplot.dateAxisRenderer.min.js',
+            '~/libraries/jquery/jqplot/plugins/jqplot.logAxisRenderer.min.js',
+            '~/libraries/jquery/jqplot/plugins/jqplot.canvasTextRenderer.min.js',
+            '~/libraries/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js'
+        );
 
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
+        $headerScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        return $headerScriptInstances;
+    }
 
-		$jsFileNames = array(
-			'~/libraries/jquery/jqplot/plugins/jqplot.cursor.min.js',
-			'~/libraries/jquery/jqplot/plugins/jqplot.dateAxisRenderer.min.js',
-			'~/libraries/jquery/jqplot/plugins/jqplot.logAxisRenderer.min.js',
-			'~/libraries/jquery/jqplot/plugins/jqplot.canvasTextRenderer.min.js',
-			'~/libraries/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js'
-		);
+    public function process(Vtiger_Request $request)
+    {
+        $currentUser = Users_Record_Model::getCurrentUserModel();
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-		$headerScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		return $headerScriptInstances;
-	}
+        $linkId = $request->get('linkid');
 
-	public function process(Vtiger_Request $request) {
-		$currentUser = Users_Record_Model::getCurrentUserModel();
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
+        $expectedclosedate = $request->get('expectedclosedate');
 
-		$linkId = $request->get('linkid');
-		
-		$expectedclosedate = $request->get('expectedclosedate');
-		
-		//Date conversion from user to database format
-		if(!empty($expectedclosedate)) {
-			$closingdates['start'] = Vtiger_Date_UIType::getDBInsertedValue($expectedclosedate['start']);
-			$closingdates['end'] = Vtiger_Date_UIType::getDBInsertedValue($expectedclosedate['end']);
-		}
-		
-		$dates = $request->get('createdtime');
-		
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-		$data = $moduleModel->getForecast($closingdates,$dates);
+        //Date conversion from user to database format
+        if (!empty($expectedclosedate)) {
+            $closingdates['start'] = Vtiger_Date_UIType::getDBInsertedValue($expectedclosedate['start']);
+            $closingdates['end'] = Vtiger_Date_UIType::getDBInsertedValue($expectedclosedate['end']);
+        }
 
-		$widget = Vtiger_Widget_Model::getInstance($linkId, $currentUser->getId());
+        $dates = $request->get('createdtime');
 
-		//Include special script and css needed for this widget
-		$viewer->assign('SCRIPTS',$this->getHeaderScripts($request));
-		
-		$viewer->assign('WIDGET', $widget);
-		$viewer->assign('MODULE_NAME', $moduleName);
-		$viewer->assign('DATA', $data);
+        $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+        $data = $moduleModel->getForecast($closingdates, $dates);
 
-		$content = $request->get('content');
-		if(!empty($content)) {
-			$viewer->view('dashboards/DashBoardWidgetContents.tpl', $moduleName);
-		} else {
-			$viewer->view('dashboards/Forecast.tpl', $moduleName);
-		}
-	}
+        $widget = Vtiger_Widget_Model::getInstance($linkId, $currentUser->getId());
+
+        //Include special script and css needed for this widget
+        $viewer->assign('SCRIPTS', $this->getHeaderScripts($request));
+
+        $viewer->assign('WIDGET', $widget);
+        $viewer->assign('MODULE_NAME', $moduleName);
+        $viewer->assign('DATA', $data);
+
+        $content = $request->get('content');
+        if (!empty($content)) {
+            $viewer->view('dashboards/DashBoardWidgetContents.tpl', $moduleName);
+        } else {
+            $viewer->view('dashboards/Forecast.tpl', $moduleName);
+        }
+    }
 }

@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Events_Detail_View extends Calendar_Detail_View {
-	
+class Events_Detail_View extends Calendar_Detail_View
+{
 }

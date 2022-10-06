@@ -8,38 +8,37 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class SMSProvider {
+class SMSProvider
+{
+    public static function getInstance($providername)
+    {
+        if (!empty($providername)) {
+            $providername = trim($providername);
 
-	static function getInstance($providername) {
-		if (!empty($providername)) {
-			$providername = trim($providername);
+            $filepath = dirname(__FILE__) . "/../providers/{$providername}.php";
+            checkFileAccessForInclusion($filepath);
 
-			$filepath = dirname(__FILE__) . "/../providers/{$providername}.php";
-			checkFileAccessForInclusion($filepath);
+            $className = "SMSNotifier_" . $providername . "_Provider";
+            if (!class_exists($className)) {
+                include_once $filepath;
+            }
+            return new $className();
+        }
+        return false;
+    }
 
-			$className = "SMSNotifier_" . $providername . "_Provider";
-			if (!class_exists($className)) {
-				include_once $filepath;
-			}
-			return new $className();
-		}
-		return false;
-	}
-
-	static function listAll() {
-		$providers = array();
-		if ($handle = opendir(dirname(__FILE__) . '/../providers')) {
-			while (false !== ($file = readdir($handle))) {
-				if (!in_array($file, array('.', '..', '.svn', 'CVS'))) {
-					if (preg_match("/(.*)\.php$/", $file, $matches)) {
-						$providers[] = $matches[1];
-					}
-				}
-			}
-		}
-		return $providers;
-	}
-
+    public static function listAll()
+    {
+        $providers = array();
+        if ($handle = opendir(dirname(__FILE__) . '/../providers')) {
+            while (false !== ($file = readdir($handle))) {
+                if (!in_array($file, array('.', '..', '.svn', 'CVS'))) {
+                    if (preg_match("/(.*)\.php$/", $file, $matches)) {
+                        $providers[] = $matches[1];
+                    }
+                }
+            }
+        }
+        return $providers;
+    }
 }
-
-?>

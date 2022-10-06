@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Services_DetailView_Model extends Products_DetailView_Model {
-	
+class Services_DetailView_Model extends Products_DetailView_Model
+{
 }

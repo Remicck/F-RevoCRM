@@ -8,18 +8,20 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Mobile_UI_Error  extends Mobile_WS_Controller {
-	protected $error;
-	
-	function setError($e) {
-		$this->error = $e;
-	}
-	
-	function process(Mobile_API_Request $request) {
-		$viewer = new Mobile_UI_Viewer();
-		$viewer->assign('errorcode', $this->error['code']);
-		$viewer->assign('errormsg', $this->error['message']);
-		return $viewer->process('generic/Error.tpl');
-	}
+class Mobile_UI_Error extends Mobile_WS_Controller
+{
+    protected $error;
 
+    public function setError($e)
+    {
+        $this->error = $e;
+    }
+
+    public function process(Mobile_API_Request $request)
+    {
+        $viewer = new Mobile_UI_Viewer();
+        $viewer->assign('errorcode', $this->error['code']);
+        $viewer->assign('errormsg', $this->error['message']);
+        return $viewer->process('generic/Error.tpl');
+    }
 }

@@ -8,11 +8,11 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	//Actions
-	'LBL_CONVERT_LEAD_FIELD_MAPPING' => 'リードの昇格のマッピング',
-	'LBL_ORGANIZATIONS' => '顧客企業',
-	'LBL_CONTACTS' => '顧客担当者',
-	'LBL_OPPURTUNITIES' => '案件',
+    //Actions
+    'LBL_CONVERT_LEAD_FIELD_MAPPING' => 'リードの昇格のマッピング',
+    'LBL_ORGANIZATIONS' => '顧客企業',
+    'LBL_CONTACTS' => '顧客担当者',
+    'LBL_OPPURTUNITIES' => '案件',
 );
 $jsLanguageStrings = array(
 );

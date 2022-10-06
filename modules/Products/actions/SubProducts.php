@@ -8,32 +8,34 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Products_SubProducts_Action extends Vtiger_Action_Controller {
+class Products_SubProducts_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		return $permissions;
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $productId = $request->get('record');
+        $productModel = Vtiger_Record_Model::getInstanceById($productId, 'Products');
+        $subProducts = $productModel->getSubProducts($active = true);
+        $values = array();
+        foreach ($subProducts as $id => $subProduct) {
+            $stockMessage = '';
+            if ($subProduct->get('quantityInBundle') > $subProduct->get('qtyinstock')) {
+                $stockMessage = vtranslate('LBL_STOCK_NOT_ENOUGH', $request->getModule());
+            }
+            $values[$id] = array('productName'	=> $subProduct->getName(),
+                                 'quantity'		=> $subProduct->get('quantityInBundle'),
+                                 'stockMessage'	=> $stockMessage);
+        }
 
-	function process(Vtiger_Request $request) {
-		$productId = $request->get('record');
-		$productModel = Vtiger_Record_Model::getInstanceById($productId, 'Products');
-		$subProducts = $productModel->getSubProducts($active = true);
-		$values = array();
-		foreach($subProducts as $id => $subProduct) {
-			$stockMessage = '';
-			if ($subProduct->get('quantityInBundle') > $subProduct->get('qtyinstock')) {
-				$stockMessage = vtranslate('LBL_STOCK_NOT_ENOUGH', $request->getModule());
-			}
-			$values[$id] = array('productName'	=> $subProduct->getName(),
-								 'quantity'		=> $subProduct->get('quantityInBundle'),
-								 'stockMessage'	=> $stockMessage);
-		}
-
-		$result = array('isBundleViewable' => $productModel->isBundleViewable(), 'values' => $values);
-		$response = new Vtiger_Response();
-		$response->setResult($result);
-		$response->emit();
-	}
+        $result = array('isBundleViewable' => $productModel->isBundleViewable(), 'values' => $values);
+        $response = new Vtiger_Response();
+        $response->setResult($result);
+        $response->emit();
+    }
 }

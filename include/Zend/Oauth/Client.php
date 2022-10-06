@@ -79,12 +79,12 @@ class Zend_Oauth_Client extends Zend_Http_Client
         if ($config instanceof Zend_Config && !isset($config->rfc3986_strict)) {
             $config                   = $config->toArray();
             $config['rfc3986_strict'] = true;
-        } else if (null === $config ||
+        } elseif (null === $config ||
                    (is_array($config) && !isset($config['rfc3986_strict']))) {
             $config['rfc3986_strict'] = true;
         }
         parent::__construct($uri, $config);
-        $this->_config = new Zend_Oauth_Config;
+        $this->_config = new Zend_Oauth_Config();
         if ($oauthOptions !== null) {
             if ($oauthOptions instanceof Zend_Config) {
                 $oauthOptions = $oauthOptions->toArray();
@@ -104,7 +104,7 @@ class Zend_Oauth_Client extends Zend_Http_Client
         if ($adapter == null) {
             $this->adapter = $adapter;
         } else {
-              parent::setAdapter($adapter);
+            parent::setAdapter($adapter);
         }
     }
 
@@ -142,12 +142,13 @@ class Zend_Oauth_Client extends Zend_Http_Client
      */
     protected function _prepareBody()
     {
-        if($this->_streamingRequest) {
-            $this->setHeaders(self::CONTENT_LENGTH,
-                $this->raw_post_data->getTotalSize());
+        if ($this->_streamingRequest) {
+            $this->setHeaders(
+                self::CONTENT_LENGTH,
+                $this->raw_post_data->getTotalSize()
+            );
             return $this->raw_post_data;
-        }
-        else {
+        } else {
             return parent::_prepareBody();
         }
     }
@@ -192,13 +193,13 @@ class Zend_Oauth_Client extends Zend_Http_Client
     {
         if ($method == self::GET) {
             $this->setRequestMethod(self::GET);
-        } elseif($method == self::POST) {
+        } elseif ($method == self::POST) {
             $this->setRequestMethod(self::POST);
-        } elseif($method == self::PUT) {
+        } elseif ($method == self::PUT) {
             $this->setRequestMethod(self::PUT);
-        }  elseif($method == self::DELETE) {
+        } elseif ($method == self::DELETE) {
             $this->setRequestMethod(self::DELETE);
-        }   elseif($method == self::HEAD) {
+        } elseif ($method == self::HEAD) {
             $this->setRequestMethod(self::HEAD);
         }
         return parent::setMethod($method);
@@ -261,7 +262,7 @@ class Zend_Oauth_Client extends Zend_Http_Client
             $this->setRawData($raw, 'application/x-www-form-urlencoded');
             $this->paramsPost = array();
         } elseif ($requestScheme == Zend_Oauth::REQUEST_SCHEME_QUERYSTRING) {
-            $params = $this->paramsGet;            
+            $params = $this->paramsGet;
             $query = $this->getUri()->getQuery();
             if ($query) {
                 $queryParts = explode('&', $this->getUri()->getQuery());
@@ -274,11 +275,15 @@ class Zend_Oauth_Client extends Zend_Http_Client
             if (!empty($this->paramsPost)) {
                 $params = array_merge($params, $this->paramsPost);
                 $query  = $this->getToken()->toQueryString(
-                    $this->getUri(true), $this->_config, $params
+                    $this->getUri(true),
+                    $this->_config,
+                    $params
                 );
             }
             $query = $this->getToken()->toQueryString(
-                $this->getUri(true), $this->_config, $params
+                $this->getUri(true),
+                $this->_config,
+                $params
             );
             $this->getUri()->setQuery($query);
             $this->paramsGet = array();
@@ -298,19 +303,23 @@ class Zend_Oauth_Client extends Zend_Http_Client
     protected function _getSignableParametersAsQueryString()
     {
         $params = array();
-            if (!empty($this->paramsGet)) {
-                $params = array_merge($params, $this->paramsGet);
-                $query  = $this->getToken()->toQueryString(
-                    $this->getUri(true), $this->_config, $params
-                );
-            }
-            if (!empty($this->paramsPost)) {
-                $params = array_merge($params, $this->paramsPost);
-                $query  = $this->getToken()->toQueryString(
-                    $this->getUri(true), $this->_config, $params
-                );
-            }
-            return $params;
+        if (!empty($this->paramsGet)) {
+            $params = array_merge($params, $this->paramsGet);
+            $query  = $this->getToken()->toQueryString(
+                $this->getUri(true),
+                $this->_config,
+                $params
+            );
+        }
+        if (!empty($this->paramsPost)) {
+            $params = array_merge($params, $this->paramsPost);
+            $query  = $this->getToken()->toQueryString(
+                $this->getUri(true),
+                $this->_config,
+                $params
+            );
+        }
+        return $params;
     }
 
     /**

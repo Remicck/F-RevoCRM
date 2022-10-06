@@ -5,7 +5,6 @@
  */
 class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
 {
-
     /**
      * @type HTMLPurifier_AttrDef_CSS_AlphaValue
      */
@@ -155,7 +154,6 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
         }
         return $color;
     }
-
 }
 
 // vim: et sw=4 sts=4

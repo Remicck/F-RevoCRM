@@ -7,6 +7,10 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-class Vtiger_PDF_Frame {
-	var $x, $y, $h, $w;
+class Vtiger_PDF_Frame
+{
+    public $x;
+    public $y;
+    public $h;
+    public $w;
 }

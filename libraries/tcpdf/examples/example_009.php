@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : example_009.php
 // Begin       : 2008-03-04
@@ -41,8 +42,8 @@ $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 009', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -53,15 +54,15 @@ $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
-	$pdf->setLanguageArray($l);
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
 }
 
 // -------------------------------------------------------------------
@@ -101,15 +102,15 @@ $w = 30;
 $h = 30;
 // test all combinations of alignments
 for ($i = 0; $i < 3; ++$i) {
-	$fitbox = $horizontal_alignments[$i].' ';
-	$x = 15;
-	for ($j = 0; $j < 3; ++$j) {
-		$fitbox[1] = $vertical_alignments[$j];
-		$pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,128));
-		$pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
-		$x += 32; // new column
-	}
-	$y += 32; // new row
+    $fitbox = $horizontal_alignments[$i].' ';
+    $x = 15;
+    for ($j = 0; $j < 3; ++$j) {
+        $fitbox[1] = $vertical_alignments[$j];
+        $pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,128));
+        $pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
+        $x += 32; // new column
+    }
+    $y += 32; // new row
 }
 
 $x = 115;
@@ -117,15 +118,15 @@ $y = 35;
 $w = 25;
 $h = 50;
 for ($i = 0; $i < 3; ++$i) {
-	$fitbox = $horizontal_alignments[$i].' ';
-	$x = 115;
-	for ($j = 0; $j < 3; ++$j) {
-		$fitbox[1] = $vertical_alignments[$j];
-		$pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,255));
-		$pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
-		$x += 27; // new column
-	}
-	$y += 52; // new row
+    $fitbox = $horizontal_alignments[$i].' ';
+    $x = 115;
+    for ($j = 0; $j < 3; ++$j) {
+        $fitbox[1] = $vertical_alignments[$j];
+        $pdf->Rect($x, $y, $w, $h, 'F', array(), array(128,255,255));
+        $pdf->Image('images/image_demo.jpg', $x, $y, $w, $h, 'JPG', '', '', false, 300, '', false, false, 0, $fitbox, false, false);
+        $x += 27; // new column
+    }
+    $y += 52; // new row
 }
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

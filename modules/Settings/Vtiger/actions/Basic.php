@@ -7,38 +7,42 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-class Settings_Vtiger_Basic_Action extends Settings_Vtiger_IndexAjax_View {
-    
-    function __construct() {
-		parent::__construct();
-		$this->exposeMethod('updateFieldPinnedStatus');
-	}
-    
-    function process(Vtiger_Request $request) {
-		$mode = $request->getMode();
-		if(!empty($mode)) {
-			echo $this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
-    
-    public function updateFieldPinnedStatus(Vtiger_Request $request) {
+class Settings_Vtiger_Basic_Action extends Settings_Vtiger_IndexAjax_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('updateFieldPinnedStatus');
+    }
+
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->getMode();
+        if (!empty($mode)) {
+            echo $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
+
+    public function updateFieldPinnedStatus(Vtiger_Request $request)
+    {
         $fieldId = $request->get('fieldid');
         $menuItemModel = Settings_Vtiger_MenuItem_Model::getInstanceById($fieldId);
-        
+
         $pin = $request->get('pin');
-        if($pin == 'true') {
+        if ($pin == 'true') {
             $menuItemModel->markPinned();
-        }else{
+        } else {
             $menuItemModel->unMarkPinned();
         }
-        
-	$response = new Vtiger_Response();
-	$response->setResult(array('SUCCESS'=>'OK'));
-	$response->emit();
+
+        $response = new Vtiger_Response();
+        $response->setResult(array('SUCCESS'=>'OK'));
+        $response->emit();
     }
-    
-    public function validateRequest(Vtiger_Request $request) {
+
+    public function validateRequest(Vtiger_Request $request)
+    {
         $request->validateWriteAccess();
     }
 }

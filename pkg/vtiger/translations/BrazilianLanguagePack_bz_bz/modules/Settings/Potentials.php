@@ -4,10 +4,10 @@
  * ("License"); You may not use this file except in compliance with the License
  * The Original Code is: vtiger CRM Open Source
  * The Initial Developer of the Original Code is vtiger.
- * Portions created by vtiger are Copyright (C) vtiger. 
+ * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved. Contributor(s): Valmir C. Trindade - Brazilian Portuguese Translation - www.ttcasolucoes.com.br
  * ***********************************************************************************/
 
 $languageStrings = array(
-	'LBL_POTENTIAL_FIELD_MAPPING' => 'Mapeamento Campos Oportunidades',
+    'LBL_POTENTIAL_FIELD_MAPPING' => 'Mapeamento Campos Oportunidades',
 );

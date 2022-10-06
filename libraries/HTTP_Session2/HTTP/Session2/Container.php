@@ -128,11 +128,13 @@ abstract class HTTP_Session2_Container implements HTTP_Session2_Container_Interf
     public function set()
     {
         session_module_name('user');
-        session_set_save_handler(array($this, 'open'),
+        session_set_save_handler(
+            array($this, 'open'),
             array($this, 'close'),
             array($this, 'read'),
             array($this, 'write'),
             array($this, 'destroy'),
-            array($this, 'gc'));
+            array($this, 'gc')
+        );
     }
 }

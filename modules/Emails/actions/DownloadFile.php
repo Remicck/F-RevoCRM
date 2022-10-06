@@ -8,19 +8,22 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Emails_DownloadFile_Action extends Vtiger_Action_Controller {
+class Emails_DownloadFile_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
-	
-	public function checkPermission(Vtiger_Request $request) {
-		return parent::checkPermission($request);
-	}
+    public function checkPermission(Vtiger_Request $request)
+    {
+        return parent::checkPermission($request);
+    }
 
-	public function process(Vtiger_Request $request) {
+    public function process(Vtiger_Request $request)
+    {
         $db = PearDatabase::getInstance();
 
         $attachmentId = $request->get('attachment_id');
@@ -28,8 +31,7 @@ class Emails_DownloadFile_Action extends Vtiger_Action_Controller {
         $query = "SELECT * FROM vtiger_attachments WHERE attachmentsid = ? AND name = ?" ;
         $result = $db->pquery($query, array($attachmentId, $name));
 
-        if($db->num_rows($result) == 1)
-        {
+        if ($db->num_rows($result) == 1) {
             $row = $db->fetchByAssoc($result, 0);
             $fileType = $row["type"];
             $name = $row["name"];
@@ -37,9 +39,9 @@ class Emails_DownloadFile_Action extends Vtiger_Action_Controller {
             $name = decode_html($name);
             $storedFileName = $row['storedname'];
             if (!empty($name)) {
-                if(!empty($storedFileName)){
+                if (!empty($storedFileName)) {
                     $saved_filename = $attachmentId."_". $storedFileName;
-                }else if(is_null($storedFileName)){
+                } elseif (is_null($storedFileName)) {
                     $saved_filename = $attachmentId."_". $name;
                 }
                 $disk_file_size = filesize($filepath.$saved_filename);
@@ -56,5 +58,3 @@ class Emails_DownloadFile_Action extends Vtiger_Action_Controller {
         }
     }
 }
-
-?>

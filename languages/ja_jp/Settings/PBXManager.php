@@ -13,20 +13,20 @@ $languageStrings = array(
     'LBL_PBXMANAGER' =>'PBXマネージャ',
     'LBL_PBXMANAGER_CONFIG' => 'Asteriskサーバ詳細',
     'LBL_NOTE' => '備考:',
-    'LBL_INFO_WEBAPP_URL' => 'Asterisk App URL 設定', 
+    'LBL_INFO_WEBAPP_URL' => 'Asterisk App URL 設定',
     'LBL_FORMAT_WEBAPP_URL' => '(protocol)://(asterisk_ip):(VtigerConnector_port)',
     'LBL_FORMAT_INFO_WEBAPP_URL' => 'ex:http://0.0.0.0:5000',
     'LBL_INFO_CONTEXT' => 'Vtiger Spezifischer Kontext in Ihrer Asterisk-Server konfiguriert (extensions.conf)',
     'LBL_PBXMANAGER_INFO' => 'Configure Asterisk Server Details after Installing Vtiger Asterisk Connector in your Asterisk Server',
-    
+
     'webappurl'=>'Vtiger Asterisk App URL',
     'vtigersecretkey'=>'Vtiger Secret Key',
     'outboundcontext' => 'Outbound Context',
     'outboundtrunk' => 'Outbound Trunk',
-    
+
 );
 
 $jsLanguageStrings = array(
-    
+
 );
 ?>  

@@ -13,8 +13,8 @@
  * @subpackage Cacher
  * @author Rodney Rehm
  */
-abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
-
+abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource
+{
     /**
      * fetch cached content and its modification time from data source
      *
@@ -26,7 +26,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
      * @param integer $mtime cache modification timestamp (epoch)
      * @return void
      */
-    protected abstract function fetch($id, $name, $cache_id, $compile_id, &$content, &$mtime);
+    abstract protected function fetch($id, $name, $cache_id, $compile_id, &$content, &$mtime);
 
     /**
      * Fetch cached content's modification timestamp from data source
@@ -56,7 +56,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
      * @param string $content content to cache
      * @return boolean success
      */
-    protected abstract function save($id, $name, $cache_id, $compile_id, $exp_time, $content);
+    abstract protected function save($id, $name, $cache_id, $compile_id, $exp_time, $content);
 
     /**
      * Delete content from cache
@@ -67,7 +67,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
      * @param integer|null $exp_time   seconds till expiration time in seconds or null
      * @return integer number of deleted caches
      */
-    protected abstract function delete($name, $cache_id, $compile_id, $exp_time);
+    abstract protected function delete($name, $cache_id, $compile_id, $exp_time);
 
     /**
      * populate Cached Object with meta data from Resource
@@ -184,7 +184,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
         $this->cache = array();
         return $this->delete($resource_name, $cache_id, $compile_id, $exp_time);
     }
-    
+
     /**
      * Check is cache is locked for this template
      *
@@ -196,12 +196,12 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
     {
         $id = $cached->filepath;
         $name = $cached->source->name . '.lock';
-        
+
         $mtime = $this->fetchTimestamp($id, $name, null, null);
         if ($mtime === null) {
             $this->fetch($id, $name, null, null, $content, $mtime);
         }
-        
+
         return $mtime && time() - $mtime < $smarty->locking_timeout;
     }
 
@@ -214,7 +214,7 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
     public function acquireLock(Smarty $smarty, Smarty_Template_Cached $cached)
     {
         $cached->is_locked = true;
-        
+
         $id = $cached->filepath;
         $name = $cached->source->name . '.lock';
         $this->save($id, $name, null, null, $smarty->locking_timeout, '');
@@ -229,10 +229,9 @@ abstract class Smarty_CacheResource_Custom extends Smarty_CacheResource {
     public function releaseLock(Smarty $smarty, Smarty_Template_Cached $cached)
     {
         $cached->is_locked = false;
-        
+
         $id = $cached->filepath;
         $name = $cached->source->name . '.lock';
         $this->delete($name, null, null, null);
     }
 }
-?>

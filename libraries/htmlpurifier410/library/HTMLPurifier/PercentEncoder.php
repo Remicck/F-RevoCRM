@@ -10,7 +10,6 @@
  */
 class HTMLPurifier_PercentEncoder
 {
-
     /**
      * Reserved characters to preserve when using encode().
      * @type array

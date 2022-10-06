@@ -8,31 +8,33 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Recurrence_UIType extends Vtiger_Date_UIType {
+class Vtiger_Recurrence_UIType extends Vtiger_Date_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Recurrence.tpl';
+    }
 
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Recurrence.tpl';
-	}
-    
     /**
-	 * Function to get the Detailview template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getDetailViewTemplateName() {
-		return 'uitypes/RecurrenceDetailView.tpl';
-	}
-    
+     * Function to get the Detailview template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getDetailViewTemplateName()
+    {
+        return 'uitypes/RecurrenceDetailView.tpl';
+    }
+
     /**
-	 * Function to get the display value in edit view
-	 * @param $value
-	 * @return converted value
-	 */
-	public function getEditViewDisplayValue($value) {
-		return $this->getDisplayValue($value);
-	}
-    
+     * Function to get the display value in edit view
+     * @param $value
+     * @return converted value
+     */
+    public function getEditViewDisplayValue($value)
+    {
+        return $this->getDisplayValue($value);
+    }
 }

@@ -8,5 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Services_ExportData_Action extends Products_ExportData_Action {
+class Services_ExportData_Action extends Products_ExportData_Action
+{
 }

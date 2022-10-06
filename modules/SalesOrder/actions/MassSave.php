@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class SalesOrder_MassSave_Action extends Inventory_MassSave_Action {
+class SalesOrder_MassSave_Action extends Inventory_MassSave_Action
+{
 }

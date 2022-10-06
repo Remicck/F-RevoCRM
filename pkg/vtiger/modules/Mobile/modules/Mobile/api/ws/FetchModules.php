@@ -9,19 +9,21 @@
  ************************************************************************************/
 include_once dirname(__FILE__) . '/../../api/ws/LoginAndFetchModules.php';
 
-class Mobile_WS_FetchModules extends Mobile_WS_LoginAndFetchModules {
+class Mobile_WS_FetchModules extends Mobile_WS_LoginAndFetchModules
+{
+    public function requireLogin()
+    {
+        return true;
+    }
 
-	function requireLogin() {
-		return true;
-	}
-	
-	function process(Mobile_API_Request $request) {
-		$current_user = $this->getActiveUser();
-		
-		$response = new Mobile_API_Response();
-		$result = array();
-		$result['modules'] = $this->getListing($current_user);
-		$response->setResult($result);
-		return $response;
-	}
+    public function process(Mobile_API_Request $request)
+    {
+        $current_user = $this->getActiveUser();
+
+        $response = new Mobile_API_Response();
+        $result = array();
+        $result['modules'] = $this->getListing($current_user);
+        $response->setResult($result);
+        return $response;
+    }
 }

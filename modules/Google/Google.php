@@ -11,17 +11,18 @@
 require_once 'vtlib/Vtiger/Module.php';
 require_once('include/events/include.inc');
 
-class Google {
-
-    const module = 'Google';
-	var $LBL_GOOGLE = 'LBL_GOOGLE';
+class Google
+{
+    public const module = 'Google';
+    public $LBL_GOOGLE = 'LBL_GOOGLE';
 
     /**
      * Invoked when special actions are to be performed on the module.
      * @param String Module name
      * @param String Event Type
      */
-    function vtlib_handler($moduleName, $eventType) {
+    public function vtlib_handler($moduleName, $eventType)
+    {
         $adb = PearDatabase::getInstance();
         $forModules = array('Contacts', 'Leads','Accounts');
         $syncModules = array('Contacts' => 'Google Contacts', 'Calendar' => 'Google Calendar');
@@ -30,21 +31,20 @@ class Google {
             $adb->pquery('UPDATE vtiger_tab SET customized=0 WHERE name=?', array($moduleName));
             $this->addMapWidget($forModules);
             $this->addWidgetforSync($syncModules);
-        } else if ($eventType == 'module.disabled') {
+        } elseif ($eventType == 'module.disabled') {
             $this->removeMapWidget($forModules);
             $this->removeWidgetforSync($syncModules);
-			$adb->pquery('UPDATE vtiger_settings_field SET active=1 WHERE name=?',array($this->LBL_GOOGLE));
-        } else if ($eventType == 'module.enabled') {
+            $adb->pquery('UPDATE vtiger_settings_field SET active=1 WHERE name=?', array($this->LBL_GOOGLE));
+        } elseif ($eventType == 'module.enabled') {
             $this->addMapWidget($forModules);
             $this->addWidgetforSync($syncModules);
-			$adb->pquery('UPDATE vtiger_settings_field SET active=0 WHERE name=?',array($this->LBL_GOOGLE));
-        } else if ($eventType == 'module.preuninstall') {
+            $adb->pquery('UPDATE vtiger_settings_field SET active=0 WHERE name=?', array($this->LBL_GOOGLE));
+        } elseif ($eventType == 'module.preuninstall') {
             $this->removeMapWidget($forModules);
             $this->removeWidgetforSync($syncModules);
-        } else if ($eventType == 'module.preupdate') {
+        } elseif ($eventType == 'module.preupdate') {
             // TODO Handle actions before this module is updated.
-        } else if ($eventType == 'module.postupdate') {
-            
+        } elseif ($eventType == 'module.postupdate') {
         }
     }
 
@@ -55,12 +55,15 @@ class Google {
      * @param String $widgetName
      * @return
      */
-    function addMapWidget($moduleNames, $widgetType = 'DETAILVIEWSIDEBARWIDGET', $widgetName = 'Google Map') {
-        if (empty($moduleNames))
+    public function addMapWidget($moduleNames, $widgetType = 'DETAILVIEWSIDEBARWIDGET', $widgetName = 'Google Map')
+    {
+        if (empty($moduleNames)) {
             return;
+        }
 
-        if (is_string($moduleNames))
+        if (is_string($moduleNames)) {
             $moduleNames = array($moduleNames);
+        }
 
         foreach ($moduleNames as $moduleName) {
             $module = Vtiger_Module::getInstance($moduleName);
@@ -77,12 +80,15 @@ class Google {
      * @param String $widgetName
      * @return
      */
-    function removeMapWidget($moduleNames, $widgetType = 'DETAILVIEWSIDEBARWIDGET', $widgetName = 'Google Map') {
-        if (empty($moduleNames))
+    public function removeMapWidget($moduleNames, $widgetType = 'DETAILVIEWSIDEBARWIDGET', $widgetName = 'Google Map')
+    {
+        if (empty($moduleNames)) {
             return;
+        }
 
-        if (is_string($moduleNames))
+        if (is_string($moduleNames)) {
             $moduleNames = array($moduleNames);
+        }
 
         foreach ($moduleNames as $moduleName) {
             $module = Vtiger_Module::getInstance($moduleName);
@@ -98,12 +104,15 @@ class Google {
      * @param String $widgetName
      * @return
      */
-    function addWidgetforSync($moduleNames, $widgetType = 'LISTVIEWSIDEBARWIDGET') {
-        if (empty($moduleNames))
+    public function addWidgetforSync($moduleNames, $widgetType = 'LISTVIEWSIDEBARWIDGET')
+    {
+        if (empty($moduleNames)) {
             return;
+        }
 
-        if (is_string($moduleNames))
+        if (is_string($moduleNames)) {
             $moduleNames = array($moduleNames);
+        }
 
         foreach ($moduleNames as $moduleName => $widgetName) {
             $module = Vtiger_Module::getInstance($moduleName);
@@ -119,12 +128,15 @@ class Google {
      * @param String $widgetName
      * @return
      */
-    function removeWidgetforSync($moduleNames, $widgetType = 'LISTVIEWSIDEBARWIDGET') {
-        if (empty($moduleNames))
+    public function removeWidgetforSync($moduleNames, $widgetType = 'LISTVIEWSIDEBARWIDGET')
+    {
+        if (empty($moduleNames)) {
             return;
+        }
 
-        if (is_string($moduleNames))
+        if (is_string($moduleNames)) {
             $moduleNames = array($moduleNames);
+        }
 
         foreach ($moduleNames as $moduleName => $widgetName) {
             $module = Vtiger_Module::getInstance($moduleName);
@@ -133,7 +145,4 @@ class Google {
             }
         }
     }
-
 }
-
-?>

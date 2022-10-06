@@ -8,13 +8,15 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class ModComments_List_View extends Vtiger_List_View {
+class ModComments_List_View extends Vtiger_List_View
+{
+    public function isEditable($moduleName)
+    {
+        return false;
+    }
 
-	public function isEditable($moduleName) {
-		return false;
-	}
-
-	public function isDeletable($moduleName) {
-		return false;
-	}
+    public function isDeletable($moduleName)
+    {
+        return false;
+    }
 }

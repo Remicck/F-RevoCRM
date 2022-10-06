@@ -237,5 +237,3 @@ $lang = array(
     "Select Thumbnails" => "Wybierz miniatury",
     "Download files" => "Pobierz pliki",
 );
-
-?>

@@ -9,8 +9,8 @@
  *********************************************************************************/
 
 if (defined('VTIGER_UPGRADE')) {
-	global $current_user, $adb;
-	$db = PearDatabase::getInstance();
+    global $current_user, $adb;
+    $db = PearDatabase::getInstance();
 
     // プロジェクトマイルストーンをプロジェクトから作るときに、自動でプロジェクトが含まれるように修正
     // projectidのfieldid
@@ -19,7 +19,7 @@ if (defined('VTIGER_UPGRADE')) {
     // relation_id
     $r_result = $db->query('select relation_id from vtiger_relatedlists where name = "get_dependents_list" and label = "Project Milestones" limit 1');
     $r_count = $db->num_rows($r_result);
-    if($f_count > 0 && $r_count > 0){
+    if ($f_count > 0 && $r_count > 0) {
         $fieldid = $db->query_result($f_result, 0, 'fieldid');
         $relation_id = $db->query_result($r_result, 0, 'relation_id');
         $db->pquery('update vtiger_relatedlists set relationfieldid = ? where relation_id = ?', array($fieldid, $relation_id));

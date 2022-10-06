@@ -16,8 +16,8 @@
  * @package Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Private_Modifier extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Private_Modifier extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for modifier execution
      *
@@ -48,23 +48,23 @@ class Smarty_Internal_Compile_Private_Modifier extends Smarty_Internal_CompileBa
                         $output = $function[0] . '::' . $function[1] . '(' . $params . ')';
                     }
                 }
-            } else if (isset($compiler->smarty->registered_plugins[Smarty::PLUGIN_MODIFIERCOMPILER][$modifier][0])) {
+            } elseif (isset($compiler->smarty->registered_plugins[Smarty::PLUGIN_MODIFIERCOMPILER][$modifier][0])) {
                 $output = call_user_func($compiler->smarty->registered_plugins[Smarty::PLUGIN_MODIFIERCOMPILER][$modifier][0], $single_modifier, $compiler->smarty);
-                // check for plugin modifiercompiler
-            } else if ($compiler->smarty->loadPlugin('smarty_modifiercompiler_' . $modifier)) {
+            // check for plugin modifiercompiler
+            } elseif ($compiler->smarty->loadPlugin('smarty_modifiercompiler_' . $modifier)) {
                 // check if modifier allowed
                 if (!is_object($compiler->smarty->security_policy) || $compiler->smarty->security_policy->isTrustedModifier($modifier, $compiler)) {
                     $plugin = 'smarty_modifiercompiler_' . $modifier;
                     $output = $plugin($single_modifier, $compiler);
                 }
-                // check for plugin modifier
-            } else if ($function = $compiler->getPlugin($modifier, Smarty::PLUGIN_MODIFIER)) {
+            // check for plugin modifier
+            } elseif ($function = $compiler->getPlugin($modifier, Smarty::PLUGIN_MODIFIER)) {
                 // check if modifier allowed
                 if (!is_object($compiler->smarty->security_policy) || $compiler->smarty->security_policy->isTrustedModifier($modifier, $compiler)) {
                     $output = "{$function}({$params})";
                 }
-                // check if trusted PHP function
-            } else if (is_callable($modifier)) {
+            // check if trusted PHP function
+            } elseif (is_callable($modifier)) {
                 // check if modifier allowed
                 if (!is_object($compiler->smarty->security_policy) || $compiler->smarty->security_policy->isTrustedPhpModifier($modifier, $compiler)) {
                     $output = "{$modifier}({$params})";
@@ -75,7 +75,4 @@ class Smarty_Internal_Compile_Private_Modifier extends Smarty_Internal_CompileBa
         }
         return $output;
     }
-
 }
-
-?>

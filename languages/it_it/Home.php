@@ -8,27 +8,27 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-	'ALVT'                         => 'Migliori Aziende'            , 
-	'PLVT'                         => 'Migliori Opportunità '      , 
-	'QLTQ'                         => 'Migliori Preventivi'         , 
-	'CVLVT'                        => 'Indici chiave'               , 
-	'HLT'                          => 'Top Support Tickets'         , 
-	'GRT'                          => 'I miei Gruppi'               , 
-	'OLTSO'                        => 'Ordini di Vendita Importanti', 
-	'ILTI'                         => 'Fatture Importanti'          , 
-	'HDB'                          => 'Cruscotto Home Page'         , 
-	'OLTPO'                        => 'Ordini di Acquisto Importanti', 
-	'LTFAQ'                        => 'Mie FAQ recenti'             , 
-	'UA'                           => 'Prossimi Eventi'             , 
-	'PA'                           => 'Eventi Pendenti'             , 
+    'ALVT'                         => 'Migliori Aziende'            ,
+    'PLVT'                         => 'Migliori Opportunità '      ,
+    'QLTQ'                         => 'Migliori Preventivi'         ,
+    'CVLVT'                        => 'Indici chiave'               ,
+    'HLT'                          => 'Top Support Tickets'         ,
+    'GRT'                          => 'I miei Gruppi'               ,
+    'OLTSO'                        => 'Ordini di Vendita Importanti',
+    'ILTI'                         => 'Fatture Importanti'          ,
+    'HDB'                          => 'Cruscotto Home Page'         ,
+    'OLTPO'                        => 'Ordini di Acquisto Importanti',
+    'LTFAQ'                        => 'Mie FAQ recenti'             ,
+    'UA'                           => 'Prossimi Eventi'             ,
+    'PA'                           => 'Eventi Pendenti'             ,
         'Home'                         => 'Cruscotto'                         ,
 
   'LBL_SAVE_ORDER' => 'Salvare L\'Ordine',
   'LBL_ADD_NEW_DASHBOARD' => 'Aggiungere un nuovo pannello',
-	'LBL_MAX_CHARACTERS_ALLOWED_DASHBOARD' => 'Massimo 30 caratteri sono consentiti per il nome cruscotto.',
+    'LBL_MAX_CHARACTERS_ALLOWED_DASHBOARD' => 'Massimo 30 caratteri sono consentiti per il nome cruscotto.',
 );
 
 $jsLanguageStrings = array(
-	'JS_TAB_NAME_SHOULD_NOT_BE_EMPTY' => 'nome cruscotto non può non essere vuoto',
-	'JS_NO_DATA_AVAILABLE' => 'Nessun dato disponibile',
+    'JS_TAB_NAME_SHOULD_NOT_BE_EMPTY' => 'nome cruscotto non può non essere vuoto',
+    'JS_NO_DATA_AVAILABLE' => 'Nessun dato disponibile',
 );

@@ -8,5 +8,6 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class Potentials_MassActionAjax_View extends Project_MassActionAjax_View {
+class Potentials_MassActionAjax_View extends Project_MassActionAjax_View
+{
 }

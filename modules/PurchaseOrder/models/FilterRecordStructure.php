@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class PurchaseOrder_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model {
+class PurchaseOrder_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model
+{
 }

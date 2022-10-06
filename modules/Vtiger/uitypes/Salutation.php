@@ -8,21 +8,23 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Salutation_UIType extends Vtiger_Base_UIType {
-
-	/**
-	 * Function to get the Template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Salutation.tpl';
-	}
+class Vtiger_Salutation_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Salutation.tpl';
+    }
 
     /**
-	 * Function to get the Detailview template name for the current UI Type Object
-	 * @return <String> - Template Name
-	 */
-	public function getDetailViewTemplateName() {
-		return 'uitypes/SalutationDetailView.tpl';
-	}
+     * Function to get the Detailview template name for the current UI Type Object
+     * @return <String> - Template Name
+     */
+    public function getDetailViewTemplateName()
+    {
+        return 'uitypes/SalutationDetailView.tpl';
+    }
 }

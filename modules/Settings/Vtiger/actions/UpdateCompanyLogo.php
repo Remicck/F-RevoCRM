@@ -9,45 +9,47 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Settings_Vtiger_UpdateCompanyLogo_Action extends Settings_Vtiger_Basic_Action {
+class Settings_Vtiger_UpdateCompanyLogo_Action extends Settings_Vtiger_Basic_Action
+{
+    public function process(Vtiger_Request $request)
+    {
+        $qualifiedModuleName = $request->getModule(false);
+        $moduleModel = Settings_Vtiger_CompanyDetails_Model::getInstance();
 
-	public function process(Vtiger_Request $request) {
-		$qualifiedModuleName = $request->getModule(false);
-		$moduleModel = Settings_Vtiger_CompanyDetails_Model::getInstance();
+        $saveLogo = $securityError = false;
+        $logoDetails = $_FILES['logo'];
+        $fileType = explode('/', $logoDetails['type']);
+        $fileType = $fileType[1];
 
-		$saveLogo = $securityError = false;
-		$logoDetails = $_FILES['logo'];
-		$fileType = explode('/', $logoDetails['type']);
-		$fileType = $fileType[1];
+        $logoContent = file_get_contents($logoDetails['tmp_name']);
+        if (preg_match('(<\?php?(.*?))', $logoContent) != 0) {
+            $securityError = true;
+        }
 
-		$logoContent = file_get_contents($logoDetails['tmp_name']);
-		if (preg_match('(<\?php?(.*?))', $logoContent) != 0) {
-			$securityError = true;
-		}
+        if (!$securityError) {
+            if ($logoDetails['size'] && in_array($fileType, Settings_Vtiger_CompanyDetails_Model::$logoSupportedFormats)) {
+                $saveLogo = true;
+            }
 
-		if (!$securityError) {
-			if ($logoDetails['size'] && in_array($fileType, Settings_Vtiger_CompanyDetails_Model::$logoSupportedFormats)) {
-				$saveLogo = true;
-			}
+            if ($saveLogo) {
+                $logoName = ltrim(basename(' '.Vtiger_Util_Helper::sanitizeUploadFileName($logoDetails['name'], vglobal('upload_badext'))));
+                $moduleModel->saveLogo();
+                $moduleModel->set('logoname', $logoName);
+                $moduleModel->save();
+            }
+        }
 
-			if ($saveLogo) {
-				$logoName = ltrim(basename(' '.Vtiger_Util_Helper::sanitizeUploadFileName($logoDetails['name'], vglobal('upload_badext'))));
-				$moduleModel->saveLogo();
-				$moduleModel->set('logoname', $logoName);
-				$moduleModel->save();
-			}
-		}
+        $reloadUrl = $moduleModel->getIndexViewUrl();
+        if ($securityError) {
+            $reloadUrl .= '&error=LBL_IMAGE_CORRUPTED';
+        } elseif (!$saveLogo) {
+            $reloadUrl .= '&error=LBL_INVALID_IMAGE';
+        }
+        header('Location: ' . $reloadUrl);
+    }
 
-		$reloadUrl = $moduleModel->getIndexViewUrl();
-		if ($securityError) {
-			$reloadUrl .= '&error=LBL_IMAGE_CORRUPTED';
-		} else if (!$saveLogo) {
-			$reloadUrl .= '&error=LBL_INVALID_IMAGE';
-		}
-		header('Location: ' . $reloadUrl);
-	}
-    
-    public function validateRequest(Vtiger_Request $request) {
+    public function validateRequest(Vtiger_Request $request)
+    {
         $request->validateWriteAccess();
     }
 }

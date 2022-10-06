@@ -8,27 +8,31 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class RecycleBin_ListAjax_View extends RecycleBin_List_View {
+class RecycleBin_ListAjax_View extends RecycleBin_List_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('getPageCount');
+        $this->exposeMethod('getRecordsCount');
+    }
 
-	function __construct() {
-		parent::__construct();
-		$this->exposeMethod('getPageCount');
-		$this->exposeMethod('getRecordsCount');
-	}
+    public function preProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function preProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function postProcess(Vtiger_Request $request) {
-		return true;
-	}
-
-	function process(Vtiger_Request $request) {
-		$mode = $request->get('mode');
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->get('mode');
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
 }

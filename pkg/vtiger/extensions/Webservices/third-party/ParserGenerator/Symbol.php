@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -23,7 +23,7 @@
  */
 /**
  * Symbols (terminals and nonterminals) of the grammar are stored in this class
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -38,28 +38,28 @@ class PHP_ParserGenerator_Symbol
      *
      * These are tokens directly from the lexer
      */
-    const TERMINAL = 1;
+    public const TERMINAL = 1;
     /**
      * Symbols that start with a lower-case letter like foo.
      *
      * These are grammar rules like "foo ::= BLAH."
      */
-    const NONTERMINAL = 2;
+    public const NONTERMINAL = 2;
     /**
      * Multiple terminal symbols.
      *
      * These are a grammar rule that consists of several terminals like
      * FOO|BAR|BAZ.  Note that non-terminals cannot be in a multi-terminal,
      * and a multi-terminal acts like a single terminal.
-     * 
+     *
      * "FOO|BAR FOO|BAZ" is actually two multi-terminals, FOO|BAR and FOO|BAZ.
      */
-    const MULTITERMINAL = 3;
-    
-    const LEFT = 1;
-    const RIGHT = 2;
-    const NONE = 3;
-    const UNK = 4;
+    public const MULTITERMINAL = 3;
+
+    public const LEFT = 1;
+    public const RIGHT = 2;
+    public const NONE = 3;
+    public const UNK = 4;
     /**
      * Name of the symbol
      *
@@ -118,7 +118,7 @@ class PHP_ParserGenerator_Symbol
     /**
      * True if this symbol is a non-terminal and can generate an empty
      * result.
-     * 
+     *
      * For instance "foo ::= ."
      * @var boolean
      */
@@ -157,7 +157,7 @@ class PHP_ParserGenerator_Symbol
      */
     /**
      * Number of terminal symbols in the MULTITERMINAL
-     * 
+     *
      * This is of course the same as count($this->subsym)
      * @var int
      */
@@ -186,7 +186,7 @@ class PHP_ParserGenerator_Symbol
         if (isset(self::$symbol_table[$x])) {
             return self::$symbol_table[$x];
         }
-        $sp = new PHP_ParserGenerator_Symbol;
+        $sp = new PHP_ParserGenerator_Symbol();
         $sp->name = $x;
         $sp->type = preg_match('/[A-Z]/', $x[0]) ? self::TERMINAL : self::NONTERMINAL;
         $sp->rule = 0;
@@ -225,11 +225,11 @@ class PHP_ParserGenerator_Symbol
 
     /**
      * Sort function helper for symbols
-     * 
+     *
      * Symbols that begin with upper case letters (terminals or tokens)
      * must sort before symbols that begin with lower case letters
      * (non-terminals).  Other than that, the order does not matter.
-     * 
+     *
      * We find experimentally that leaving the symbols in their original
      * order (the order they appeared in the grammar file) gives the
      * smallest parser tables in SQLite.
@@ -248,12 +248,22 @@ class PHP_ParserGenerator_Symbol
      */
     public static function same_symbol(PHP_ParserGenerator_Symbol $a, PHP_ParserGenerator_Symbol $b)
     {
-        if ($a === $b) return 1;
-        if ($a->type != self::MULTITERMINAL) return 0;
-        if ($b->type != self::MULTITERMINAL) return 0;
-        if ($a->nsubsym != $b->nsubsym) return 0;
+        if ($a === $b) {
+            return 1;
+        }
+        if ($a->type != self::MULTITERMINAL) {
+            return 0;
+        }
+        if ($b->type != self::MULTITERMINAL) {
+            return 0;
+        }
+        if ($a->nsubsym != $b->nsubsym) {
+            return 0;
+        }
         for ($i = 0; $i < $a->nsubsym; $i++) {
-            if ($a->subsym[$i] != $b->subsym[$i]) return 0;
+            if ($a->subsym[$i] != $b->subsym[$i]) {
+                return 0;
+            }
         }
         return 1;
     }

@@ -8,5 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Services_MassActionAjax_View extends Products_MassActionAjax_View {
+class Services_MassActionAjax_View extends Products_MassActionAjax_View
+{
 }

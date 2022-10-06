@@ -8,6 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Contacts_TransferOwnership_Action extends Accounts_TransferOwnership_Action {
-	
+class Contacts_TransferOwnership_Action extends Accounts_TransferOwnership_Action
+{
 }

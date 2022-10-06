@@ -11,7 +11,6 @@
 /**
  * SalesOrder Edit View Record Structure Model
  */
-class SalesOrder_EditRecordStructure_Model extends Inventory_EditRecordStructure_Model {
-
-	
+class SalesOrder_EditRecordStructure_Model extends Inventory_EditRecordStructure_Model
+{
 }

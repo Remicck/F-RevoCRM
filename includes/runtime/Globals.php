@@ -14,11 +14,12 @@
  * @param type $value
  * @return value of the given key
  */
-function vglobal($key, $value=null) {
-	$returnVal = false;
-	if($value !== null) {
-		$GLOBALS[$key] = $value;
-	}
-	$returnVal = isset($GLOBALS[$key]) ? $GLOBALS[$key] : false;
-	return $returnVal;
+function vglobal($key, $value=null)
+{
+    $returnVal = false;
+    if ($value !== null) {
+        $GLOBALS[$key] = $value;
+    }
+    $returnVal = isset($GLOBALS[$key]) ? $GLOBALS[$key] : false;
+    return $returnVal;
 }

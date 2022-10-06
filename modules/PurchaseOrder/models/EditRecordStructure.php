@@ -11,7 +11,6 @@
 /**
  * PurchaseOrder Edit View Record Structure Model
  */
-class PurchaseOrder_EditRecordStructure_Model extends Inventory_EditRecordStructure_Model {
-
-	
+class PurchaseOrder_EditRecordStructure_Model extends Inventory_EditRecordStructure_Model
+{
 }

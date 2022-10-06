@@ -10,4 +10,3 @@
 $languageStrings = array(
     'LBL_POTENTIAL_FIELD_MAPPING' => 'Oportunități de Mapping câmp',
 );
-?>

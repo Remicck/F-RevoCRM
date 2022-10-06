@@ -19,14 +19,14 @@ $files = glob("js/browser/*.js");
 
 foreach ($files as $file) {
     $fmtime = filemtime($file);
-    if (!isset($mtime) || ($fmtime > $mtime))
+    if (!isset($mtime) || ($fmtime > $mtime)) {
         $mtime = $fmtime;
+    }
 }
 
 httpCache::checkMTime($mtime);
 
 header("Content-Type: text/javascript");
-foreach ($files as $file)
+foreach ($files as $file) {
     require $file;
-
-?>
+}

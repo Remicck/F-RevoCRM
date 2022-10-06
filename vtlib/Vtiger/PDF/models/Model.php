@@ -7,22 +7,27 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-class Vtiger_PDF_Model {
-	protected $values = array();
-	
-	function set($key, $value) {
-		$this->values[$key] = $value;
-	}
+class Vtiger_PDF_Model
+{
+    protected $values = array();
 
-	function get($key, $defvalue='') {
-		return (isset($this->values[$key]))? $this->values[$key] : $defvalue;
-	}
-	
-	function count() {
-		return count($this->values);
-	}
-	
-	function keys() {
-		return array_keys($this->values);
-	}
+    public function set($key, $value)
+    {
+        $this->values[$key] = $value;
+    }
+
+    public function get($key, $defvalue='')
+    {
+        return (isset($this->values[$key])) ? $this->values[$key] : $defvalue;
+    }
+
+    public function count()
+    {
+        return count($this->values);
+    }
+
+    public function keys()
+    {
+        return array_keys($this->values);
+    }
 }

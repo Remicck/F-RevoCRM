@@ -77,7 +77,7 @@ $field->summaryfield = 1;
 $field->label = '日報/週報';
 $field->defaultvalue = 'Day';
 $array = array("Day","Week");
-$field->setPicklistValues( $array );
+$field->setPicklistValues($array);
 $blockInstance->addField($field);
 
 // 提出日
@@ -108,7 +108,7 @@ $field->summaryfield = 1;
 $field->label = 'ステータス';
 $field->defaultvalue = '提出中';
 $array = array("提出中","承認済");
-$field->setPicklistValues( $array );
+$field->setPicklistValues($array);
 $blockInstance->addField($field);
 
 // 提出先
@@ -124,7 +124,7 @@ $field->quickcreate = 1;
 $field->summaryfield = 1;
 $field->label = '提出先';
 $blockInstance->addField($field);
-$field->setRelatedModules(Array('Users'));
+$field->setRelatedModules(array('Users'));
 
 // 担当
 $field = new Vtiger_Field();
@@ -139,7 +139,7 @@ $field->quickcreate = 0;
 $field->summaryfield = 1;
 $field->label = '担当';
 $blockInstance->addField($field);
-$field->setRelatedModules(Array('Users'));
+$field->setRelatedModules(array('Users'));
 
 // コメント
 $field = new Vtiger_Field();
@@ -229,7 +229,7 @@ FRFilterSetting::add($module, 'All', array(
 $module = Vtiger_Module::getInstance('Calendar');
 $parentModule = Vtiger_Module::getInstance('Dailyreports');
 $function_name = 'get_activities';
-$parentModule->setRelatedList($module, 'Activities', Array('add'), $function_name);
+$parentModule->setRelatedList($module, 'Activities', array('add'), $function_name);
 
 //更新履歴の関連付け
 $module = Vtiger_Module::getInstance($module_name);
@@ -244,15 +244,15 @@ $module->enableTools(array('Import', 'Export', 'Merge'));
  */
 $log->debug("[START] Add Comments function");
 $modules = array('Dailyreports');
-for( $i=0; $i<count($modules); $i++) {
+for ($i=0; $i<count($modules); $i++) {
     $modulename = $modules[$i];
     $moduleinstance = vtiger_module::getinstance($modulename);
 
     require_once 'modules/ModComments/ModComments.php';
-    $commentsmodule = Vtiger_Module::getInstance( 'ModComments' );
-    $fieldinstance = Vtiger_Field::getInstance( 'related_to', $commentsmodule );
-    $fieldinstance->setRelatedModules( array($modulename) );
-    $detailviewblock = ModComments::addWidgetTo( $modulename );
+    $commentsmodule = Vtiger_Module::getInstance('ModComments');
+    $fieldinstance = Vtiger_Field::getInstance('related_to', $commentsmodule);
+    $fieldinstance->setRelatedModules(array($modulename));
+    $detailviewblock = ModComments::addWidgetTo($modulename);
     echo "comment widget for module $modulename has been created";
 }
 

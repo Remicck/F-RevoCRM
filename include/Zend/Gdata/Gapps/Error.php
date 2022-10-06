@@ -44,37 +44,40 @@ require_once 'Zend/Gdata/App/Base.php';
  */
 class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
 {
-
     // Error codes as defined at
     // http://code.google.com/apis/apps/gdata_provisioning_api_v2.0_reference.html#appendix_d
 
-    const UNKNOWN_ERROR = 1000;
-    const USER_DELETED_RECENTLY = 1100;
-    const USER_SUSPENDED = 1101;
-    const DOMAIN_USER_LIMIT_EXCEEDED = 1200;
-    const DOMAIN_ALIAS_LIMIT_EXCEEDED = 1201;
-    const DOMAIN_SUSPENDED = 1202;
-    const DOMAIN_FEATURE_UNAVAILABLE = 1203;
-    const ENTITY_EXISTS = 1300;
-    const ENTITY_DOES_NOT_EXIST = 1301;
-    const ENTITY_NAME_IS_RESERVED = 1302;
-    const ENTITY_NAME_NOT_VALID = 1303;
-    const INVALID_GIVEN_NAME = 1400;
-    const INVALID_FAMILY_NAME = 1401;
-    const INVALID_PASSWORD = 1402;
-    const INVALID_USERNAME = 1403;
-    const INVALID_HASH_FUNCTION_NAME = 1404;
-    const INVALID_HASH_DIGEST_LENGTH = 1405;
-    const INVALID_EMAIL_ADDRESS = 1406;
-    const INVALID_QUERY_PARAMETER_VALUE = 1407;
-    const TOO_MANY_RECIPIENTS_ON_EMAIL_LIST = 1500;
+    public const UNKNOWN_ERROR = 1000;
+    public const USER_DELETED_RECENTLY = 1100;
+    public const USER_SUSPENDED = 1101;
+    public const DOMAIN_USER_LIMIT_EXCEEDED = 1200;
+    public const DOMAIN_ALIAS_LIMIT_EXCEEDED = 1201;
+    public const DOMAIN_SUSPENDED = 1202;
+    public const DOMAIN_FEATURE_UNAVAILABLE = 1203;
+    public const ENTITY_EXISTS = 1300;
+    public const ENTITY_DOES_NOT_EXIST = 1301;
+    public const ENTITY_NAME_IS_RESERVED = 1302;
+    public const ENTITY_NAME_NOT_VALID = 1303;
+    public const INVALID_GIVEN_NAME = 1400;
+    public const INVALID_FAMILY_NAME = 1401;
+    public const INVALID_PASSWORD = 1402;
+    public const INVALID_USERNAME = 1403;
+    public const INVALID_HASH_FUNCTION_NAME = 1404;
+    public const INVALID_HASH_DIGEST_LENGTH = 1405;
+    public const INVALID_EMAIL_ADDRESS = 1406;
+    public const INVALID_QUERY_PARAMETER_VALUE = 1407;
+    public const TOO_MANY_RECIPIENTS_ON_EMAIL_LIST = 1500;
 
     protected $_errorCode = null;
     protected $_reason = null;
     protected $_invalidInput = null;
 
-    public function __construct($errorCode = null, $reason = null,
-            $invalidInput = null) {
+    public function __construct(
+        $errorCode = null,
+        $reason = null,
+        $invalidInput = null
+    )
+    {
         parent::__construct("Google Apps error received: $errorCode ($reason)");
         $this->_errorCode = $errorCode;
         $this->_reason = $reason;
@@ -88,8 +91,9 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      * @see getErrorCode
      * @param integer $value The new value for the error code.
      */
-    public function setErrorCode($value) {
-       $this->_errorCode = $value;
+    public function setErrorCode($value)
+    {
+        $this->_errorCode = $value;
     }
 
     /**
@@ -128,7 +132,8 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      * @see setErrorCode
      * @return integer The error code returned by the Google Apps server.
      */
-    public function getErrorCode() {
+    public function getErrorCode()
+    {
         return $this->_errorCode;
     }
 
@@ -138,8 +143,9 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      * @see getReason
      * @param string $value The reason this exception occurred.
      */
-    public function setReason($value) {
-       $this->_reason = $value;
+    public function setReason($value)
+    {
+        $this->_reason = $value;
     }
 
     /**
@@ -148,8 +154,9 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      * @see setReason
      * @return string The reason this exception occurred.
      */
-    public function getReason() {
-       return $this->_reason;
+    public function getReason()
+    {
+        return $this->_reason;
     }
 
     /**
@@ -158,8 +165,9 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      * @see getInvalidInput
      * @param string $value The invalid input that triggered this exception.
      */
-    public function setInvalidInput($value) {
-       $this->_invalidInput = $value;
+    public function setInvalidInput($value)
+    {
+        $this->_invalidInput = $value;
     }
 
     /**
@@ -168,8 +176,9 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      * @see setInvalidInput
      * @return string The reason this exception occurred.
      */
-    public function getInvalidInput() {
-       return $this->_invalidInput;
+    public function getInvalidInput()
+    {
+        return $this->_invalidInput;
     }
 
     /**
@@ -206,17 +215,17 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
     protected function takeAttributeFromDOM($attribute)
     {
         switch ($attribute->localName) {
-        case 'errorCode':
-            $this->_errorCode = $attribute->nodeValue;
-            break;
-        case 'reason':
-            $this->_reason = $attribute->nodeValue;
-            break;
-        case 'invalidInput':
-            $this->_invalidInput = $attribute->nodeValue;
-            break;
-        default:
-            parent::takeAttributeFromDOM($attribute);
+            case 'errorCode':
+                $this->_errorCode = $attribute->nodeValue;
+                break;
+            case 'reason':
+                $this->_reason = $attribute->nodeValue;
+                break;
+            case 'invalidInput':
+                $this->_invalidInput = $attribute->nodeValue;
+                break;
+            default:
+                parent::takeAttributeFromDOM($attribute);
         }
     }
 
@@ -225,9 +234,9 @@ class Zend_Gdata_Gapps_Error extends Zend_Gdata_App_Base
      *
      * @return string
      */
-    public function __toString() {
+    public function __toString()
+    {
         return "Error " . $this->getErrorCode() . ": " . $this->getReason() .
             "\n\tInvalid Input: \"" . $this->getInvalidInput() . "\"";
     }
-
 }

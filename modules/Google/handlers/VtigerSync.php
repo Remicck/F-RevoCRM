@@ -8,8 +8,10 @@
  * All Rights Reserved.
  *************************************************************************************/
 vimport('~~/modules/WSAPP/synclib/handlers/VtigerSyncEventHandler.php');
-class Google_VtigerSync_Handler extends WSAPP_VtigerSyncEventHandler {
-	public function getSyncServerInstance(){
-		return new Google_SyncServer_Controller();
-	}
+class Google_VtigerSync_Handler extends WSAPP_VtigerSyncEventHandler
+{
+    public function getSyncServerInstance()
+    {
+        return new Google_SyncServer_Controller();
+    }
 }

@@ -11,23 +11,24 @@
 /**
  * Assets Field Model Class
  */
-class Assets_Field_Model extends Vtiger_Field_Model {
+class Assets_Field_Model extends Vtiger_Field_Model
+{
+    /**
+     * Function returns special validator for fields
+     * @return <Array>
+     */
+    public function getValidator()
+    {
+        $validator = array();
+        $fieldName = $this->getName();
 
-	/**
-	 * Function returns special validator for fields
-	 * @return <Array>
-	 */
-	function getValidator() {
-		$validator = array();
-		$fieldName = $this->getName();
-
-		switch($fieldName) {
-            case 'datesold' : $funcName = array('name'=>'lessThanOrEqualToToday'); 
-                              array_push($validator, $funcName); 
-                              break; 
-			default : $validator = parent::getValidator();
-						break;
-		}
-		return $validator;
-	}
+        switch($fieldName) {
+            case 'datesold': $funcName = array('name'=>'lessThanOrEqualToToday');
+                array_push($validator, $funcName);
+                break;
+            default: $validator = parent::getValidator();
+                break;
+        }
+        return $validator;
+    }
 }

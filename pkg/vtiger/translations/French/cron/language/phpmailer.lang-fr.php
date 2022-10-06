@@ -8,7 +8,7 @@
 * All Rights Reserved.
  * Translated by ABOnline solutions - http://www.abo-s.com/
  * Boris CLEMENT
- * December 2013     
+ * December 2013
 ********************************************************************************/
 
 /**

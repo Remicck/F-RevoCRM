@@ -8,16 +8,17 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_QuickCreateFollowupAjax_View extends Vtiger_QuickCreateAjax_View {
-
-	public function  process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
+class Calendar_QuickCreateFollowupAjax_View extends Vtiger_QuickCreateAjax_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
         $recordId = $request->get('record');
-        
+
         $recordModel = Vtiger_Record_Model::getInstanceById($recordId);
         $moduleModel = $recordModel->getModule();
 
-		if(isPermitted($moduleName, 'CreateView', $recordId) === 'yes'){
+        if (isPermitted($moduleName, 'CreateView', $recordId) === 'yes') {
             //Start date Field required for validation
             $startDateFieldModel = $moduleModel->getField("date_start");
             $startDateTime = $recordModel->getDisplayValue('date_start');
@@ -25,15 +26,14 @@ class Calendar_QuickCreateFollowupAjax_View extends Vtiger_QuickCreateAjax_View 
             $startDate = $startDate[0];
 
             $viewer = $this->getViewer($request);
-            $viewer->assign('STARTDATEFIELDMODEL',$startDateFieldModel);
-            $viewer->assign('STARTDATE',$startDate);
+            $viewer->assign('STARTDATEFIELDMODEL', $startDateFieldModel);
+            $viewer->assign('STARTDATE', $startDate);
             $viewer->assign('CURRENTDATE', date('Y-n-j'));
             $viewer->assign('MODULE', $moduleName);
             $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
             $viewer->assign('RECORD_MODEL', $recordModel);
 
             $viewer->view('QuickCreateFollowup.tpl', $moduleName);
-        }        
-	}
-    
+        }
+    }
 }

@@ -13,20 +13,20 @@ $languageStrings = array(
     'LBL_PBXMANAGER'        => 'PBX-Menedzser',
     'LBL_PBXMANAGER_CONFIG' => 'Asterisk Szerver adatai',
     'LBL_NOTE'              => 'Megjegyzés:',
-    'LBL_INFO_WEBAPP_URL'   => 'Állítsa be az Asterisk alkalmazás URL-t ebben a  formátumban', 
+    'LBL_INFO_WEBAPP_URL'   => 'Állítsa be az Asterisk alkalmazás URL-t ebben a  formátumban',
     'LBL_FORMAT_WEBAPP_URL' => '(protocol)://(asterisk_ip):(VtigerConnector_port)',
     'LBL_FORMAT_INFO_WEBAPP_URL' => 'ex:http://0.0.0.0:5000',
     'LBL_INFO_CONTEXT'      => 'Vtiger Specfic context configured in your Asterisk server(extensions.conf)',
     'LBL_PBXMANAGER_INFO'   => 'Configure Asterisk Server Details after Installing Vtiger Asterisk Connector in your Asterisk Server',
-    
+
     'webappurl'             => 'Vtiger Asterisk alkalmazás URL',
     'vtigersecretkey'       => 'Vtiger biztonsági kulcs'       ,
     'outboundcontext'       => 'Kimenő csomag'                 ,
     'outboundtrunk'         => 'Kimenő törzs'                  ,
-    
+
 );
 
 $jsLanguageStrings = array(
-    
+
 );
 ?>  

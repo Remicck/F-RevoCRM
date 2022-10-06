@@ -28,13 +28,13 @@
 */
 
 /**  The recognizer did not match anything for a (..)+ loop. */
-class EarlyExitException extends RecognitionException {
-	public $decisionNumber;
+class EarlyExitException extends RecognitionException
+{
+    public $decisionNumber;
 
-	public function __construct($decisionNumber, $input) {
-		parent::__construct($input);
-		$this->decisionNumber = $decisionNumber;
-	}
+    public function __construct($decisionNumber, $input)
+    {
+        parent::__construct($input);
+        $this->decisionNumber = $decisionNumber;
+    }
 }
-
-?>

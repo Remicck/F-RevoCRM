@@ -88,7 +88,7 @@ class Zend_Json_Encoder
     {
         if (is_object($value)) {
             return $this->_encodeObject($value);
-        } else if (is_array($value)) {
+        } elseif (is_array($value)) {
             return $this->_encodeArray($value);
         }
 
@@ -133,7 +133,7 @@ class Zend_Json_Encoder
 
         /*return '{"__className":"' . get_class($value) . '"'
                 . $props . '}';*/
-        return '{'.substr($props,1).'}';
+        return '{'.substr($props, 1).'}';
     }
 
 
@@ -409,6 +409,4 @@ class Zend_Json_Encoder
 
         return $result;
     }
-
 }
-

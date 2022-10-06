@@ -14,7 +14,7 @@ $lang = array(
     '_dateTimeMid' => "%a %e %b %Y %I:%M %p",
     '_dateTimeSmall' => "%d/%m/%Y %I:%M %p",
 
-	"You don't have permissions to upload files." =>
+    "You don't have permissions to upload files." =>
     "Du hast keine Berechtigung Dateien hoch zu laden.",
 
     "You don't have permissions to browse server." =>
@@ -237,5 +237,3 @@ $lang = array(
     "Select Thumbnails" => "Wähle Miniaturansicht",
     "Download files" => "Dateien herunterladen",
 );
-
-?>

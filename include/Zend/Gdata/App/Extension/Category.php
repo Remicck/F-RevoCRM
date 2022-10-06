@@ -37,7 +37,6 @@ require_once 'Zend/Gdata/App/Extension.php';
  */
 class Zend_Gdata_App_Extension_Category extends Zend_Gdata_App_Extension
 {
-
     protected $_rootElement = 'category';
     protected $_term = null;
     protected $_scheme = null;
@@ -69,17 +68,17 @@ class Zend_Gdata_App_Extension_Category extends Zend_Gdata_App_Extension
     protected function takeAttributeFromDOM($attribute)
     {
         switch ($attribute->localName) {
-        case 'term':
-            $this->_term = $attribute->nodeValue;
-            break;
-        case 'scheme':
-            $this->_scheme = $attribute->nodeValue;
-            break;
-        case 'label':
-            $this->_label = $attribute->nodeValue;
-            break;
-        default:
-            parent::takeAttributeFromDOM($attribute);
+            case 'term':
+                $this->_term = $attribute->nodeValue;
+                break;
+            case 'scheme':
+                $this->_scheme = $attribute->nodeValue;
+                break;
+            case 'label':
+                $this->_label = $attribute->nodeValue;
+                break;
+            default:
+                parent::takeAttributeFromDOM($attribute);
         }
     }
 
@@ -136,5 +135,4 @@ class Zend_Gdata_App_Extension_Category extends Zend_Gdata_App_Extension
         $this->_label = $value;
         return $this;
     }
-
 }

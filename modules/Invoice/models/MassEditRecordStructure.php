@@ -11,6 +11,6 @@
 /**
  * Mass Edit Record Structure Model
  */
-class Invoice_MassEditRecordStructure_Model extends Inventory_MassEditRecordStructure_Model {
-
+class Invoice_MassEditRecordStructure_Model extends Inventory_MassEditRecordStructure_Model
+{
 }

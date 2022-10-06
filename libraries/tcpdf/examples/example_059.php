@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : example_059.php
 // Begin       : 2010-05-06
@@ -30,36 +31,37 @@ require_once('tcpdf_include.php');
 /**
  * TCPDF class extension with custom header and footer for TOC page
  */
-class TOC_TCPDF extends TCPDF {
+class TOC_TCPDF extends TCPDF
+{
+    /**
+     * Overwrite Header() method.
+     * @public
+     */
+    public function Header()
+    {
+        if ($this->tocpage) {
+            // *** replace the following parent::Header() with your code for TOC page
+            parent::Header();
+        } else {
+            // *** replace the following parent::Header() with your code for normal pages
+            parent::Header();
+        }
+    }
 
-	/**
- 	 * Overwrite Header() method.
-	 * @public
-	 */
-	public function Header() {
-		if ($this->tocpage) {
-			// *** replace the following parent::Header() with your code for TOC page
-			parent::Header();
-		} else {
-			// *** replace the following parent::Header() with your code for normal pages
-			parent::Header();
-		}
-	}
-
-	/**
- 	 * Overwrite Footer() method.
-	 * @public
-	 */
-	public function Footer() {
-		if ($this->tocpage) {
-			// *** replace the following parent::Footer() with your code for TOC page
-			parent::Footer();
-		} else {
-			// *** replace the following parent::Footer() with your code for normal pages
-			parent::Footer();
-		}
-	}
-
+    /**
+     * Overwrite Footer() method.
+     * @public
+     */
+    public function Footer()
+    {
+        if ($this->tocpage) {
+            // *** replace the following parent::Footer() with your code for TOC page
+            parent::Footer();
+        } else {
+            // *** replace the following parent::Footer() with your code for normal pages
+            parent::Footer();
+        }
+    }
 } // end of class
 
 // create new PDF document
@@ -76,8 +78,8 @@ $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 059', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -88,15 +90,15 @@ $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
-	$pdf->setLanguageArray($l);
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
 }
 
 // set font
@@ -133,9 +135,9 @@ $pdf->Cell(0, 10, 'Paragraph 1.3', 0, 1, 'L');
 
 // add some pages and bookmarks
 for ($i = 2; $i < 12; $i++) {
-	$pdf->AddPage();
-	$pdf->Bookmark('Chapter '.$i, 0, 0, '', 'B', array(0,64,128));
-	$pdf->Cell(0, 10, 'Chapter '.$i, 0, 1, 'L');
+    $pdf->AddPage();
+    $pdf->Bookmark('Chapter '.$i, 0, 0, '', 'B', array(0,64,128));
+    $pdf->Cell(0, 10, 'Chapter '.$i, 0, 1, 'L');
 }
 
 

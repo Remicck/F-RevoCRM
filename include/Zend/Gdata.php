@@ -43,13 +43,12 @@ require_once 'Zend/Gdata/App.php';
  */
 class Zend_Gdata extends Zend_Gdata_App
 {
-
     /**
      * Service name for use with Google's authentication mechanisms
      *
      * @var string
      */
-    const AUTH_SERVICE_NAME = 'xapi';
+    public const AUTH_SERVICE_NAME = 'xapi';
 
     /**
      * Default URI to which to POST.
@@ -120,8 +119,11 @@ class Zend_Gdata extends Zend_Gdata_App
      *                                    by passing false to the
      *                                    useObjectMapping() function.
      */
-    public static function import($uri, $client = null,
-        $className='Zend_Gdata_Feed')
+    public static function import(
+        $uri,
+        $client = null,
+        $className='Zend_Gdata_Feed'
+    )
     {
         $app = new Zend_Gdata($client);
         $requestData = $app->decodeRequest('GET', $uri);
@@ -156,8 +158,9 @@ class Zend_Gdata extends Zend_Gdata_App
         } else {
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';
             throw new Zend_Gdata_App_InvalidArgumentException(
-                    'You must specify the location as either a string URI ' .
-                    'or a child of Zend_Gdata_Query');
+                'You must specify the location as either a string URI ' .
+                'or a child of Zend_Gdata_Query'
+            );
         }
         return parent::getFeed($uri, $className);
     }
@@ -181,8 +184,9 @@ class Zend_Gdata extends Zend_Gdata_App
         } else {
             require_once 'Zend/Gdata/App/InvalidArgumentException.php';
             throw new Zend_Gdata_App_InvalidArgumentException(
-                    'You must specify the location as either a string URI ' .
-                    'or a child of Zend_Gdata_Query');
+                'You must specify the location as either a string URI ' .
+                'or a child of Zend_Gdata_Query'
+            );
         }
         return parent::getEntry($uri, $className);
     }
@@ -232,10 +236,9 @@ class Zend_Gdata extends Zend_Gdata_App
         $client = parent::getHttpClient();
         if ($client->getClientLoginToken() ||
             $client->getAuthSubToken()) {
-                return true;
+            return true;
         }
 
         return false;
     }
-
 }

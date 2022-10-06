@@ -8,20 +8,20 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_FetchAnnouncement extends CustomerPortal_API_Abstract {
+class CustomerPortal_FetchAnnouncement extends CustomerPortal_API_Abstract
+{
+    public function process(CustomerPortal_API_Request $request)
+    {
+        global $adb;
+        $response = new CustomerPortal_API_Response();
+        $current_user = $this->getActiveUser();
 
-	function process(CustomerPortal_API_Request $request) {
-		global $adb;
-		$response = new CustomerPortal_API_Response();
-		$current_user = $this->getActiveUser();
-
-		if ($current_user) {
-			$sql = "SELECT announcement FROM vtiger_customerportal_settings LIMIT 1";
-			$result = $adb->pquery($sql, array());
-			$announcement = $adb->query_result($result, 0, 'announcement');
-			$response->setResult(array('announcement' => $announcement));
-		}
-		return $response;
-	}
-
+        if ($current_user) {
+            $sql = "SELECT announcement FROM vtiger_customerportal_settings LIMIT 1";
+            $result = $adb->pquery($sql, array());
+            $announcement = $adb->query_result($result, 0, 'announcement');
+            $response->setResult(array('announcement' => $announcement));
+        }
+        return $response;
+    }
 }

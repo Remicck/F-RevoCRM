@@ -8,35 +8,38 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class PurchaseOrder_ProductsPopupAjax_View extends PurchaseOrder_ProductsPopup_View {
+class PurchaseOrder_ProductsPopupAjax_View extends PurchaseOrder_ProductsPopup_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('getListViewCount');
+        $this->exposeMethod('getRecordsCount');
+        $this->exposeMethod('getPageCount');
+    }
 
-	function __construct() {
-		parent::__construct();
-		$this->exposeMethod('getListViewCount');
-		$this->exposeMethod('getRecordsCount');
-		$this->exposeMethod('getPageCount');
-	}
+    public function preProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function preProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function postProcess(Vtiger_Request $request)
+    {
+        return true;
+    }
 
-	function postProcess(Vtiger_Request $request) {
-		return true;
-	}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->get('mode');
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
 
-	function process (Vtiger_Request $request) {
-		$mode = $request->get('mode');
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-
-		$viewer = $this->getViewer($request);
-		$this->initializeListViewContents($request, $viewer);
-		$moduleName = 'Inventory';
-		$viewer->assign('MODULE_NAME',$moduleName);
-		echo $viewer->view('PopupContents.tpl', $moduleName, true);
-	}
-
+        $viewer = $this->getViewer($request);
+        $this->initializeListViewContents($request, $viewer);
+        $moduleName = 'Inventory';
+        $viewer->assign('MODULE_NAME', $moduleName);
+        echo $viewer->view('PopupContents.tpl', $moduleName, true);
+    }
 }

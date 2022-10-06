@@ -102,12 +102,10 @@ function smarty_block_textformat($params, $content, $template, &$repeat)
         }
     }
     $_output = implode($wrap_char . $wrap_char, $_paragraphs);
-    
+
     if ($assign) {
         $template->assign($assign, $_output);
     } else {
         return $_output;
     }
 }
-
-?>

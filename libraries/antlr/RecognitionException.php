@@ -57,123 +57,116 @@
  *  Better to just say the recognizer had a problem and then let the parser
  *  figure out a fancy report.
  */
-class RecognitionException extends Exception {
+class RecognitionException extends Exception
+{
+    public $line=0;
 
-	public $line=0;
+
+    public function __construct($input)
+    {
+        /** What input stream did the error occur in? */
+        $this->input = $input;
+        /** What is index of token/char were we looking at when the error occurred? */
+        $this->index = $input->index();
+
+        /** The current Token when an error occurred.  Since not all streams
+         *  can retrieve the ith Token, we have to track the Token object.
+         *  For parsers.  Even when it's a tree parser, token might be set.
+         */
+        $this->token=null;
+
+        /** If this is a tree parser exception, node is set to the node with
+         *  the problem.
+         */
+        $this->node=null;
+
+        /** The current char when an error occurred. For lexers. */
+        $this->c=0;
+
+        /** Track the line at which the error occurred in case this is
+         *  generated from a lexer.  We need to track this since the
+         *  unexpected char doesn't carry the line info.
+         */
+        $this->line=0;
+
+        $this->charPositionInLine=0;
+
+        /** If you are parsing a tree node stream, you will encounter som
+         *  imaginary nodes w/o line/col info.  We now search backwards looking
+         *  for most recent token with line/col info, but notify getErrorHeader()
+         *  that info is approximate.
+         */
+        $this->approximateLineInfo=false;
 
 
-	public function __construct($input) {
-		/** What input stream did the error occur in? */
-		$this->input = $input;
-		/** What is index of token/char were we looking at when the error occurred? */
-		$this->index = $input->index();
+        if ($this->input instanceof TokenStream) {
+            $this->token = $input->LT(1);
+            $this->line = $this->token->getLine();
+            $this->charPositionInLine = $this->token->getCharPositionInLine();
+        }
+        if ($this->input instanceof TreeNodeStream) {
+            $this->extractInformationFromTreeNodeStream($input);
+        } elseif ($input instanceof CharStream) {
+            $this->c = $input->LA(1);
+            $this->line = $input->getLine();
+            $this->charPositionInLine = $input->getCharPositionInLine();
+        } else {
+            $this->c = $input->LA(1);
+        }
+    }
 
-		/** The current Token when an error occurred.  Since not all streams
-		 *  can retrieve the ith Token, we have to track the Token object.
-		 *  For parsers.  Even when it's a tree parser, token might be set.
-		 */
-		$this->token=null;
+    protected function extractInformationFromTreeNodeStream($input)
+    {
+        $nodes = $input;
+        $this->node = $nodes->LT(1);
+        $adaptor = $nodes->getTreeAdaptor();
+        $payload = $adaptor->getToken($this->node);
+        if ($payload!=null) {
+            $this->token = $payload;
+            if ($payload->getLine()<= 0) {
+                // imaginary node; no line/pos info; scan backwards
+                $i = -1;
+                $priorNode = $nodes->LT($i);
+                while ($priorNode!=null) {
+                    $priorPayload = $adaptor->getToken($priorNode);
+                    if ($priorPayload!=null && $priorPayload->getLine()>0) {
+                        // we found the most recent real line / pos info
+                        $this->line = $priorPayload->getLine();
+                        $this->charPositionInLine = $priorPayload->getCharPositionInLine();
+                        $this->approximateLineInfo = true;
+                        break;
+                    }
+                    --$i;
+                    $priorNode = $nodes->LT($i);
+                }
+            } else { // node created from real token
+                $this->line = $payload->getLine();
+                $this->charPositionInLine = $payload->getCharPositionInLine();
+            }
+        } elseif ($this->node instanceof Tree) {
+            $this->line = $this->node->getLine();
+            $this->charPositionInLine = $this->node->getCharPositionInLine();
+            if ($this->node instanceof CommonTree) {
+                $this->token = $this->node->token;
+            }
+        } else {
+            $type = $adaptor->getType($this->node);
+            $text = $adaptor->getText($this->node);
+            $this->token = CommonToken::forTypeAndText($type, $text);
+        }
+    }
 
-		/** If this is a tree parser exception, node is set to the node with
-		 *  the problem.
-		 */
-		$this->node=null;
-
-		/** The current char when an error occurred. For lexers. */
-		$this->c=0;
-
-		/** Track the line at which the error occurred in case this is
-		 *  generated from a lexer.  We need to track this since the
-		 *  unexpected char doesn't carry the line info.
-		 */
-		$this->line=0;
-
-		$this->charPositionInLine=0;
-
-		/** If you are parsing a tree node stream, you will encounter som
-		 *  imaginary nodes w/o line/col info.  We now search backwards looking
-		 *  for most recent token with line/col info, but notify getErrorHeader()
-		 *  that info is approximate.
-		 */
-		$this->approximateLineInfo=false;
-		
-
-		if ( $this->input instanceof TokenStream ) {
-			$this->token = $input->LT(1);
-			$this->line = $this->token->getLine();
-			$this->charPositionInLine = $this->token->getCharPositionInLine();
-		}
-		if ( $this->input instanceof TreeNodeStream ) {
-			$this->extractInformationFromTreeNodeStream($input);
-		}
-		else if ( $input instanceof CharStream ) {
-			$this->c = $input->LA(1);
-			$this->line = $input->getLine();
-			$this->charPositionInLine = $input->getCharPositionInLine();
-		}
-		else {
-			$this->c = $input->LA(1);
-		}
-	}
-
-	protected function extractInformationFromTreeNodeStream($input) {
-		$nodes = $input;
-		$this->node = $nodes->LT(1);
-		$adaptor = $nodes->getTreeAdaptor();
-		$payload = $adaptor->getToken($this->node);
-		if ( $payload!=null ) {
-			$this->token = $payload;
-			if ( $payload->getLine()<= 0 ) {
-				// imaginary node; no line/pos info; scan backwards
-				$i = -1;
-				$priorNode = $nodes->LT($i);
-				while ( $priorNode!=null ) {
-					$priorPayload = $adaptor->getToken($priorNode);
-					if ( $priorPayload!=null && $priorPayload->getLine()>0 ) {
-						// we found the most recent real line / pos info
-						$this->line = $priorPayload->getLine();
-						$this->charPositionInLine = $priorPayload->getCharPositionInLine();
-						$this->approximateLineInfo = true;
-						break;
-					}
-					--$i;
-					$priorNode = $nodes->LT($i);
-				}
-			}
-			else { // node created from real token
-				$this->line = $payload->getLine();
-				$this->charPositionInLine = $payload->getCharPositionInLine();
-			}
-		}
-		else if ( $this->node instanceof Tree) {
-			$this->line = $this->node->getLine();
-			$this->charPositionInLine = $this->node->getCharPositionInLine();
-			if ( $this->node instanceof CommonTree) {
-				$this->token = $this->node->token;
-			}
-		}
-		else {
-			$type = $adaptor->getType($this->node);
-			$text = $adaptor->getText($this->node);
-			$this->token = CommonToken::forTypeAndText($type, $text);
-		}
-	}
-
-	/** Return the token type or char of the unexpected input element */
-	public function getUnexpectedType() {
-		if ( $this->input instanceof TokenStream ) {
-			return $this->token->getType();
-		}
-		else if ( $this->input instanceof TreeNodeStream ) {
-			$nodes = $this->input;
-			$adaptor = $nodes->getTreeAdaptor();
-			return $adaptor->getType($this->node);
-		}
-		else {
-			return $this->c;
-		}
-	}
+    /** Return the token type or char of the unexpected input element */
+    public function getUnexpectedType()
+    {
+        if ($this->input instanceof TokenStream) {
+            return $this->token->getType();
+        } elseif ($this->input instanceof TreeNodeStream) {
+            $nodes = $this->input;
+            $adaptor = $nodes->getTreeAdaptor();
+            return $adaptor->getType($this->node);
+        } else {
+            return $this->c;
+        }
+    }
 }
-
-
-?>

@@ -9,5 +9,5 @@
  * ***********************************************************************************/
 
 $languageStrings = array(
-	'LBL_POTENTIAL_FIELD_MAPPING' => '案件の項目マッピング',
+    'LBL_POTENTIAL_FIELD_MAPPING' => '案件の項目マッピング',
 );

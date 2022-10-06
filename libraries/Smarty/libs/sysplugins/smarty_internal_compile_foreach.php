@@ -15,7 +15,8 @@
  * @package Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
+class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase
+{
     /**
      * Attribute definition: Overwrites base class.
      *
@@ -173,8 +174,8 @@ class Smarty_Internal_Compile_Foreach extends Smarty_Internal_CompileBase {
  * @package Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Foreachelse extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Foreachelse extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for the {foreachelse} tag
      *
@@ -193,7 +194,6 @@ class Smarty_Internal_Compile_Foreachelse extends Smarty_Internal_CompileBase {
 
         return "<?php }\nif (!\$_smarty_tpl->tpl_vars[$item]->_loop) {\n?>";
     }
-
 }
 
 /**
@@ -202,8 +202,8 @@ class Smarty_Internal_Compile_Foreachelse extends Smarty_Internal_CompileBase {
  * @package Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Foreachclose extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Foreachclose extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for the {/foreach} tag
      *
@@ -225,7 +225,4 @@ class Smarty_Internal_Compile_Foreachclose extends Smarty_Internal_CompileBase {
 
         return "<?php } ?>";
     }
-
 }
-
-?>

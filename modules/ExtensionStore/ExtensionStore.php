@@ -8,8 +8,6 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class ExtensionStore {
-	
+class ExtensionStore
+{
 }
-
-?>

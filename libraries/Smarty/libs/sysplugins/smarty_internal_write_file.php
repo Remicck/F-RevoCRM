@@ -13,8 +13,8 @@
  * @package Smarty
  * @subpackage PluginsInternal
  */
-class Smarty_Internal_Write_File {
-
+class Smarty_Internal_Write_File
+{
     /**
      * Writes file in a safe way to disk
      *
@@ -64,7 +64,4 @@ class Smarty_Internal_Write_File {
         error_reporting($_error_reporting);
         return true;
     }
-
 }
-
-?>

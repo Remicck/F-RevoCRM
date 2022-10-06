@@ -27,20 +27,20 @@
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-class MismatchedRangeException extends RecognitionException {
-	public $a;
-	public $b;
+class MismatchedRangeException extends RecognitionException
+{
+    public $a;
+    public $b;
 
-	public function __construct($a, $b, $input) {
-		parent::__construct($input);
-		$this->a = $a;
-		$this->b = $b;
-	}
+    public function __construct($a, $b, $input)
+    {
+        parent::__construct($input);
+        $this->a = $a;
+        $this->b = $b;
+    }
 
-	public function __toString() {
-		return "MismatchedNotSetException(".$this->getUnexpectedType()." not in [".a.",".b."])";
-	}
+    public function __toString()
+    {
+        return "MismatchedNotSetException(".$this->getUnexpectedType()." not in [".a.",".b."])";
+    }
 }
-
-
-?>

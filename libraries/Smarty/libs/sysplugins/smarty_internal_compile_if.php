@@ -15,8 +15,8 @@
 * @package Smarty
 * @subpackage Compiler
 */
-class Smarty_Internal_Compile_If extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_If extends Smarty_Internal_CompileBase
+{
     /**
     * Compiles code for the {if} tag
     *
@@ -33,7 +33,7 @@ class Smarty_Internal_Compile_If extends Smarty_Internal_CompileBase {
         // must whole block be nocache ?
         $compiler->nocache = $compiler->nocache | $compiler->tag_nocache;
 
-        if (!array_key_exists("if condition",$parameter)) {
+        if (!array_key_exists("if condition", $parameter)) {
             $compiler->trigger_template_error("missing if condition", $compiler->lex->taglineno);
         }
 
@@ -61,7 +61,6 @@ class Smarty_Internal_Compile_If extends Smarty_Internal_CompileBase {
             return "<?php if ({$parameter['if condition']}){?>";
         }
     }
-
 }
 
 /**
@@ -70,8 +69,8 @@ class Smarty_Internal_Compile_If extends Smarty_Internal_CompileBase {
 * @package Smarty
 * @subpackage Compiler
 */
-class Smarty_Internal_Compile_Else extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Else extends Smarty_Internal_CompileBase
+{
     /**
     * Compiles code for the {else} tag
     *
@@ -87,7 +86,6 @@ class Smarty_Internal_Compile_Else extends Smarty_Internal_CompileBase {
 
         return "<?php }else{ ?>";
     }
-
 }
 
 /**
@@ -96,8 +94,8 @@ class Smarty_Internal_Compile_Else extends Smarty_Internal_CompileBase {
 * @package Smarty
 * @subpackage Compiler
 */
-class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase
+{
     /**
     * Compiles code for the {elseif} tag
     *
@@ -113,7 +111,7 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
 
         list($nesting, $compiler->tag_nocache) = $this->closeTag($compiler, array('if', 'elseif'));
 
-        if (!array_key_exists("if condition",$parameter)) {
+        if (!array_key_exists("if condition", $parameter)) {
             $compiler->trigger_template_error("missing elseif condition", $compiler->lex->taglineno);
         }
 
@@ -151,8 +149,9 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
             }
         } else {
             $tmp = '';
-            foreach ($compiler->prefix_code as $code)
-            $tmp .= $code;
+            foreach ($compiler->prefix_code as $code) {
+                $tmp .= $code;
+            }
             $compiler->prefix_code = array();
             $this->openTag($compiler, 'elseif', array($nesting + 1, $compiler->tag_nocache));
             if ($condition_by_assign) {
@@ -169,7 +168,6 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
             }
         }
     }
-
 }
 
 /**
@@ -178,8 +176,8 @@ class Smarty_Internal_Compile_Elseif extends Smarty_Internal_CompileBase {
 * @package Smarty
 * @subpackage Compiler
 */
-class Smarty_Internal_Compile_Ifclose extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Ifclose extends Smarty_Internal_CompileBase
+{
     /**
     * Compiles code for the {/if} tag
     *
@@ -201,7 +199,4 @@ class Smarty_Internal_Compile_Ifclose extends Smarty_Internal_CompileBase {
         }
         return "<?php {$tmp}?>";
     }
-
 }
-
-?>

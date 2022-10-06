@@ -7,26 +7,24 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  *************************************************************************************/
-	
-	class State{
-		
-		var $success ;
-		var $result ;
-		var $error;
-		
-		function __construct()
-		{
-			$this->success = false;
-			$this->result = array();
-			$this->error = array();
-		}
-		function State(){
-			// PHP4-style constructor.
-			// This will NOT be invoked, unless a sub-class that extends `foo` calls it.
-			// In that case, call the new-style constructor to keep compatibility.
-			self::__construct();
-		}
-		
-		
-	}
-?>
+
+class State
+{
+    public $success ;
+    public $result ;
+    public $error;
+
+    public function __construct()
+    {
+        $this->success = false;
+        $this->result = array();
+        $this->error = array();
+    }
+    public function State()
+    {
+        // PHP4-style constructor.
+        // This will NOT be invoked, unless a sub-class that extends `foo` calls it.
+        // In that case, call the new-style constructor to keep compatibility.
+        self::__construct();
+    }
+}

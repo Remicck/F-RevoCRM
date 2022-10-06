@@ -8,31 +8,33 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Profiles_Detail_View extends Settings_Vtiger_Index_View {
+class Settings_Profiles_Detail_View extends Settings_Vtiger_Index_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $recordId = $request->get('record');
+        $moduleName = $request->getModule();
+        $qualifiedModuleName = $request->getModule(false);
 
-	public function process(Vtiger_Request $request) {
-		$recordId = $request->get('record');
-		$moduleName = $request->getModule();
-		$qualifiedModuleName = $request->getModule(false);
+        $recordModel = Settings_Profiles_Record_Model::getInstanceById($recordId);
 
-		$recordModel = Settings_Profiles_Record_Model::getInstanceById($recordId);
+        $viewer = $this->getViewer($request);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->assign('RECORD_ID', $recordId);
+        $viewer->assign('RECORD_MODEL', $recordModel);
+        $viewer->assign('ALL_BASIC_ACTIONS', Vtiger_Action_Model::getAllBasic(true));
+        $viewer->assign('ALL_UTILITY_ACTIONS', Vtiger_Action_Model::getAllUtility(true));
+        $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
 
-		$viewer = $this->getViewer($request);
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->assign('RECORD_ID', $recordId);
-		$viewer->assign('RECORD_MODEL', $recordModel);
-		$viewer->assign('ALL_BASIC_ACTIONS', Vtiger_Action_Model::getAllBasic(true));
-		$viewer->assign('ALL_UTILITY_ACTIONS', Vtiger_Action_Model::getAllUtility(true));
-		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+        $viewer->view('DetailView.tpl', $qualifiedModuleName);
+    }
 
-		$viewer->view('DetailView.tpl', $qualifiedModuleName);
-	}
-    
     /**
      * Setting module related Information to $viewer (for Vtiger7)
      * @param type $request
      * @param type $moduleModel
      */
-    public function setModuleInfo($request, $moduleModel){
+    public function setModuleInfo($request, $moduleModel)
+    {
     }
 }

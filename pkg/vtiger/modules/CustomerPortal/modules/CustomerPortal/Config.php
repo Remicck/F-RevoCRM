@@ -8,8 +8,7 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_Config {
-
-	static $DEFAULT_PAGE_LIMIT = 50;
-
+class CustomerPortal_Config
+{
+    public static $DEFAULT_PAGE_LIMIT = 50;
 }

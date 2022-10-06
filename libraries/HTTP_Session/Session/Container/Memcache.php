@@ -49,7 +49,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @var     object  Memcache
      * @access  private
      */
-    var $mc;
+    public $mc;
 
     /**
      * Constructor method
@@ -66,7 +66,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return object
      */
-    function HTTP_Session_Container_Memcache($options)
+    public function HTTP_Session_Container_Memcache($options)
     {
         $this->_setDefaults();
 
@@ -83,20 +83,19 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access private
      * @return mixed   Object on error, otherwise bool
      */
-    function _connect($mc)
+    public function _connect($mc)
     {
         if (is_object($mc) && is_a($mc, 'Memcache')) {
             $this->mc = $mc;
-
         } else {
-
-            return new PEAR_Error('The given memcache object was not valid in file '
+            return new PEAR_Error(
+                'The given memcache object was not valid in file '
                                   . __FILE__ . ' at line ' . __LINE__,
-                                  41,
-                                  PEAR_ERROR_RETURN,
-                                  null,
-                                  null
-                                 );
+                41,
+                PEAR_ERROR_RETURN,
+                null,
+                null
+            );
         }
 
         return true;
@@ -108,7 +107,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access private
      * @return void
      */
-    function _setDefaults()
+    public function _setDefaults()
     {
         $this->options['prefix']   = 'sessiondata:';
         $this->options['memcache'] = null;
@@ -123,7 +122,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return mixed  Object on error, otherwise bool
      */
-    function open($save_path, $session_name)
+    public function open($save_path, $session_name)
     {
         return $this->_connect($this->options['memcache']);
     }
@@ -134,7 +133,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return bool
      */
-    function close()
+    public function close()
     {
         return true;
     }
@@ -147,7 +146,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return mixed
      */
-    function read($id)
+    public function read($id)
     {
         $result = $this->mc->get($this->options['prefix'] . $id);
         return $result;
@@ -162,12 +161,14 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return bool
      */
-    function write($id, $data)
+    public function write($id, $data)
     {
-        $this->mc->set($this->options['prefix'] . $id,
-                       $data,
-                       MEMCACHE_COMPRESSED,
-                       time() + ini_get('session.gc_maxlifetime'));
+        $this->mc->set(
+            $this->options['prefix'] . $id,
+            $data,
+            MEMCACHE_COMPRESSED,
+            time() + ini_get('session.gc_maxlifetime')
+        );
 
         return true;
     }
@@ -180,7 +181,7 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return bool
      */
-    function destroy($id)
+    public function destroy($id)
     {
         $this->mc->delete($this->options['prefix'] . $id);
         return true;
@@ -194,9 +195,8 @@ class HTTP_Session_Container_Memcache extends HTTP_Session_Container
      * @access public
      * @return bool
      */
-    function gc($maxlifetime)
+    public function gc($maxlifetime)
     {
         return true;
     }
 }
-?>

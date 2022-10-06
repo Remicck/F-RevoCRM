@@ -15,8 +15,8 @@
  * @package Smarty
  * @subpackage Debug
  */
-class Smarty_Internal_Debug extends Smarty_Internal_Data {
-
+class Smarty_Internal_Debug extends Smarty_Internal_Data
+{
     /**
      * template data
      *
@@ -190,7 +190,7 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
             return $key;
         } else {
             if (isset($_is_stringy[$template->source->type])) {
-                self::$template_data[$key]['name'] = '\''.substr($template->source->name,0,25).'...\'';
+                self::$template_data[$key]['name'] = '\''.substr($template->source->name, 0, 25).'...\'';
             } else {
                 self::$template_data[$key]['name'] = $template->source->filepath;
             }
@@ -200,7 +200,4 @@ class Smarty_Internal_Debug extends Smarty_Internal_Data {
             return $key;
         }
     }
-
 }
-
-?>

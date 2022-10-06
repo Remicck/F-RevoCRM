@@ -1,9 +1,9 @@
 <root>
-<?php IF (is_array($message)): ?>
-<?php   FOREACH ($message as $msg): ?>
+<?php if (is_array($message)): ?>
+<?php   foreach ($message as $msg): ?>
 <error><?php echo text::xmlData($msg) ?></error>
-<?php   ENDFOREACH ?>
-<?PHP ELSE: ?>
+<?php   endforeach ?>
+<?php else: ?>
 <error><?php echo text::xmlData($message) ?></error>
-<?PHP ENDIF ?>
+<?php endif ?>
 </root>

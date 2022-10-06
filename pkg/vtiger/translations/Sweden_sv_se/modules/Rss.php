@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'Rss Feed Källor',
     'LBL_ADD_FEED_SOURCE' => 'Lägg Feed Källa',
@@ -16,19 +16,16 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Ange som standard',
     'LBL_SENDER' => 'sändare',
     'LBL_FEED_SOURCE' => 'Matningskälla',
-    'LBL_ENTER_FEED_SOURCE' => 'Ange Feed Källa',  
+    'LBL_ENTER_FEED_SOURCE' => 'Ange Feed Källa',
     'SINGLE_Rss' => 'rSS-flöde',
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'RSS har sparats',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'RSS har sparats',
     'JS_INVALID_RSS_URL' => 'Ogiltig Rss webbadress',
     'JS_RSS_MADE_AS_DEFAULT' => 'Rss som förval',
-    
+
 
   'JS_NO_RECORDS' => 'Inga Poster',
 
 );
-
-
-?>

@@ -11,7 +11,6 @@
 /**
  * Vtiger Detail View Record Structure Model
  */
-class Events_DetailRecordStructure_Model extends Calendar_DetailRecordStructure_Model {
-	
+class Events_DetailRecordStructure_Model extends Calendar_DetailRecordStructure_Model
+{
 }
-?>

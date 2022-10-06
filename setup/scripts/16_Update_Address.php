@@ -157,6 +157,3 @@ $adb->pquery($sql, array('ship_pobox','Quotes'));
 
 $adb->pquery($sql, array('country','Vendors'));
 $adb->pquery($sql, array('pobox','Vendors'));
-
-
-

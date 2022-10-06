@@ -35,11 +35,11 @@
  */
 interface PHPExcel_Writer_IWriter
 {
-	/**
-	 * Save PHPExcel to file
-	 *
-	 * @param 	string 		$pFilename
-	 * @throws 	Exception
-	 */
-	public function save($pFilename = null);
+    /**
+     * Save PHPExcel to file
+     *
+     * @param 	string 		$pFilename
+     * @throws 	Exception
+     */
+    public function save($pFilename = null);
 }

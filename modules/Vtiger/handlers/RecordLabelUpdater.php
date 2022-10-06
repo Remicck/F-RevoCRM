@@ -9,25 +9,26 @@
  * *********************************************************************************** */
 require_once 'include/events/VTEventHandler.inc';
 
-class Vtiger_RecordLabelUpdater_Handler extends VTEventHandler {
+class Vtiger_RecordLabelUpdater_Handler extends VTEventHandler
+{
+    public function handleEvent($eventName, $data)
+    {
+        global $adb;
 
-	function handleEvent($eventName, $data) {
-		global $adb;
+        if ($eventName == 'vtiger.entity.aftersave') {
+            $record = $data->getId();
+            $module = $data->getModuleName();
 
-		if ($eventName == 'vtiger.entity.aftersave') {
-			$record = $data->getId();
-			$module = $data->getModuleName();
+            if ($module === 'Users') {
+                return;
+            }
 
-			if($module === 'Users') {
-				return;
-			}
+            $labelInfo = getEntityName($module, $record, true);
 
-			$labelInfo = getEntityName($module, $record, true);
-
-			if ($labelInfo) {
-				$label = decode_html($labelInfo[$data->getId()]);
-				$adb->pquery('UPDATE vtiger_crmentity SET label=? WHERE crmid=?', array($label, $record));
-			}
-		}
-	}
+            if ($labelInfo) {
+                $label = decode_html($labelInfo[$data->getId()]);
+                $adb->pquery('UPDATE vtiger_crmentity SET label=? WHERE crmid=?', array($label, $record));
+            }
+        }
+    }
 }

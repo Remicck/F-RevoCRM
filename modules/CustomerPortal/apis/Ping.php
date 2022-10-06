@@ -8,12 +8,12 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_Ping extends CustomerPortal_API_Abstract {
-
-	function process(CustomerPortal_API_Request $request) {
-		$response = new CustomerPortal_API_Response();
-		$response->setResult('login success');
-		return $response;
-	}
-
+class CustomerPortal_Ping extends CustomerPortal_API_Abstract
+{
+    public function process(CustomerPortal_API_Request $request)
+    {
+        $response = new CustomerPortal_API_Response();
+        $response->setResult('login success');
+        return $response;
+    }
 }

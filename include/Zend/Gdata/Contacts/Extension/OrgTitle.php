@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -20,7 +20,7 @@
  */
 require_once 'Zend/Gdata/Contacts/Extension.php';
 
-class Zend_Gdata_Contacts_Extension_OrgTitle extends Zend_Gdata_Contacts_ExtensionElement {
-	protected $_rootElement = 'orgTitle';
-	
+class Zend_Gdata_Contacts_Extension_OrgTitle extends Zend_Gdata_Contacts_ExtensionElement
+{
+    protected $_rootElement = 'orgTitle';
 }

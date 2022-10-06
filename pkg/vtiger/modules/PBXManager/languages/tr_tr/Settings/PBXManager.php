@@ -13,20 +13,20 @@ $languageStrings = array(
     'LBL_PBXMANAGER' =>'PBXManager',
     'LBL_PBXMANAGER_CONFIG' => 'Asterisk sunucu ayrıntıları',
     'LBL_NOTE' => 'Note:',
-    'LBL_INFO_WEBAPP_URL' => 'Biçiminde Asterisk App URL yapılandırın', 
+    'LBL_INFO_WEBAPP_URL' => 'Biçiminde Asterisk App URL yapılandırın',
     'LBL_FORMAT_WEBAPP_URL' => '(Protokol) :/ / (asterisk_ip): (port)',
     'LBL_FORMAT_INFO_WEBAPP_URL' => 'ex:http://0.0.0.0:5000',
     'LBL_INFO_CONTEXT' => 'Vtiger Özel bağlam sizin Asterisk sunucusu yapılandırılmış (extensions.conf)',
     'LBL_PBXMANAGER_INFO' => 'Asterisk sunucu ayrıntıları  Yapılandır sonr Vtiger yıldız bağlayıcı Asterisk sunucu yükleme',
-    
+
     'webappurl'=>'Vtiger yıldız Web URL',
     'vtigersecretkey'=>'Vtiger Gizli Anahtar',
     'outboundcontext' => 'Giden BaÄŸlam',
     'outboundtrunk' => 'Giden Trunk',
-    
+
 );
 
 $jsLanguageStrings = array(
-    
+
 );
 ?>  

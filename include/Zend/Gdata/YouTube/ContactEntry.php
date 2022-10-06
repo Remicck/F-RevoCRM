@@ -43,7 +43,6 @@ require_once 'Zend/Gdata/YouTube/Extension/Status.php';
  */
 class Zend_Gdata_YouTube_ContactEntry extends Zend_Gdata_YouTube_UserProfileEntry
 {
-
     /**
      * The classname for individual feed elements.
      *
@@ -100,14 +99,14 @@ class Zend_Gdata_YouTube_ContactEntry extends Zend_Gdata_YouTube_UserProfileEntr
     {
         $absoluteNodeName = $child->namespaceURI . ':' . $child->localName;
         switch ($absoluteNodeName) {
-        case $this->lookupNamespace('yt') . ':' . 'status':
-            $status = new Zend_Gdata_YouTube_Extension_Status();
-            $status->transferFromDOM($child);
-            $this->_status = $status;
-            break;
-        default:
-            parent::takeChildFromDOM($child);
-            break;
+            case $this->lookupNamespace('yt') . ':' . 'status':
+                $status = new Zend_Gdata_YouTube_Extension_Status();
+                $status->transferFromDOM($child);
+                $this->_status = $status;
+                break;
+            default:
+                parent::takeChildFromDOM($child);
+                break;
         }
     }
 
@@ -132,5 +131,4 @@ class Zend_Gdata_YouTube_ContactEntry extends Zend_Gdata_YouTube_UserProfileEntr
     {
         return $this->_status;
     }
-
 }

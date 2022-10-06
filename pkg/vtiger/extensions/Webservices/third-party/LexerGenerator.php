@@ -1,14 +1,14 @@
 <?php
 /**
  * PHP_LexerGenerator, a php 5 lexer generator.
- * 
+ *
  * This lexer generator translates a file in a format similar to
  * re2c ({@link http://re2c.org}) and translates it into a PHP 5-based lexer
  *
  * PHP version 5
  *
  * LICENSE:
- * 
+ *
  * Copyright (c) 2006, Gregory Beaver <cellog@php.net>
  * All rights reserved.
  *
@@ -56,39 +56,39 @@ require_once 'PHP/LexerGenerator/Lexer.php';
 /**
  * The basic home class for the lexer generator.  A lexer scans text and
  * organizes it into tokens for usage by a parser.
- * 
+ *
  * Sample Usage:
  * <code>
  * require_once 'PHP/LexerGenerator.php';
  * $lex = new PHP_LexerGenerator('/path/to/lexerfile.plex');
  * </code>
- * 
+ *
  * A file named "/path/to/lexerfile.php" will be created.
- * 
+ *
  * File format consists of a PHP file containing specially
  * formatted comments like so:
- * 
+ *
  * <code>
  * /*!lex2php
  * {@*}
  * </code>
- * 
+ *
  * The first lex2php comment must contain several declarations and define
  * all regular expressions.  Declarations (processor instructions) start with
  * a "%" symbol and must be:
- * 
+ *
  *  - %counter
  *  - %input
  *  - %token
  *  - %value
  *  - %line
- * 
+ *
  * token and counter should define the class variables used to define lexer input
  * and the index into the input.  token and value should be used to define the class
  * variables used to store the token number and its textual value.  Finally, line
  * should be used to define the class variable used to define the current line number
  * of scanning.
- * 
+ *
  * For example:
  * <code>
  * /*!lex2php
@@ -99,24 +99,24 @@ require_once 'PHP/LexerGenerator/Lexer.php';
  * %line {%this->linenumber}
  * {@*}
  * </code>
- * 
+ *
  * Patterns consist of an identifier containing upper or lower-cased letters, and
  * a descriptive match pattern.
- * 
+ *
  * Descriptive match patterns may either be regular expressions (regexes) or
  * quoted literal strings.  Here are some examples:
- * 
+ *
  * <pre>
  * pattern = "quoted literal"
  * ANOTHER = /[a-zA-Z_]+/
  * </pre>
- * 
+ *
  * Quoted strings must escape the \ and " characters with \" and \\.
- * 
+ *
  * Regex patterns must be in Perl-compatible regular expression format (preg).
  * special characters (like \t \n or \x3H) can only be used in regexes, all
  * \ will be escaped in literal strings.
- * 
+ *
  * Any sub-patterns must be defined using (?:) instead of ():
  *
  * <code>
@@ -137,11 +137,11 @@ require_once 'PHP/LexerGenerator/Lexer.php';
  * PAWNMOVE = /P?[a-h](?:[2-7]|[18]\=(?:Q|R|B|N))|P?[a-h]x[a-h](?:[2-7]|[18]\=(?:Q|R|B|N))/
  * {@*}
  * </code>
- * 
+ *
  * All regexes must be delimited.  Any legal preg delimiter can be used (as in @ or / in
  * the example above)
- * 
- * 
+ *
+ *
  * @package    PHP_LexerGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -165,13 +165,16 @@ class PHP_LexerGenerator
      *
      * @param string $lexerfile path to the plex file
      */
-    function __construct($lexerfile)
+    public function __construct($lexerfile)
     {
         $this->lex = new PHP_LexerGenerator_Lexer(file_get_contents($lexerfile));
         $info = pathinfo($lexerfile);
         $this->outfile = $info['dirname'] . DIRECTORY_SEPARATOR .
-            substr($info['basename'], 0,
-            strlen($info['basename']) - strlen($info['extension'])) . 'php';
+            substr(
+                $info['basename'],
+                0,
+                strlen($info['basename']) - strlen($info['extension'])
+            ) . 'php';
         $this->parser = new PHP_LexerGenerator_Parser($this->outfile, $this->lex);
         $this->parser->PrintTrace();
         while ($this->lex->advance($this->parser)) {
@@ -181,4 +184,3 @@ class PHP_LexerGenerator
     }
 }
 //$a = new PHP_LexerGenerator('/development/File_ChessPGN/ChessPGN/Lexer.plex');
-?>

@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -20,13 +20,14 @@
  */
 require_once 'Zend/Gdata/Feed.php';
 
-class Zend_Gdata_Contacts_ListFeed extends Zend_Gdata_Feed {
-	
-	protected $_entryClassName = 'Zend_Gdata_Contacts_ListEntry';
-	
-	protected $_feedClassName = 'Zend_Gdata_Contacts_ListFeed';
-	
-	public function __construct($element = null) {
+class Zend_Gdata_Contacts_ListFeed extends Zend_Gdata_Feed
+{
+    protected $_entryClassName = 'Zend_Gdata_Contacts_ListEntry';
+
+    protected $_feedClassName = 'Zend_Gdata_Contacts_ListFeed';
+
+    public function __construct($element = null)
+    {
         $this->registerAllNamespaces(Zend_Gdata_Contacts::$namespaces);
         parent::__construct($element);
     }

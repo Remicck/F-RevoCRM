@@ -1,8 +1,9 @@
 <?php
+
 // contributed by "Heinz Hombergs" <opn@hhombergs.de>
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'de',
-			DB_ERROR                    => 'Unbekannter Fehler',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'de',
+            DB_ERROR                    => 'Unbekannter Fehler',
             DB_ERROR_ALREADY_EXISTS     => 'existiert bereits',
             DB_ERROR_CANNOT_CREATE      => 'kann nicht erstellen',
             DB_ERROR_CANNOT_DELETE      => 'kann nicht löschen',

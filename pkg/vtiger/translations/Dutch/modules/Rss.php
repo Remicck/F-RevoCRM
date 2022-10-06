@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'RSS Feed Bronnen',
     'LBL_ADD_FEED_SOURCE' => 'Voeg Feed Bron',
@@ -16,19 +16,16 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Als standaard instellen',
     'LBL_SENDER' => 'zender',
     'LBL_FEED_SOURCE' => 'Feed Bron',
-    'LBL_ENTER_FEED_SOURCE' => 'Voer Feed Bron',  
+    'LBL_ENTER_FEED_SOURCE' => 'Voer Feed Bron',
     'SINGLE_Rss' => 'RSS-Feed',
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss succesvol opgeslagen',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss succesvol opgeslagen',
     'JS_INVALID_RSS_URL' => 'Ongeldige Rss Url',
     'JS_RSS_MADE_AS_DEFAULT' => 'Rss Made als standaard',
-    
+
 
   'JS_NO_RECORDS' => 'Geen Records',
 
 );
-
-
-?>

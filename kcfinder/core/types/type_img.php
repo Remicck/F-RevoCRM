@@ -12,14 +12,14 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class type_img {
-
-    public function checkFile($file, array $config) {
+class type_img
+{
+    public function checkFile($file, array $config)
+    {
         $gd = new gd($file);
-        if ($gd->init_error)
+        if ($gd->init_error) {
             return "Unknown image format/encoding.";
+        }
         return true;
     }
 }
-
-?>

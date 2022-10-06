@@ -1,7 +1,8 @@
 <?php
+
 // Christian Tiberg" christian@commsoft.nu
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'en',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'en',
             DB_ERROR                    => 'Okänt fel',
             DB_ERROR_ALREADY_EXISTS     => 'finns redan',
             DB_ERROR_CANNOT_CREATE      => 'kan inte skapa',

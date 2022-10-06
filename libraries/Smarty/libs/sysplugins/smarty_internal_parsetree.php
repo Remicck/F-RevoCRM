@@ -15,8 +15,8 @@
  * @subpackage Compiler
  * @ignore
  */
-abstract class _smarty_parsetree {
-
+abstract class _smarty_parsetree
+{
     /**
      * Parser object
      * @var object
@@ -34,7 +34,6 @@ abstract class _smarty_parsetree {
      * @return string  buffer content
      */
     abstract public function to_smarty_php();
-
 }
 
 /**
@@ -44,8 +43,8 @@ abstract class _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_tag extends _smarty_parsetree {
-
+class _smarty_tag extends _smarty_parsetree
+{
     /**
      * Saved block nesting level
      * @var int
@@ -86,7 +85,6 @@ class _smarty_tag extends _smarty_parsetree {
         $this->parser->compiler->prefix_code[] = sprintf('<?php ob_start();?>%s<?php %s=ob_get_clean();?>', $this->data, $var);
         return $var;
     }
-
 }
 
 /**
@@ -96,9 +94,8 @@ class _smarty_tag extends _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_code extends _smarty_parsetree {
-
-
+class _smarty_code extends _smarty_parsetree
+{
     /**
      * Create parse tree buffer for code fragment
      *
@@ -120,7 +117,6 @@ class _smarty_code extends _smarty_parsetree {
     {
         return sprintf("(%s)", $this->data);
     }
-
 }
 
 /**
@@ -130,8 +126,8 @@ class _smarty_code extends _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_doublequoted extends _smarty_parsetree {
-
+class _smarty_doublequoted extends _smarty_parsetree
+{
     /**
      * Create parse tree buffer for double quoted string subtrees
      *
@@ -197,7 +193,6 @@ class _smarty_doublequoted extends _smarty_parsetree {
         }
         return $code;
     }
-
 }
 
 /**
@@ -207,9 +202,8 @@ class _smarty_doublequoted extends _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_dq_content extends _smarty_parsetree {
-
-
+class _smarty_dq_content extends _smarty_parsetree
+{
     /**
      * Create parse tree buffer with string content
      *
@@ -231,7 +225,6 @@ class _smarty_dq_content extends _smarty_parsetree {
     {
         return '"' . $this->data . '"';
     }
-
 }
 
 /**
@@ -241,14 +234,14 @@ class _smarty_dq_content extends _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_template_buffer extends _smarty_parsetree {
-
+class _smarty_template_buffer extends _smarty_parsetree
+{
     /**
      * Array of template elements
      *
      * @var array
      */
-    public $subtrees = Array();
+    public $subtrees = array();
 
     /**
      * Create root of parse tree for template elements
@@ -322,7 +315,6 @@ class _smarty_template_buffer extends _smarty_parsetree {
         }
         return $code;
     }
-
 }
 
 /**
@@ -332,9 +324,8 @@ class _smarty_template_buffer extends _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_text extends _smarty_parsetree {
-
-
+class _smarty_text extends _smarty_parsetree
+{
     /**
      * Create template text buffer
      *
@@ -356,7 +347,6 @@ class _smarty_text extends _smarty_parsetree {
     {
         return $this->data;
     }
-
 }
 
 /**
@@ -366,8 +356,8 @@ class _smarty_text extends _smarty_parsetree {
  * @subpackage Compiler
  * @ignore
  */
-class _smarty_linebreak extends _smarty_parsetree {
-
+class _smarty_linebreak extends _smarty_parsetree
+{
     /**
      * Create buffer with linebreak content
      *
@@ -389,7 +379,4 @@ class _smarty_linebreak extends _smarty_parsetree {
     {
         return $this->data;
     }
-
 }
-
-?>

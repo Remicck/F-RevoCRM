@@ -8,21 +8,22 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Webforms_ListView_Model extends Settings_Vtiger_ListView_Model {
-    
-     /**
-	 * Function which returns Basic List Query for webform. 
-	 */
-    public function getBasicListQuery() {
+class Settings_Webforms_ListView_Model extends Settings_Vtiger_ListView_Model
+{
+    /**
+    * Function which returns Basic List Query for webform.
+    */
+    public function getBasicListQuery()
+    {
         $module = $this->getModule();
         $listFields = $module->listFields;
-        
-		$listQuery = "SELECT ";
-		foreach ($listFields as $fieldName => $fieldLabel) {
-			$listQuery .= $module->baseTable.".$fieldName, ";
-		}
+
+        $listQuery = "SELECT ";
+        foreach ($listFields as $fieldName => $fieldLabel) {
+            $listQuery .= $module->baseTable.".$fieldName, ";
+        }
         $listQuery.= $module->baseTable.'.'.$module->baseIndex .' FROM '. $module->baseTable.
-                     ' INNER JOIN vtiger_tab ON vtiger_tab.name='. $module->baseTable.'.targetmodule WHERE vtiger_tab.presence IN (0,2)';    
+                     ' INNER JOIN vtiger_tab ON vtiger_tab.name='. $module->baseTable.'.targetmodule WHERE vtiger_tab.presence IN (0,2)';
         return $listQuery;
     }
 }

@@ -9,7 +9,6 @@
  */
 class HTMLPurifier_LanguageFactory
 {
-
     /**
      * Cache of language code information used to load HTMLPurifier_Language objects.
      * Structure is: $factory->cache[$language_code][$key] = $value
@@ -170,7 +169,6 @@ class HTMLPurifier_LanguageFactory
 
         // load fallback localisation
         if (!empty($fallback)) {
-
             // infinite recursion guard
             if (isset($languages_seen[$code])) {
                 trigger_error(

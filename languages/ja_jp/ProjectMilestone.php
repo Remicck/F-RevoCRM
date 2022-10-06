@@ -8,26 +8,26 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	// Basic Strings
-	'SINGLE_ProjectMilestone' => 'プロジェクトマイルストーン',
-	'LBL_ADD_RECORD' => 'プロジェクトマイルストーンの追加',
-	'LBL_RECORDS_LIST' => 'プロジェクトマイルストーンのリスト',
+    // Basic Strings
+    'SINGLE_ProjectMilestone' => 'プロジェクトマイルストーン',
+    'LBL_ADD_RECORD' => 'プロジェクトマイルストーンの追加',
+    'LBL_RECORDS_LIST' => 'プロジェクトマイルストーンのリスト',
     'LBL_PROJECTS_LIST' => 'プロジェクトリスト',
-	'LBL_TASKS_LIST' => 'タスクリスト', 
+    'LBL_TASKS_LIST' => 'タスクリスト',
     'LBL_MILESTONES_LIST' => 'マイルストーンリスト',
 
-	// Blocks
-	'LBL_PROJECT_MILESTONE_INFORMATION' => '基本情報',
-	
-	//Field Labels
-	'Project Milestone Name' => 'マイルストーンの名称',
-	'Milestone Date' => 'マイルストーンの日付',
-	'Project Milestone No' => 'マイルストーン番号',
+    // Blocks
+    'LBL_PROJECT_MILESTONE_INFORMATION' => '基本情報',
+
+    //Field Labels
+    'Project Milestone Name' => 'マイルストーンの名称',
+    'Milestone Date' => 'マイルストーンの日付',
+    'Project Milestone No' => 'マイルストーン番号',
         'Type' => 'タイプ',
     'Related to' => '関連',
-	//picklist values
-	'administrative' => '管理',
+    //picklist values
+    'administrative' => '管理',
     'operative' => '運用',
     'other' => 'その他',
-	
+
 );

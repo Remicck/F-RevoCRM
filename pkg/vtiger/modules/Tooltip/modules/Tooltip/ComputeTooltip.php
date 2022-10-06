@@ -6,7 +6,7 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-* 
+*
  ********************************************************************************/
 require_once 'include/utils/CommonUtils.php';
 require_once 'include/Webservices/DescribeObject.php';
@@ -19,23 +19,21 @@ $modname = vtlib_purify($_REQUEST['modname']);
 $id = vtlib_purify($_REQUEST['id']);
 $fieldname = vtlib_purify($_REQUEST['fieldname']);
 $tabid = getTabid($modname);
-$result = ToolTipExists($fieldname,$tabid);
-if($result !== false){
+$result = ToolTipExists($fieldname, $tabid);
+if ($result !== false) {
 //get tooltip information
-	$viewid = 1;	//viewid is 1 by default
-	$descObject = vtws_describe($modname,$current_user);
-	$id = vtws_getWebserviceEntityId($modname, $id);
-	$sql = "select * from $modname where id ='$id';";
-	$result = vtws_query($sql, $current_user);
-	if(empty($result)){
-		exit(0);
-	}
-	$result = vttooltip_processResult($result, $descObject);
-	$text = getToolTipText($viewid, $fieldname,$modname,$result);
-	$tip = getToolTip($text);
-	echo $tip;
-}else {
-	echo false;
+    $viewid = 1;	//viewid is 1 by default
+    $descObject = vtws_describe($modname, $current_user);
+    $id = vtws_getWebserviceEntityId($modname, $id);
+    $sql = "select * from $modname where id ='$id';";
+    $result = vtws_query($sql, $current_user);
+    if (empty($result)) {
+        exit(0);
+    }
+    $result = vttooltip_processResult($result, $descObject);
+    $text = getToolTipText($viewid, $fieldname, $modname, $result);
+    $tip = getToolTip($text);
+    echo $tip;
+} else {
+    echo false;
 }
-
-?>

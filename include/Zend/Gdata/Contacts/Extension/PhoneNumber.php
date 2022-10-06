@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -20,20 +20,22 @@
  */
 require_once 'Zend/Gdata/Contacts/Extension.php';
 
-class Zend_Gdata_Contacts_Extension_PhoneNumber extends Zend_Gdata_Contacts_ExtensionElement {
-	protected $_rootElement = 'phoneNumber';
-	
-	protected $_rel;
-	
-	public function __construct($value = null, $rel = 'work') {
-		parent::__construct($value);
-		$this->_rel = $rel;
-	}
-	
-	public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null) {
-		$element = parent::getDOM($doc, $majorVersion, $minorVersion);
-		$element->setAttribute('rel', $this->lookupNamespace('gd').'#'.$this->_rel);
-		return $element;
-	}
-	
+class Zend_Gdata_Contacts_Extension_PhoneNumber extends Zend_Gdata_Contacts_ExtensionElement
+{
+    protected $_rootElement = 'phoneNumber';
+
+    protected $_rel;
+
+    public function __construct($value = null, $rel = 'work')
+    {
+        parent::__construct($value);
+        $this->_rel = $rel;
+    }
+
+    public function getDOM($doc = null, $majorVersion = 1, $minorVersion = null)
+    {
+        $element = parent::getDOM($doc, $majorVersion, $minorVersion);
+        $element->setAttribute('rel', $this->lookupNamespace('gd').'#'.$this->_rel);
+        return $element;
+    }
 }

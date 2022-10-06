@@ -8,29 +8,29 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_ChangePassword extends CustomerPortal_API_Abstract {
+class CustomerPortal_ChangePassword extends CustomerPortal_API_Abstract
+{
+    public function process(CustomerPortal_API_Request $request)
+    {
+        global $adb;
+        $response = new CustomerPortal_API_Response();
+        $current_user = $this->getActiveUser();
 
-	function process(CustomerPortal_API_Request $request) {
-		global $adb;
-		$response = new CustomerPortal_API_Response();
-		$current_user = $this->getActiveUser();
+        if ($current_user) {
+            $current_customer = $this->getActiveCustomer();
+            $username = $this->getActiveCustomer()->username;
+            $password = $request->get('password');
 
-		if ($current_user) {
-			$current_customer = $this->getActiveCustomer();
-			$username = $this->getActiveCustomer()->username;
-			$password = $request->get('password');
+            if (!$this->authenticatePortalUser($username, $password)) {
+                throw new Exception("Wrong password.Please try again", 1412);
+                exit;
+            }
 
-			if (!$this->authenticatePortalUser($username, $password)) {
-				throw new Exception("Wrong password.Please try again", 1412);
-				exit;
-			}
-
-			$newPassword = $request->get('newPassword');
-			$sql = "UPDATE vtiger_portalinfo SET user_password=? WHERE id=? AND user_name=?";
-			$adb->pquery($sql, array(Vtiger_Functions::generateEncryptedPassword($newPassword), $current_customer->id, $username));
-			$response->setResult('Password changed successfully');
-		}
-		return $response;
-	}
-
+            $newPassword = $request->get('newPassword');
+            $sql = "UPDATE vtiger_portalinfo SET user_password=? WHERE id=? AND user_name=?";
+            $adb->pquery($sql, array(Vtiger_Functions::generateEncryptedPassword($newPassword), $current_customer->id, $username));
+            $response->setResult('Password changed successfully');
+        }
+        return $response;
+    }
 }

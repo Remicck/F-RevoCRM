@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Contacts_RelationListView_Model extends Vtiger_RelationListView_Model {
+class Contacts_RelationListView_Model extends Vtiger_RelationListView_Model
+{
 }

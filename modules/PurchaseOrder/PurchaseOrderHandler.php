@@ -11,10 +11,10 @@
 include_once 'include/Webservices/Revise.php';
 include_once 'include/Webservices/Retrieve.php';
 
-class PurchaseOrderHandler extends VTEventHandler {
-
-    function handleEvent($eventName, $entityData) {
-
+class PurchaseOrderHandler extends VTEventHandler
+{
+    public function handleEvent($eventName, $entityData)
+    {
         $moduleName = $entityData->getModuleName();
 
 
@@ -31,29 +31,28 @@ class PurchaseOrderHandler extends VTEventHandler {
          * NOTE: beforesave the total amount will not be populated in event data.
          */
         if ($eventName == 'vtiger.entity.aftersave') {
-            if ($currentModule != 'PurchaseOrder')
+            if ($currentModule != 'PurchaseOrder') {
                 return;
+            }
             $entityDelta = new VTEntityDelta();
             $oldCurrency = $entityDelta->getOldValue($entityData->getModuleName(), $entityData->getId(), 'currency_id');
             $oldConversionRate = $entityDelta->getOldValue($entityData->getModuleName(), $entityData->getId(), 'conversion_rate');
             $newCurrency = $entityDelta->getCurrentValue($entityData->getModuleName(), $entityData->getId(), 'currency_id');
             $db = PearDatabase::getInstance();
             $wsid = vtws_getWebserviceEntityId('PurchaseOrder', $entityData->getId());
-            $wsrecord = vtws_retrieve($wsid,$current_user);
+            $wsrecord = vtws_retrieve($wsid, $current_user);
             if ($oldCurrency != $newCurrency && $oldCurrency != '') {
-                if($oldConversionRate != ''){
+                if ($oldConversionRate != '') {
                     $wsrecord['paid'] = floatval(($wsrecord['paid']/$oldConversionRate) * $wsrecord['conversion_rate']);
-                } 
+                }
             }
             $wsrecord['balance'] = floatval($wsrecord['hdnGrandTotal'] - $wsrecord['paid']);
-            if ($wsrecord['balance'] == 0)
+            if ($wsrecord['balance'] == 0) {
                 $wsrecord['postatus'] = 'Received Shipment';
+            }
             $query = "UPDATE vtiger_purchaseorder SET balance=?,paid=? WHERE purchaseorderid=?";
             $db->pquery($query, array($wsrecord['balance'], $wsrecord['paid'], $entityData->getId()));
             // TODO Make it available for other event handlers
         }
     }
-
 }
-
-?>

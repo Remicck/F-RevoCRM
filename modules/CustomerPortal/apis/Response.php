@@ -8,56 +8,65 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_API_Response {
+class CustomerPortal_API_Response
+{
+    private $error = null;
+    private $result = null;
 
-	private $error = NULL;
-	private $result = NULL;
+    public function setError($code, $message)
+    {
+        $error = array('code' => $code, 'message' => $message);
+        $this->error = $error;
+    }
 
-	function setError($code, $message) {
-		$error = array('code' => $code, 'message' => $message);
-		$this->error = $error;
-	}
+    public function getError()
+    {
+        return $this->error;
+    }
 
-	function getError() {
-		return $this->error;
-	}
+    public function hasError()
+    {
+        return !is_null($this->error);
+    }
 
-	function hasError() {
-		return !is_null($this->error);
-	}
+    public function setResult($result)
+    {
+        $this->result = $result;
+    }
 
-	function setResult($result) {
-		$this->result = $result;
-	}
+    public function getResult()
+    {
+        return $this->result;
+    }
 
-	function getResult() {
-		return $this->result;
-	}
+    public function addToResult($key, $value)
+    {
+        $this->result[$key] = $value;
+    }
 
-	function addToResult($key, $value) {
-		$this->result[$key] = $value;
-	}
+    public function prepareResponse()
+    {
+        $response = array();
+        if ($this->result === null) {
+            $response['success'] = false;
+            $response['error'] = $this->error;
+        } else {
+            $response['success'] = true;
+            $response['result'] = $this->result;
+        }
+        return $response;
+    }
 
-	function prepareResponse() {
-		$response = array();
-		if ($this->result === NULL) {
-			$response['success'] = false;
-			$response['error'] = $this->error;
-		} else {
-			$response['success'] = true;
-			$response['result'] = $this->result;
-		}
-		return $response;
-	}
+    public function emitJSON()
+    {
+        return Zend_Json::encode($this->prepareResponse());
+    }
 
-	function emitJSON() {
-		return Zend_Json::encode($this->prepareResponse());
-	}
-
-	function emitHTML() {
-		if ($this->result === NULL)
-			return (is_string($this->error)) ? $this->error : var_export($this->error, true);
-		return $this->result;
-	}
-
+    public function emitHTML()
+    {
+        if ($this->result === null) {
+            return (is_string($this->error)) ? $this->error : var_export($this->error, true);
+        }
+        return $this->result;
+    }
 }

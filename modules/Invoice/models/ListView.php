@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Invoice_ListView_Model extends Inventory_ListView_Model {
+class Invoice_ListView_Model extends Inventory_ListView_Model
+{
 }

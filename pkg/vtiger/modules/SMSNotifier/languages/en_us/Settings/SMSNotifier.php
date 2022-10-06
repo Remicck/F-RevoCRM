@@ -8,22 +8,22 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	'isactive' => 'Active',
-	'LBL_ADD_CONFIGURATION' => 'New Configuration',
-	'LBL_ADD_RECORD' => 'New Configuration',
-	'LBL_EDIT_CONFIGURATION' => 'Edit Configuration',
-	'LBL_SELECT_ONE' => 'Select One',
-	'password' => 'Password',
-	'providertype' => 'Provider',
-	'SMSNotifier' => 'SMS Provider Configuration',
-	'username' => 'User Name',
+    'isactive' => 'Active',
+    'LBL_ADD_CONFIGURATION' => 'New Configuration',
+    'LBL_ADD_RECORD' => 'New Configuration',
+    'LBL_EDIT_CONFIGURATION' => 'Edit Configuration',
+    'LBL_SELECT_ONE' => 'Select One',
+    'password' => 'Password',
+    'providertype' => 'Provider',
+    'SMSNotifier' => 'SMS Provider Configuration',
+    'username' => 'User Name',
         'ClickATellNew' => 'Clickatell (Platform)',
         'ClickATell' => 'Clickatell (Communicator/Central)',
         'LBL_CLICKATELLNEW_CALLBACKURL_INFO' => "Please copy this URL to the 'Enable delivery notifications' field in your ClickATell SMS Integration Settings page",
 );
 
 $jsLanguageStrings = array(
-	'JS_CONFIGURATION_SAVED' => 'SMS Provider Configurations saved',
-	'JS_RECORD_DELETED_SUCCESSFULLY' => 'SMS Provider Deleted Successfully',
-	'LBL_DELETE_CONFIRMATION' => 'Are you sure, you want to delete this SMSNotifier Configuration?',
-);	
+    'JS_CONFIGURATION_SAVED' => 'SMS Provider Configurations saved',
+    'JS_RECORD_DELETED_SUCCESSFULLY' => 'SMS Provider Deleted Successfully',
+    'LBL_DELETE_CONFIRMATION' => 'Are you sure, you want to delete this SMSNotifier Configuration?',
+);

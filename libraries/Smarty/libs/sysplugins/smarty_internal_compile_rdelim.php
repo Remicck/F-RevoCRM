@@ -14,8 +14,8 @@
  * @package Smarty
  * @subpackage Compiler
  */
-class Smarty_Internal_Compile_Rdelim extends Smarty_Internal_CompileBase {
-
+class Smarty_Internal_Compile_Rdelim extends Smarty_Internal_CompileBase
+{
     /**
      * Compiles code for the {rdelim} tag
      *
@@ -35,7 +35,4 @@ class Smarty_Internal_Compile_Rdelim extends Smarty_Internal_CompileBase {
         $compiler->has_code = true;
         return $compiler->smarty->right_delimiter;
     }
-
 }
-
-?>

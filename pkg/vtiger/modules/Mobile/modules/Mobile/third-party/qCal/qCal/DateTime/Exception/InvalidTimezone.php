@@ -1,2 +1,5 @@
 <?php
-class qCal_DateTime_Exception_InvalidTimezone extends qCal_DateTime_Exception {}
+
+class qCal_DateTime_Exception_InvalidTimezone extends qCal_DateTime_Exception
+{
+}

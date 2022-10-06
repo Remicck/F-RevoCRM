@@ -8,85 +8,88 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class Products_ExportData_Action extends Vtiger_ExportData_Action {
+class Products_ExportData_Action extends Vtiger_ExportData_Action
+{
+    public $allTaxes = array();
+    public $allRegions = array();
+    public $taxHeaders = array();
 
-	var $allTaxes = array();
-	var $allRegions = array();
-	var $taxHeaders = array();
+    public function getAllTaxes()
+    {
+        if (!$this->allTaxes) {
+            $this->allTaxes = Inventory_TaxRecord_Model::getProductTaxes();
+        }
+        return $this->allTaxes;
+    }
 
-	public function getAllTaxes() {
-		if (!$this->allTaxes) {
-			$this->allTaxes = Inventory_TaxRecord_Model::getProductTaxes();
-		}
-		return $this->allTaxes;
-	}
+    public function getAllRegions()
+    {
+        if (!$this->allRegions) {
+            $this->allRegions = Inventory_TaxRegion_Model::getAllTaxRegions();
+        }
+        return $this->allRegions;
+    }
 
-	public function getAllRegions() {
-		if (!$this->allRegions) {
-			$this->allRegions = Inventory_TaxRegion_Model::getAllTaxRegions();
-		}
-		return $this->allRegions;
-	}
+    public function getHeaders()
+    {
+        if (!$this->headers) {
+            $translatedHeaders = parent::getHeaders();
+            $taxModels = $this->getAllTaxes();
+            foreach ($taxModels as $taxId => $taxModel) {
+                $taxName = $taxModel->getName();
+                $decodedTaxName = decode_html($taxName);
+                $translatedHeaders[] = $decodedTaxName;
+                $this->taxHeaders[] = $decodedTaxName;
 
-	public function getHeaders() {
-		if (!$this->headers) {
-			$translatedHeaders = parent::getHeaders();
-			$taxModels = $this->getAllTaxes();
-			foreach ($taxModels as $taxId => $taxModel) {
-				$taxName = $taxModel->getName();
-				$decodedTaxName = decode_html($taxName);
-				$translatedHeaders[] = $decodedTaxName;
-				$this->taxHeaders[] = $decodedTaxName;
+                $regions = $taxModel->getRegionTaxes();
+                foreach ($regions as $regionsTaxInfo) {
+                    $allRegions = $this->getAllRegions();
+                    foreach (array_fill_keys($regionsTaxInfo['list'], $regionsTaxInfo['value']) as $regionId => $taxPercentage) {
+                        if ($allRegions[$regionId]) {
+                            $taxRegionName = $taxName . '-' . $allRegions[$regionId]->getName();
+                            $taxRegionName = decode_html($taxRegionName);
+                            $translatedHeaders[] = $taxRegionName;
+                            $this->taxHeaders[] = $taxRegionName;
+                        }
+                    }
+                }
+            }
+            $this->headers = $translatedHeaders;
+        }
+        return $this->headers;
+    }
 
-				$regions = $taxModel->getRegionTaxes();
-				foreach ($regions as $regionsTaxInfo) {
-					$allRegions = $this->getAllRegions();
-					foreach (array_fill_keys($regionsTaxInfo['list'], $regionsTaxInfo['value']) as $regionId => $taxPercentage) {
-						if ($allRegions[$regionId]) {
-							$taxRegionName = $taxName . '-' . $allRegions[$regionId]->getName();
-							$taxRegionName = decode_html($taxRegionName);
-							$translatedHeaders[] = $taxRegionName;
-							$this->taxHeaders[] = $taxRegionName;
-						}
-					}
-				}
-			}
-			$this->headers = $translatedHeaders;
-		}
-		return $this->headers;
-	}
+    public function sanitizeValues($arr)
+    {
+        $recordId = $arr['crmid'];
+        $arr = parent::sanitizeValues($arr);
 
-	public function sanitizeValues($arr) {
-		$recordId = $arr['crmid'];
-		$arr = parent::sanitizeValues($arr);
+        $headers = $this->getHeaders();
+        $taxModels = $this->getAllTaxes();
+        $taxValues = array();
 
-		$headers = $this->getHeaders();
-		$taxModels = $this->getAllTaxes();
-		$taxValues = array();
+        foreach ($taxModels as $taxId => $taxModel) {
+            $taxName = $taxModel->getName();
+            $taxPercentageInfo = getProductTaxPercentage($taxModel->get('taxname'), $recordId);
+            $taxValues[$taxName] = $taxPercentageInfo['percentage'];
 
-		foreach ($taxModels as $taxId => $taxModel) {
-			$taxName = $taxModel->getName();
-			$taxPercentageInfo = getProductTaxPercentage($taxModel->get('taxname'), $recordId);
-			$taxValues[$taxName] = $taxPercentageInfo['percentage'];
+            if ($taxPercentageInfo['regions']) {
+                foreach ($taxPercentageInfo['regions'] as $regionsTaxInfo) {
+                    $allRegions = $this->getAllRegions();
+                    foreach (array_fill_keys($regionsTaxInfo['list'], $regionsTaxInfo['value']) as $regionId => $taxPercentage) {
+                        if ($allRegions[$regionId]) {
+                            $regionTaxName = $taxName . '-' . $allRegions[$regionId]->getName();
+                            $taxValues[$regionTaxName] = $taxPercentage;
+                        }
+                    }
+                }
+            }
+        }
 
-			if ($taxPercentageInfo['regions']) {
-				foreach ($taxPercentageInfo['regions'] as $regionsTaxInfo) {
-					$allRegions = $this->getAllRegions();
-					foreach (array_fill_keys($regionsTaxInfo['list'], $regionsTaxInfo['value']) as $regionId => $taxPercentage) {
-						if ($allRegions[$regionId]) {
-							$regionTaxName = $taxName . '-' . $allRegions[$regionId]->getName();
-							$taxValues[$regionTaxName] = $taxPercentage;
-						}
-					}
-				}
-			}
-		}
+        foreach ($this->taxHeaders as $fieldName) {
+            $arr[$fieldName] = $taxValues[$fieldName];
+        }
 
-		foreach ($this->taxHeaders as $fieldName) {
-			$arr[$fieldName] = $taxValues[$fieldName];
-		}
-
-		return $arr;
-	}
-
+        return $arr;
+    }
 }

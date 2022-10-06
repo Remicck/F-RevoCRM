@@ -8,34 +8,35 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class MailManager_Search_View extends MailManager_Relation_View {
+class MailManager_Search_View extends MailManager_Relation_View
+{
+    /**
+     * Processes the request for search Operation
+     * @global <type> $currentUserModel
+     * @param Vtiger_Request $request
+     * @return boolean
+     */
+    public function process(Vtiger_Request $request)
+    {
+        $response = new MailManager_Response(true);
+        $viewer = $this->getViewer($request);
+        if ('popupui' == $this->getOperationArg($request)) {
+            $viewer->view('Search.Popupui.tpl', 'MailManager');
+            $response = false;
+        } elseif ('email' == $this->getOperationArg($request)) {
+            $searchTerm = $request->get('q');
+            if (empty($searchTerm)) {
+                $searchTerm = '%@';
+            } // To avoid empty value of email to be filtered.
+            else {
+                $searchTerm = "%$searchTerm%";
+            }
 
-	/**
-	 * Processes the request for search Operation
-	 * @global <type> $currentUserModel
-	 * @param Vtiger_Request $request
-	 * @return boolean
-	 */
-	public function process(Vtiger_Request $request) {
+            $filteredResult = MailManager::lookupMailInVtiger($searchTerm, Users_Record_Model::getCurrentUserModel());
 
-		$response = new MailManager_Response(true);
-		$viewer = $this->getViewer($request);
-		if ('popupui' == $this->getOperationArg($request)) {
-			$viewer->view( 'Search.Popupui.tpl', 'MailManager' );
-			$response = false;
-
-		} else if ('email' == $this->getOperationArg($request)) {
-			$searchTerm = $request->get('q');
-			if (empty($searchTerm)) $searchTerm = '%@'; // To avoid empty value of email to be filtered.
-			else $searchTerm = "%$searchTerm%";
-
-			$filteredResult = MailManager::lookupMailInVtiger($searchTerm, Users_Record_Model::getCurrentUserModel());
-
-			MailManager_Utils_Helper::emitJSON($filteredResult);
-			$response = false;
-		}
-		return $response;
-	}
+            MailManager_Utils_Helper::emitJSON($filteredResult);
+            $response = false;
+        }
+        return $response;
+    }
 }
-
-?>

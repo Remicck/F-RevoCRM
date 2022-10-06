@@ -7,29 +7,34 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  ************************************************************************************/
-class ModComments_CommentsModel {
-	private $data;
-	
-	static $ownerNamesCache = array();
-	
-	function __construct($datarow) {
-		$this->data = $datarow;
-	}
-	
-	function author() {
-		$authorid = $this->data['smcreatorid'];
-		if(!isset(self::$ownerNamesCache[$authorid])) {
-			self::$ownerNamesCache[$authorid] = getOwnerName($authorid);
-		}
-		return self::$ownerNamesCache[$authorid];
-	}
-	
-	function timestamp(){
-		$date = new DateTimeField($this->data['modifiedtime']);
-		return $date->getDisplayDateTimeValue();
-	}
-	
-	function content() {
-		return decode_html($this->data['commentcontent']);
-	}
+class ModComments_CommentsModel
+{
+    private $data;
+
+    public static $ownerNamesCache = array();
+
+    public function __construct($datarow)
+    {
+        $this->data = $datarow;
+    }
+
+    public function author()
+    {
+        $authorid = $this->data['smcreatorid'];
+        if (!isset(self::$ownerNamesCache[$authorid])) {
+            self::$ownerNamesCache[$authorid] = getOwnerName($authorid);
+        }
+        return self::$ownerNamesCache[$authorid];
+    }
+
+    public function timestamp()
+    {
+        $date = new DateTimeField($this->data['modifiedtime']);
+        return $date->getDisplayDateTimeValue();
+    }
+
+    public function content()
+    {
+        return decode_html($this->data['commentcontent']);
+    }
 }

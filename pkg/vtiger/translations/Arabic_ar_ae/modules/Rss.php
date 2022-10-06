@@ -8,14 +8,14 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'LBL_RSS_FEED_SOURCES' => 'مصادر تغذيات',
     'LBL_ADD_FEED_SOURCE' => 'إضافة مصدر الغذاء',
     'LBL_FEEDS_LIST_FROM' => 'قائمة من يغذي',
     'LBL_SET_AS_DEFAULT' => 'جعل الافتراضي',
     'LBL_SENDER' => 'مرسل',
     'LBL_FEED_SOURCE' => 'مصدر تغذية',
-    'LBL_ENTER_FEED_SOURCE' => 'إدخال مصدر تغذية',  
+    'LBL_ENTER_FEED_SOURCE' => 'إدخال مصدر تغذية',
     'SINGLE_Rss' => 'آر إس إس',
 
   'Rss' => 'Rss',
@@ -26,11 +26,8 @@ $jsLanguageStrings = array(
     'JS_RSS_SUCCESSFULLY_SAVED' => 'آر إس إس المحفوظة',
     'JS_INVALID_RSS_URL' => 'رابط آر إس إس إينافليد',
     'JS_RSS_MADE_AS_DEFAULT' => 'آر إس إس المقدمة كافتراضي',
-    
+
 
   'JS_NO_RECORDS' => 'لا توجد سجلات',
 
 );
-
-
-?>

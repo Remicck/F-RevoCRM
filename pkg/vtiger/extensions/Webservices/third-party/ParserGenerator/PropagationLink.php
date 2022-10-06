@@ -1,7 +1,7 @@
 <?php
 /**
  * PHP_ParserGenerator, a php 5 parser generator.
- * 
+ *
  * This is a direct port of the Lemon parser generator, found at
  * {@link http://www.hwaci.com/sw/lemon/}
  *
@@ -25,7 +25,7 @@
  * A followset propagation link indicates that the contents of one
  * configuration followset should be propagated to another whenever
  * the first changes.
- * 
+ *
  * @package    PHP_ParserGenerator
  * @author     Gregory Beaver <cellog@php.net>
  * @copyright  2006 Gregory Beaver
@@ -34,7 +34,8 @@
  * @since      Class available since Release 0.1.0
  */
 
-class PHP_ParserGenerator_PropagationLink {
+class PHP_ParserGenerator_PropagationLink
+{
     /**
      * The configuration that defines this propagation link
      * @var PHP_ParserGenerator_Config
@@ -48,16 +49,16 @@ class PHP_ParserGenerator_PropagationLink {
 
     /**
      * Add a propagation link to the current list
-     * 
+     *
      * This prepends the configuration passed in to the first parameter
      * which is either 0 or a PHP_ParserGenerator_PropagationLink defining
      * an existing list.
      * @param PHP_ParserGenerator_PropagationLink|null
      * @param PHP_ParserGenerator_Config
      */
-    static function Plink_add(&$plpp, PHP_ParserGenerator_Config $cfp)
+    public static function Plink_add(&$plpp, PHP_ParserGenerator_Config $cfp)
     {
-        $new = new PHP_ParserGenerator_PropagationLink;
+        $new = new PHP_ParserGenerator_PropagationLink();
         $new->next = $plpp;
         $plpp = $new;
         $new->cfp = $cfp;
@@ -66,8 +67,10 @@ class PHP_ParserGenerator_PropagationLink {
     /**
      * Transfer every propagation link on the list "from" to the list "to"
      */
-    static function Plink_copy(PHP_ParserGenerator_PropagationLink &$to,
-                               PHP_ParserGenerator_PropagationLink $from)
+    public static function Plink_copy(
+        PHP_ParserGenerator_PropagationLink &$to,
+        PHP_ParserGenerator_PropagationLink $from
+    )
     {
         while ($from) {
             $nextpl = $from->next;
@@ -81,7 +84,7 @@ class PHP_ParserGenerator_PropagationLink {
      * Delete every propagation link on the list
      * @param PHP_ParserGenerator_PropagationLink|0
      */
-    static function Plink_delete($plp)
+    public static function Plink_delete($plp)
     {
         while ($plp) {
             $nextpl = $plp->next;
@@ -90,4 +93,3 @@ class PHP_ParserGenerator_PropagationLink {
         }
     }
 }
-

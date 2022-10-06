@@ -8,54 +8,55 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_FetchRecord extends CustomerPortal_API_Abstract {
+class CustomerPortal_FetchRecord extends CustomerPortal_API_Abstract
+{
+    protected function processRetrieve(CustomerPortal_API_Request $request)
+    {
+        global $adb;
+        $parentId = $request->get('parentId');
+        $recordId = $request->get('recordId');
+        $module = VtigerWebserviceObject::fromId($adb, $recordId)->getEntityName();
 
-	protected function processRetrieve(CustomerPortal_API_Request $request) {
-		global $adb;
-		$parentId = $request->get('parentId');
-		$recordId = $request->get('recordId');
-		$module = VtigerWebserviceObject::fromId($adb, $recordId)->getEntityName();
+        if (!CustomerPortal_Utils::isModuleActive($module)) {
+            throw new Exception("Records not Accessible for this module", 1412);
+            exit;
+        }
 
-		if (!CustomerPortal_Utils::isModuleActive($module)) {
-			throw new Exception("Records not Accessible for this module", 1412);
-			exit;
-		}
+        if (!empty($parentId)) {
+            if (!$this->isRecordAccessible($parentId)) {
+                throw new Exception("Parent record not Accessible", 1412);
+                exit;
+            }
+            $relatedRecordIds = $this->relatedRecordIds($module, CustomerPortal_Utils::getRelatedModuleLabel($module), $parentId);
 
-		if (!empty($parentId)) {
-			if (!$this->isRecordAccessible($parentId)) {
-				throw new Exception("Parent record not Accessible", 1412);
-				exit;
-			}
-			$relatedRecordIds = $this->relatedRecordIds($module, CustomerPortal_Utils::getRelatedModuleLabel($module), $parentId);
+            if (!in_array($recordId, $relatedRecordIds)) {
+                throw new Exception("Record not Accessible", 1412);
+                exit;
+            }
+        } else {
+            if (!$this->isRecordAccessible($recordId, $module)) {
+                throw new Exception("Record not Accessible", 1412);
+                exit;
+            }
+        }
 
-			if (!in_array($recordId, $relatedRecordIds)) {
-				throw new Exception("Record not Accessible", 1412);
-				exit;
-			}
-		} else {
-			if (!$this->isRecordAccessible($recordId, $module)) {
-				throw new Exception("Record not Accessible", 1412);
-				exit;
-			}
-		}
+        $fields = implode(',', CustomerPortal_Utils::getActiveFields($module));
+        $sql = sprintf('SELECT %s FROM %s WHERE id=\'%s\';', $fields, $module, $recordId);
+        $result = vtws_query($sql, $this->getActiveUser());
+        return $result[0];
+    }
 
-		$fields = implode(',', CustomerPortal_Utils::getActiveFields($module));
-		$sql = sprintf('SELECT %s FROM %s WHERE id=\'%s\';', $fields, $module, $recordId);
-		$result = vtws_query($sql, $this->getActiveUser());
-		return $result[0];
-	}
+    public function process(CustomerPortal_API_Request $request)
+    {
+        $response = new CustomerPortal_API_Response();
+        $current_user = $this->getActiveUser();
 
-	function process(CustomerPortal_API_Request $request) {
-		$response = new CustomerPortal_API_Response();
-		$current_user = $this->getActiveUser();
+        if ($current_user) {
+            $record = $this->processRetrieve($request);
 
-		if ($current_user) {
-			$record = $this->processRetrieve($request);
-
-			$record = CustomerPortal_Utils::resolveRecordValues($record);
-			$response->setResult(array('record' => $record));
-		}
-		return $response;
-	}
-
+            $record = CustomerPortal_Utils::resolveRecordValues($record);
+            $response->setResult(array('record' => $record));
+        }
+        return $response;
+    }
 }

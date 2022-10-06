@@ -94,7 +94,7 @@ class HTTP_Session2_Exception extends PEAR_Exception
      */
     public function __toString()
     {
-        return "{$this->message} Code: {$this->code}"; 
+        return "{$this->message} Code: {$this->code}";
     }
 
     /**

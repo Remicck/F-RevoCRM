@@ -8,19 +8,20 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class ModComments_DetailAjax_View extends Vtiger_IndexAjax_View {
-
-	public function process(Vtiger_Request $request) {
-		$record = $request->get('record');
-		$moduleName = $request->getModule();
-		$recordModel = ModComments_Record_Model::getInstanceById($record);
-		$currentUserModel = Users_Record_Model::getCurrentUserModel();
+class ModComments_DetailAjax_View extends Vtiger_IndexAjax_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $record = $request->get('record');
+        $moduleName = $request->getModule();
+        $recordModel = ModComments_Record_Model::getInstanceById($record);
+        $currentUserModel = Users_Record_Model::getCurrentUserModel();
         $modCommentsModel = Vtiger_Module_Model::getInstance('ModComments');
-		
-		$viewer = $this->getViewer($request);
-		$viewer->assign('CURRENTUSER', $currentUserModel);
-		$viewer->assign('COMMENT', $recordModel);
+
+        $viewer = $this->getViewer($request);
+        $viewer->assign('CURRENTUSER', $currentUserModel);
+        $viewer->assign('COMMENT', $recordModel);
         $viewer->assign('COMMENTS_MODULE_MODEL', $modCommentsModel);
-		echo $viewer->view('Comment.tpl', $moduleName, true);
-	}
+        echo $viewer->view('Comment.tpl', $moduleName, true);
+    }
 }

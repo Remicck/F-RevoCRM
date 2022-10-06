@@ -10,50 +10,61 @@
 
 include_once dirname(__FILE__) . '/Connectors.php';
 
-class Vtiger_Cache_Connector {
-	protected $connection;
+class Vtiger_Cache_Connector
+{
+    protected $connection;
 
-	protected function __construct() {
-		if (!$this->connection) {
-			$this->connection = Vtiger_Cache_Connector_Memory::getInstance();
-		}
-	}
+    protected function __construct()
+    {
+        if (!$this->connection) {
+            $this->connection = Vtiger_Cache_Connector_Memory::getInstance();
+        }
+    }
 
-	protected function cacheKey($ns, $key) {
-		if(is_array($key)) $key = implode('-', $key);
-		return $ns . '-' . $key;
-	}
+    protected function cacheKey($ns, $key)
+    {
+        if (is_array($key)) {
+            $key = implode('-', $key);
+        }
+        return $ns . '-' . $key;
+    }
 
-	public function set($namespace, $key, $value) {
-		$this->connection->set($this->cacheKey($namespace, $key), $value);
-	}
+    public function set($namespace, $key, $value)
+    {
+        $this->connection->set($this->cacheKey($namespace, $key), $value);
+    }
 
-	public function get($namespace, $key) {
-		return $this->connection->get($this->cacheKey($namespace, $key));
-	}
+    public function get($namespace, $key)
+    {
+        return $this->connection->get($this->cacheKey($namespace, $key));
+    }
 
-	public function delete($namespace, $key) {
-		$this->connection->delete($this->cacheKey($namespace, $key));
-	}
+    public function delete($namespace, $key)
+    {
+        $this->connection->delete($this->cacheKey($namespace, $key));
+    }
 
-	public function has($namespace, $key) {
-		return $this->get($namespace, $key) !== false;
-	}
+    public function has($namespace, $key)
+    {
+        return $this->get($namespace, $key) !== false;
+    }
 
-	public function flush(){
-		$this->connection->flush(); 
+    public function flush()
+    {
+        $this->connection->flush();
 
-		$time = time()+1; //one second future 
-		while(time() < $time) { 
-			//sleep 
-		} 
-	}
+        $time = time()+1; //one second future
+        while (time() < $time) {
+            //sleep
+        }
+    }
 
-	public static function getInstance() {
-		static $singleton = NULL;
-		if ($singleton === NULL) {
-			$singleton = new self();
-		}
-		return $singleton;
-	}
+    public static function getInstance()
+    {
+        static $singleton = null;
+        if ($singleton === null) {
+            $singleton = new self();
+        }
+        return $singleton;
+    }
 }

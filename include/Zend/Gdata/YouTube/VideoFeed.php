@@ -42,7 +42,6 @@ require_once 'Zend/Gdata/YouTube/VideoEntry.php';
  */
 class Zend_Gdata_YouTube_VideoFeed extends Zend_Gdata_Media_Feed
 {
-
     /**
      * The classname for individual feed elements.
      *
@@ -61,5 +60,4 @@ class Zend_Gdata_YouTube_VideoFeed extends Zend_Gdata_Media_Feed
         $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct($element);
     }
-
 }

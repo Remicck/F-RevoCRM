@@ -8,22 +8,22 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-$languageStrings = Array(
-	'Home' => 'ホーム',
-	'More' => 'More',
-	'Profile' => 'プロファイル',
-	'Change Password' => 'パスワードの変更',
-	'Logout' => 'ログアウト',
-	'Welcome to Portal' => 'ポータルへようこそ',
-	'LBL_CREATE_TICKET' => '新しいチケット',
-	'LBL_OPEN_TICKETS' => 'チケットを開く',
-	'LBL_ADD_DOCUMENT' => 'ファイルのアップロード',
-	'What would you like to do ?' => 'What would you like to do?',
-	'_start for notify' => 'keys',
-	'Your support ends on' => 'アカウント有効期限：',
-	'_start for charts' => 'keys',
-	'OpenTicketsByPriority' => 'Open Tickets By Priority',
-	'TicketsClosureTimeByPriority' => 'Tickets Closure Time By Priority',
-	'_start for widgets' => 'keys',
-	'Recent' => 'Recent'
+$languageStrings = array(
+    'Home' => 'ホーム',
+    'More' => 'More',
+    'Profile' => 'プロファイル',
+    'Change Password' => 'パスワードの変更',
+    'Logout' => 'ログアウト',
+    'Welcome to Portal' => 'ポータルへようこそ',
+    'LBL_CREATE_TICKET' => '新しいチケット',
+    'LBL_OPEN_TICKETS' => 'チケットを開く',
+    'LBL_ADD_DOCUMENT' => 'ファイルのアップロード',
+    'What would you like to do ?' => 'What would you like to do?',
+    '_start for notify' => 'keys',
+    'Your support ends on' => 'アカウント有効期限：',
+    '_start for charts' => 'keys',
+    'OpenTicketsByPriority' => 'Open Tickets By Priority',
+    'TicketsClosureTimeByPriority' => 'Tickets Closure Time By Priority',
+    '_start for widgets' => 'keys',
+    'Recent' => 'Recent'
 );

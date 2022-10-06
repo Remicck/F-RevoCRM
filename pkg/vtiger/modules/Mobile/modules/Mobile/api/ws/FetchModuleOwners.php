@@ -9,27 +9,29 @@
  * All Rights Reserved.
  * ********************************************************************************** */
 
-class Mobile_WS_FetchModuleOwners extends Mobile_WS_Controller {
-
-    function process(Mobile_API_Request $request) {
+class Mobile_WS_FetchModuleOwners extends Mobile_WS_Controller
+{
+    public function process(Mobile_API_Request $request)
+    {
         global $current_user;
-        
+
         $response = new Mobile_API_Response();
         $current_user = $this->getActiveUser();
-        
+
         $currentUserModel = Users_Record_Model::getInstanceFromUserObject($current_user);
-        
+
         $moduleName = $request->get('module');
         $users = $this->getUsers($currentUserModel, $moduleName);
         $groups = $this->getGroups($currentUserModel, $moduleName);
-        
+
         $result = array('users' => $users, 'groups' => $groups);
         $response->setResult($result);
-        
+
         return $response;
     }
 
-    function getUsers($currentUserModel, $moduleName) {
+    public function getUsers($currentUserModel, $moduleName)
+    {
         $users = $currentUserModel->getAccessibleUsersForModule($moduleName);
         $userIds = array_keys($users);
         $usersList = array();
@@ -44,7 +46,8 @@ class Mobile_WS_FetchModuleOwners extends Mobile_WS_Controller {
         return $usersList;
     }
 
-    function getGroups($currentUserModel, $moduleName) {
+    public function getGroups($currentUserModel, $moduleName)
+    {
         $groups = $currentUserModel->getAccessibleGroupForModule($moduleName);
         $groupIds = array_keys($groups);
         $groupsList = array();
@@ -59,4 +62,3 @@ class Mobile_WS_FetchModuleOwners extends Mobile_WS_Controller {
         return $groupsList;
     }
 }
-

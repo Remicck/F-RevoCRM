@@ -9,27 +9,30 @@
  ************************************************************************************/
 include_once dirname(__FILE__) . '/models/Alert.php';
 
-class Mobile_WS_FetchAllAlerts extends Mobile_WS_Controller {
-	
-	function process(Mobile_API_Request $request) {
-		$response = new Mobile_API_Response();
+class Mobile_WS_FetchAllAlerts extends Mobile_WS_Controller
+{
+    public function process(Mobile_API_Request $request)
+    {
+        $response = new Mobile_API_Response();
 
-		$current_user = $this->getActiveUser();
-		
-		$result = array();
-		$result['alerts'] = $this->getAlertDetails();
-		$response->setResult($result);
+        $current_user = $this->getActiveUser();
 
-		return $response;
-	}
-	
-	function getAlertDetails() {
-		$alertModels = Mobile_WS_AlertModel::models();
-		
-		$alerts = array();
-		foreach($alertModels as $alertModel) {
-			$alerts[] = $alertModel->serializeToSend();;
-		}
-		return $alerts;
-	}
+        $result = array();
+        $result['alerts'] = $this->getAlertDetails();
+        $response->setResult($result);
+
+        return $response;
+    }
+
+    public function getAlertDetails()
+    {
+        $alertModels = Mobile_WS_AlertModel::models();
+
+        $alerts = array();
+        foreach ($alertModels as $alertModel) {
+            $alerts[] = $alertModel->serializeToSend();
+            ;
+        }
+        return $alerts;
+    }
 }

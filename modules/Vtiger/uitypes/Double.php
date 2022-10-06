@@ -8,32 +8,34 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Double_UIType extends Vtiger_Base_UIType {
+class Vtiger_Double_UIType extends Vtiger_Base_UIType
+{
+    /**
+     * Function to get the Template name for the current UI Type object
+     * @return <String> - Template Name
+     */
+    public function getTemplateName()
+    {
+        return 'uitypes/Number.tpl';
+    }
 
-	/**
-	 * Function to get the Template name for the current UI Type object
-	 * @return <String> - Template Name
-	 */
-	public function getTemplateName() {
-		return 'uitypes/Number.tpl';
-	}
-	
-	/**
-	 * Function to get the Display Value, for the current field type with given DB Insert Value
-	 * @param <Object> $value
-	 * @return <Object>
-	 */
-	public function getDisplayValue($value, $record=false, $recordInstance=false) {
-		return decimalFormat($value);
-	}
+    /**
+     * Function to get the Display Value, for the current field type with given DB Insert Value
+     * @param <Object> $value
+     * @return <Object>
+     */
+    public function getDisplayValue($value, $record=false, $recordInstance=false)
+    {
+        return decimalFormat($value);
+    }
 
-	/**
-	 * Function to get the Value of the field in the format, the user provides it on Save
-	 * @param <Object> $value
-	 * @return <Object>
-	 */
-	public function getUserRequestValue($value) {
-		return $this->getDisplayValue($value);
-	}
-
+    /**
+     * Function to get the Value of the field in the format, the user provides it on Save
+     * @param <Object> $value
+     * @return <Object>
+     */
+    public function getUserRequestValue($value)
+    {
+        return $this->getDisplayValue($value);
+    }
 }

@@ -6,7 +6,6 @@
  */
 class HTMLPurifier_Encoder
 {
-
     /**
      * Constructor throws fatal error if you attempt to instantiate class
      */
@@ -249,7 +248,6 @@ class HTMLPurifier_Encoder
                             // Codepoints outside the Unicode range are illegal
                             ($mUcs4 > 0x10FFFF)
                         ) {
-
                         } elseif (0xFEFF != $mUcs4 && // omit BOM
                             // check for valid Char unicode codepoints
                             (
@@ -315,7 +313,7 @@ class HTMLPurifier_Encoder
     public static function unichr($code)
     {
         if ($code > 1114111 or $code < 0 or
-          ($code >= 55296 and $code <= 57343) ) {
+          ($code >= 55296 and $code <= 57343)) {
             // bits are set outside the "valid" range as defined
             // by UNICODE 4.1.0
             return '';
@@ -510,15 +508,15 @@ class HTMLPurifier_Encoder
     }
 
     /** No bugs detected in iconv. */
-    const ICONV_OK = 0;
+    public const ICONV_OK = 0;
 
     /** Iconv truncates output if converting from UTF-8 to another
      *  character set with //IGNORE, and a non-encodable character is found */
-    const ICONV_TRUNCATES = 1;
+    public const ICONV_TRUNCATES = 1;
 
     /** Iconv does not support //IGNORE, making it unusable for
      *  transcoding purposes */
-    const ICONV_UNUSABLE = 2;
+    public const ICONV_UNUSABLE = 2;
 
     /**
      * glibc iconv has a known bug where it doesn't handle the magic

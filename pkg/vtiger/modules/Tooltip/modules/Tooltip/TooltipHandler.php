@@ -6,20 +6,18 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
-* 
+*
  ********************************************************************************/
-class TooltipHandler extends VTEventHandler {
+class TooltipHandler extends VTEventHandler
+{
+    public function handleEvent($eventName, $data)
+    {
+        if ($eventName == 'vtiger.entity.beforesave') {
+            // Entity is about to be saved, take required action
+        }
 
-	function handleEvent($eventName, $data) {
-
-		if($eventName == 'vtiger.entity.beforesave') {
-			// Entity is about to be saved, take required action
-		}
-
-		if($eventName == 'vtiger.entity.aftersave') {
-			// Entity has been saved, take next action
-		}
-	}
+        if ($eventName == 'vtiger.entity.aftersave') {
+            // Entity has been saved, take next action
+        }
+    }
 }
-
-?>

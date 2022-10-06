@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,18 +12,20 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  * @subpackage layouts
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+}
 
 if (!defined('LOG4PHP_LINE_SEP')) {
-    if (substr(php_uname(), 0, 7) == "Windows") { 
+    if (substr(php_uname(), 0, 7) == "Windows") {
         /**
          * @ignore
          */
@@ -35,7 +37,7 @@ if (!defined('LOG4PHP_LINE_SEP')) {
         define('LOG4PHP_LINE_SEP', "\n");
     }
 }
- 
+
 /**
  */
 require_once(LOG4PHP_DIR . '/LoggerLayout.php');
@@ -51,8 +53,8 @@ require_once(LOG4PHP_DIR . '/spi/LoggerLoggingEvent.php');
  * @package log4php
  * @subpackage layouts
  */
-class LoggerLayoutHtml extends LoggerLayout {
-
+class LoggerLayoutHtml extends LoggerLayout
+{
     /**
      * The <b>LocationInfo</b> option takes a boolean value. By
      * default, it is set to false which means there will be no location
@@ -65,24 +67,24 @@ class LoggerLayoutHtml extends LoggerLayout {
      * <b>LocationInfo</b> option of that appender as well.
      * @var boolean
      */
-    var $locationInfo = false;
-    
+    public $locationInfo = false;
+
     /**
      * The <b>Title</b> option takes a String value. This option sets the
      * document title of the generated HTML document.
      * Defaults to 'Log4php Log Messages'.
      * @var string
      */
-    var $title = "Log4php Log Messages";
-    
+    public $title = "Log4php Log Messages";
+
     /**
      * Constructor
      */
-    function LoggerLayoutHtml()
+    public function LoggerLayoutHtml()
     {
         return;
     }
-    
+
     /**
      * The <b>LocationInfo</b> option takes a boolean value. By
      * default, it is set to false which means there will be no location
@@ -94,7 +96,7 @@ class LoggerLayoutHtml extends LoggerLayout {
      * or a {@link LoggerAppenderMailEvent} then make sure to set the
      * <b>LocationInfo</b> option of that appender as well.
      */
-    function setLocationInfo($flag)
+    public function setLocationInfo($flag)
     {
         if (is_bool($flag)) {
             $this->locationInfo = $flag;
@@ -106,17 +108,17 @@ class LoggerLayoutHtml extends LoggerLayout {
     /**
      * Returns the current value of the <b>LocationInfo</b> option.
      */
-    function getLocationInfo()
+    public function getLocationInfo()
     {
         return $this->locationInfo;
     }
-    
+
     /**
      * The <b>Title</b> option takes a String value. This option sets the
      * document title of the generated HTML document.
      * Defaults to 'Log4php Log Messages'.
      */
-    function setTitle($title)
+    public function setTitle($title)
     {
         $this->title = $title;
     }
@@ -124,67 +126,67 @@ class LoggerLayoutHtml extends LoggerLayout {
     /**
      * @return string Returns the current value of the <b>Title</b> option.
      */
-    function getTitle()
+    public function getTitle()
     {
         return $this->title;
     }
-    
+
     /**
      * @return string Returns the content type output by this layout, i.e "text/html".
      */
-    function getContentType()
+    public function getContentType()
     {
         return "text/html";
     }
-    
+
     /**
      * No options to activate.
      */
-    function activateOptions()
+    public function activateOptions()
     {
         return true;
     }
-    
+
     /**
      * @param LoggerLoggingEvent $event
      * @return string
      */
-    function format($event)
+    public function format($event)
     {
         $sbuf = LOG4PHP_LINE_SEP . "<tr>" . LOG4PHP_LINE_SEP;
-    
+
         $sbuf .= "<td>";
-        
+
         $eventTime = (float)$event->getTimeStamp();
         $eventStartTime = (float)LoggerLoggingEvent::getStartTime();
         $sbuf .= number_format(($eventTime - $eventStartTime) * 1000, 0, '', '');
         $sbuf .= "</td>" . LOG4PHP_LINE_SEP;
-    
+
         $sbuf .= "<td title=\"" . $event->getThreadName() . " thread\">";
         $sbuf .= $event->getThreadName();
         $sbuf .= "</td>" . LOG4PHP_LINE_SEP;
-    
+
         $sbuf .= "<td title=\"Level\">";
-        
+
         $level = $event->getLevel();
-        
+
         if ($level->equals(LoggerLevel::getLevelDebug())) {
-          $sbuf .= "<font color=\"#339933\">";
-          $sbuf .= $level->toString();
-          $sbuf .= "</font>";
-        }elseif($level->equals(LoggerLevel::getLevelWarn())) {
-          $sbuf .= "<font color=\"#993300\"><strong>";
-          $sbuf .= $level->toString();
-          $sbuf .= "</strong></font>";
+            $sbuf .= "<font color=\"#339933\">";
+            $sbuf .= $level->toString();
+            $sbuf .= "</font>";
+        } elseif ($level->equals(LoggerLevel::getLevelWarn())) {
+            $sbuf .= "<font color=\"#993300\"><strong>";
+            $sbuf .= $level->toString();
+            $sbuf .= "</strong></font>";
         } else {
-          $sbuf .= $level->toString();
+            $sbuf .= $level->toString();
         }
         $sbuf .= "</td>" . LOG4PHP_LINE_SEP;
-    
+
         $sbuf .= "<td title=\"" . htmlentities($event->getLoggerName(), ENT_QUOTES) . " category\">";
         $sbuf .= htmlentities($event->getLoggerName(), ENT_QUOTES);
         $sbuf .= "</td>" . LOG4PHP_LINE_SEP;
-    
+
         if ($this->locationInfo) {
             $locInfo = $event->getLocationInformation();
             $sbuf .= "<td>";
@@ -197,7 +199,7 @@ class LoggerLayoutHtml extends LoggerLayout {
         $sbuf .= "</td>" . LOG4PHP_LINE_SEP;
 
         $sbuf .= "</tr>" . LOG4PHP_LINE_SEP;
-        
+
         if ($event->getNDC() != null) {
             $sbuf .= "<tr><td bgcolor=\"#EEEEEE\" style=\"font-size : xx-small;\" colspan=\"6\" title=\"Nested Diagnostic Context\">";
             $sbuf .= "NDC: " . htmlentities($event->getNDC(), ENT_QUOTES);
@@ -210,7 +212,7 @@ class LoggerLayoutHtml extends LoggerLayout {
     /**
      * @return string Returns appropriate HTML headers.
      */
-    function getHeader()
+    public function getHeader()
     {
         $sbuf = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\" \"http://www.w3.org/TR/html4/loose.dtd\">" . LOG4PHP_LINE_SEP;
         $sbuf .= "<html>" . LOG4PHP_LINE_SEP;
@@ -233,8 +235,9 @@ class LoggerLayoutHtml extends LoggerLayout {
         $sbuf .= "<th>Thread</th>" . LOG4PHP_LINE_SEP;
         $sbuf .= "<th>Level</th>" . LOG4PHP_LINE_SEP;
         $sbuf .= "<th>Category</th>" . LOG4PHP_LINE_SEP;
-        if ($this->locationInfo)
+        if ($this->locationInfo) {
             $sbuf .= "<th>File:Line</th>" . LOG4PHP_LINE_SEP;
+        }
         $sbuf .= "<th>Message</th>" . LOG4PHP_LINE_SEP;
         $sbuf .= "</tr>" . LOG4PHP_LINE_SEP;
 
@@ -244,7 +247,7 @@ class LoggerLayoutHtml extends LoggerLayout {
     /**
      * @return string Returns the appropriate HTML footers.
      */
-    function getFooter()
+    public function getFooter()
     {
         $sbuf = "</table>" . LOG4PHP_LINE_SEP;
         $sbuf .= "<br>" . LOG4PHP_LINE_SEP;
@@ -253,4 +256,3 @@ class LoggerLayoutHtml extends LoggerLayout {
         return $sbuf;
     }
 }
-?>

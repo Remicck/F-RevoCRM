@@ -39,8 +39,8 @@ require(dirname(__FILE__) . '/Smarty.class.php');
  *
  * @package Smarty
  */
-class SmartyBC extends Smarty {
-
+class SmartyBC extends Smarty
+{
     /**
      * Smarty 2 BC
      * @var string
@@ -439,7 +439,6 @@ class SmartyBC extends Smarty {
     {
         trigger_error("Smarty error: $error_msg", $error_type);
     }
-
 }
 
 /**
@@ -456,5 +455,3 @@ function smarty_php_tag($params, $content, $template, &$repeat)
     eval($content);
     return '';
 }
-
-?>

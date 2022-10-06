@@ -31,70 +31,75 @@
 /** A parser for TokenStreams.  "parser grammars" result in a subclass
  *  of this.
  */
-class AntlrParser extends BaseRecognizer {
-	public $input;
+class AntlrParser extends BaseRecognizer
+{
+    public $input;
 
 
-	public function __construct($input, $state = null) {
-		parent::__construct($state); // share the state object with another parser
-		$this->setTokenStream($input);
+    public function __construct($input, $state = null)
+    {
+        parent::__construct($state); // share the state object with another parser
+        $this->setTokenStream($input);
     }
 
-	public function reset() {
-		parent::reset(); // reset all recognizer state variables
-		if ( $this->input!=null ) {
-			$this->input->seek(0); // rewind the input
-		}
-	}
+    public function reset()
+    {
+        parent::reset(); // reset all recognizer state variables
+        if ($this->input!=null) {
+            $this->input->seek(0); // rewind the input
+        }
+    }
 
-	protected function getCurrentInputSymbol($input) {
-		return $this->input->LT(1);
-	}
+    protected function getCurrentInputSymbol($input)
+    {
+        return $this->input->LT(1);
+    }
 
-	protected function getMissingSymbol($input, $e, $expectedTokenType, $follow)
-	{
-		$tokenText = null;
-		if ( $expectedTokenType==TokenConst::$EOF ){ 
-			$tokenText = "<missing EOF>";
-		} else {
-			$tokenNames = $this->getTokenNames();
-			$tokenText = "<missing ".$tokenNames[$expectedTokenType].">";
-		}
-		$t = CommonToken::forTypeAndText($expectedTokenType, $tokenText);
-		$current = $input->LT(1);
-		if ( $current->getType() == TokenConst::$EOF ) {
-			$current = $this->input->LT(-1);
-		}
-		$t->line = $current->getLine();
-		$t->charPositionInLine = $current->getCharPositionInLine();
-		$t->channel = $DEFAULT_TOKEN_CHANNEL;
-		return $t;
-	}
+    protected function getMissingSymbol($input, $e, $expectedTokenType, $follow)
+    {
+        $tokenText = null;
+        if ($expectedTokenType==TokenConst::$EOF) {
+            $tokenText = "<missing EOF>";
+        } else {
+            $tokenNames = $this->getTokenNames();
+            $tokenText = "<missing ".$tokenNames[$expectedTokenType].">";
+        }
+        $t = CommonToken::forTypeAndText($expectedTokenType, $tokenText);
+        $current = $input->LT(1);
+        if ($current->getType() == TokenConst::$EOF) {
+            $current = $this->input->LT(-1);
+        }
+        $t->line = $current->getLine();
+        $t->charPositionInLine = $current->getCharPositionInLine();
+        $t->channel = $DEFAULT_TOKEN_CHANNEL;
+        return $t;
+    }
 
-	/** Set the token stream and reset the parser */
-	public function setTokenStream($input) {
-		$this->input = null;
-		$this->reset();
-		$this->input = $input;
-	}
+    /** Set the token stream and reset the parser */
+    public function setTokenStream($input)
+    {
+        $this->input = null;
+        $this->reset();
+        $this->input = $input;
+    }
 
-    public function getTokenStream() {
-		return $this->input;
-	}
+    public function getTokenStream()
+    {
+        return $this->input;
+    }
 
-	public function getSourceName() {
-		return $this->input->getSourceName();
-	}
+    public function getSourceName()
+    {
+        return $this->input->getSourceName();
+    }
 
-	public function traceIn($ruleName, $ruleIndex)  {
-		parent::traceIn($ruleName, $ruleIndex, $this->input->LT(1));
-	}
+    public function traceIn($ruleName, $ruleIndex)
+    {
+        parent::traceIn($ruleName, $ruleIndex, $this->input->LT(1));
+    }
 
-	public function traceOut($ruleName, $ruleIndex)  {
-		parent::traceOut($ruleName, $ruleIndex, $this->input->LT(1));
-	}
-	
-
+    public function traceOut($ruleName, $ruleIndex)
+    {
+        parent::traceOut($ruleName, $ruleIndex, $this->input->LT(1));
+    }
 }
-
-?>

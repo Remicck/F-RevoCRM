@@ -78,7 +78,7 @@ class Zend_Oauth_Consumer extends Zend_Oauth
      */
     public function __construct($options = null)
     {
-        $this->_config = new Zend_Oauth_Config;
+        $this->_config = new Zend_Oauth_Config();
         if ($options !== null) {
             if ($options instanceof Zend_Config) {
                 $options = $options->toArray();
@@ -104,7 +104,7 @@ class Zend_Oauth_Consumer extends Zend_Oauth
     ) {
         if ($request === null) {
             $request = new Zend_Oauth_Http_RequestToken($this, $customServiceParameters);
-        } elseif($customServiceParameters !== null) {
+        } elseif ($customServiceParameters !== null) {
             $request->setParameters($customServiceParameters);
         }
         if ($httpMethod !== null) {
@@ -136,7 +136,7 @@ class Zend_Oauth_Consumer extends Zend_Oauth
     ) {
         if ($redirect === null) {
             $redirect = new Zend_Oauth_Http_UserAuthorization($this, $customServiceParameters);
-        } elseif($customServiceParameters !== null) {
+        } elseif ($customServiceParameters !== null) {
             $redirect->setParameters($customServiceParameters);
         }
         if ($token !== null) {
@@ -166,7 +166,7 @@ class Zend_Oauth_Consumer extends Zend_Oauth
             $token = null;
         }
         $redirectUrl = $this->getRedirectUrl($customServiceParameters, $token, $request);
-        
+
         header('Location: ' . $redirectUrl);
         exit(1);
     }
@@ -192,7 +192,8 @@ class Zend_Oauth_Consumer extends Zend_Oauth
         if (!$authorizedToken->isValid()) {
             require_once 'Zend/Oauth/Exception.php';
             throw new Zend_Oauth_Exception(
-                'Response from Service Provider is not a valid authorized request token');
+                'Response from Service Provider is not a valid authorized request token'
+            );
         }
         if ($request === null) {
             $request = new Zend_Oauth_Http_AccessToken($this);

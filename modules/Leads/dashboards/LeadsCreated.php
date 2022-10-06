@@ -8,58 +8,59 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Leads_LeadsCreated_Dashboard extends Vtiger_IndexAjax_View {
-
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-
-		$jsFileNames = array(
+class Leads_LeadsCreated_Dashboard extends Vtiger_IndexAjax_View
+{
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $jsFileNames = array(
 //			'~/libraries/jquery/jqplot/plugins/jqplot.cursor.min.js',
 //			'~/libraries/jquery/jqplot/plugins/jqplot.dateAxisRenderer.min.js',
 //			'~/libraries/jquery/jqplot/plugins/jqplot.logAxisRenderer.min.js',
 //			'~/libraries/jquery/jqplot/plugins/jqplot.canvasTextRenderer.min.js',
 //			'~/libraries/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.min.js'
-		);
+        );
 
-		$headerScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		return $headerScriptInstances;
-	}
+        $headerScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        return $headerScriptInstances;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$currentUser = Users_Record_Model::getCurrentUserModel();
-		$viewer = $this->getViewer($request);
-		$moduleName = $request->getModule();
+    public function process(Vtiger_Request $request)
+    {
+        $currentUser = Users_Record_Model::getCurrentUserModel();
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
 
-		$linkId = $request->get('linkid');
-		$dates = $request->get('createdtime');
-		$owner = $request->get('owner');
+        $linkId = $request->get('linkid');
+        $dates = $request->get('createdtime');
+        $owner = $request->get('owner');
 
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-		$data = $moduleModel->getLeadsCreated($owner, $dates);
+        $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+        $data = $moduleModel->getLeadsCreated($owner, $dates);
 
-		$widget = Vtiger_Widget_Model::getInstance($linkId, $currentUser->getId());
+        $widget = Vtiger_Widget_Model::getInstance($linkId, $currentUser->getId());
 
-		//Include special script and css needed for this widget
-		$viewer->assign('SCRIPTS',$this->getHeaderScripts($request));
+        //Include special script and css needed for this widget
+        $viewer->assign('SCRIPTS', $this->getHeaderScripts($request));
 
-		$viewer->assign('WIDGET', $widget);
-		$viewer->assign('MODULE_NAME', $moduleName);
-		$viewer->assign('DATA', $data);
-		$viewer->assign('CURRENTUSER', $currentUser);
+        $viewer->assign('WIDGET', $widget);
+        $viewer->assign('MODULE_NAME', $moduleName);
+        $viewer->assign('DATA', $data);
+        $viewer->assign('CURRENTUSER', $currentUser);
 
-		$accessibleUsers = $currentUser->getAccessibleUsersForModule('Leads');
-		$viewer->assign('ACCESSIBLE_USERS', $accessibleUsers);
-		
+        $accessibleUsers = $currentUser->getAccessibleUsersForModule('Leads');
+        $viewer->assign('ACCESSIBLE_USERS', $accessibleUsers);
 
-		$content = $request->get('content');
-		if(!empty($content)) {
-			$viewer->view('dashboards/DashBoardWidgetContents.tpl', $moduleName);
-		} else {
-			$viewer->view('dashboards/LeadsCreated.tpl', $moduleName);
-		}
-	}
+
+        $content = $request->get('content');
+        if (!empty($content)) {
+            $viewer->view('dashboards/DashBoardWidgetContents.tpl', $moduleName);
+        } else {
+            $viewer->view('dashboards/LeadsCreated.tpl', $moduleName);
+        }
+    }
 }

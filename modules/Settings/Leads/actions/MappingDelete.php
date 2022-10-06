@@ -8,29 +8,32 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Settings_Leads_MappingDelete_Action extends Settings_Vtiger_Index_Action {
-    
-    public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
+class Settings_Leads_MappingDelete_Action extends Settings_Vtiger_Index_Action
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function process(Vtiger_Request $request) {
-		$recordId = $request->get('mappingId');
-		$qualifiedModuleName = $request->getModule(false);
+    public function process(Vtiger_Request $request)
+    {
+        $recordId = $request->get('mappingId');
+        $qualifiedModuleName = $request->getModule(false);
 
-		$response = new Vtiger_Response();
-		if ($recordId) {
-			Settings_Leads_Mapping_Model::deleteMapping(array($recordId));
-			$response->setResult(array(vtranslate('LBL_DELETED_SUCCESSFULLY', $qualifiedModuleName)));
-		} else {
-			$response->setError(vtranslate('LBL_INVALID_MAPPING', $qualifiedModuleName));
-		}
-		$response->emit();
-	}
-	
-	public function validateRequest(Vtiger_Request $request) {
-		$request->validateWriteAccess();
-	}
+        $response = new Vtiger_Response();
+        if ($recordId) {
+            Settings_Leads_Mapping_Model::deleteMapping(array($recordId));
+            $response->setResult(array(vtranslate('LBL_DELETED_SUCCESSFULLY', $qualifiedModuleName)));
+        } else {
+            $response->setError(vtranslate('LBL_INVALID_MAPPING', $qualifiedModuleName));
+        }
+        $response->emit();
+    }
+
+    public function validateRequest(Vtiger_Request $request)
+    {
+        $request->validateWriteAccess();
+    }
 }

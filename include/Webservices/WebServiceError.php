@@ -8,23 +8,21 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-	require_once("include/Webservices/WebServiceErrorCode.php");
-	class WebServiceException extends Exception {
-		
-		public $code;
-		public $message;
-		function __construct($errCode,$msg)
-		{
-			$this->code = $errCode;
-			$this->message = $msg;
-		}
-		function WebServiceException($errCode,$msg){
-			// PHP4-style constructor.
-			// This will NOT be invoked, unless a sub-class that extends `foo` calls it.
-			// In that case, call the new-style constructor to keep compatibility.
-			self::__construct($errCode,$msg);
-		}
-		
-	}
-	
-?>
+require_once("include/Webservices/WebServiceErrorCode.php");
+class WebServiceException extends Exception
+{
+    public $code;
+    public $message;
+    public function __construct($errCode, $msg)
+    {
+        $this->code = $errCode;
+        $this->message = $msg;
+    }
+    public function WebServiceException($errCode, $msg)
+    {
+        // PHP4-style constructor.
+        // This will NOT be invoked, unless a sub-class that extends `foo` calls it.
+        // In that case, call the new-style constructor to keep compatibility.
+        self::__construct($errCode, $msg);
+    }
+}

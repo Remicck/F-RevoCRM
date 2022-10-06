@@ -14,7 +14,7 @@ $lang = array(
     '_dateTimeMid' => "%a %e %b %Y %H:%M",
     '_dateTimeSmall' => "%d.%m.%Y %H:%M",
 
-	"You don't have permissions to upload files." =>
+    "You don't have permissions to upload files." =>
     "Nemáte práva pro nahrávání souborů.",
 
     "You don't have permissions to browse server." =>
@@ -237,5 +237,3 @@ $lang = array(
     "Select Thumbnails" => "Vybrat náhled",
     "Download files" => "Stáhnout soubory",
 );
-
-?>

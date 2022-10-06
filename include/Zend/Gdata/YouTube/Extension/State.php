@@ -37,7 +37,6 @@ require_once 'Zend/Gdata/Extension.php';
  */
 class Zend_Gdata_YouTube_Extension_State extends Zend_Gdata_Extension
 {
-
     protected $_rootNamespace = 'yt';
     protected $_rootElement = 'state';
     protected $_name = null;
@@ -52,8 +51,12 @@ class Zend_Gdata_YouTube_Extension_State extends Zend_Gdata_Extension
      * @param string $reasonCode(optional) The reasonCode value
      * @param string $helpUrl(optional) The helpUrl value
      */
-    public function __construct($explanation = null, $name = null,
-                                $reasonCode = null, $helpUrl = null)
+    public function __construct(
+        $explanation = null,
+        $name = null,
+        $reasonCode = null,
+        $helpUrl = null
+    )
     {
         $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct();
@@ -99,17 +102,17 @@ class Zend_Gdata_YouTube_Extension_State extends Zend_Gdata_Extension
     protected function takeAttributeFromDOM($attribute)
     {
         switch ($attribute->localName) {
-        case 'name':
-            $this->_name = $attribute->nodeValue;
-            break;
-        case 'reasonCode':
-            $this->_reasonCode = $attribute->nodeValue;
-            break;
-        case 'helpUrl':
-            $this->_helpUrl = $attribute->nodeValue;
-            break;
-        default:
-            parent::takeAttributeFromDOM($attribute);
+            case 'name':
+                $this->_name = $attribute->nodeValue;
+                break;
+            case 'reasonCode':
+                $this->_reasonCode = $attribute->nodeValue;
+                break;
+            case 'helpUrl':
+                $this->_helpUrl = $attribute->nodeValue;
+                break;
+            default:
+                parent::takeAttributeFromDOM($attribute);
         }
     }
 
@@ -189,5 +192,4 @@ class Zend_Gdata_YouTube_Extension_State extends Zend_Gdata_Extension
     {
         return $this->_text;
     }
-
 }

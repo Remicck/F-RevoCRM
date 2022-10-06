@@ -11,6 +11,6 @@
 /**
  * Events Edit View Record Structure Model
  */
-class Events_EditRecordStructure_Model extends Calendar_EditRecordStructure_Model {
-
+class Events_EditRecordStructure_Model extends Calendar_EditRecordStructure_Model
+{
 }

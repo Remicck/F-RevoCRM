@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -24,9 +24,9 @@
  */
 require_once('Zend/Gdata/Query.php');
 
-class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
-    
-    const CONTACTS_FEED_URI = 'https://www.google.com/m8/feeds/contacts';
+class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query
+{
+    public const CONTACTS_FEED_URI = 'https://www.google.com/m8/feeds/contacts';
 
     /**
      * The default URI used for feeds.
@@ -34,7 +34,7 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
     protected $_defaultFeedUri = self::CONTACTS_FEED_URI;
     protected $_user = 'default';
     protected $_projection = 'full';
-    protected  $_contact;
+    protected $_contact;
 
 
     /**
@@ -56,11 +56,11 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
         if ($this->getContact() != null) {
             $uri .= '/' . $this->getContact();
         }
-        
+
         $uri .= $this->getQueryString();
         return $uri;
     }
-    
+
         /**
      * @see $_projection
      * @param string $value
@@ -82,12 +82,14 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
         $this->_user = $value;
         return $this;
     }
-    
-    public function setContact($value){
+
+    public function setContact($value)
+    {
         $this->_contact = $value;
     }
-    
-    public function getContact(){
+
+    public function getContact()
+    {
         echo $this->_contact;
         return $this->_contact;
     }
@@ -102,8 +104,8 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
         $this->_visibility = $value;
         return $this;
     }
-    
-    
+
+
     /**
      * @see $_projection
      * @return string projection
@@ -130,8 +132,9 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
     {
         return $this->_visibility;
     }
-    
-    public function setShowDeleted($value){
+
+    public function setShowDeleted($value)
+    {
         if ($value !== null) {
             $this->_params['showdeleted'] = $value;
         } else {
@@ -139,7 +142,7 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
         }
         return $this;
     }
-     
+
     /**
      * @param string $value
      * @return Zend_Gdata_Calendar_EventQuery Provides a fluent interface
@@ -153,9 +156,9 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
         }
         return $this;
     }
-    
-    
- 
+
+
+
      /**
      * @return string sortorder
      */
@@ -168,8 +171,8 @@ class Zend_Gdata_Contacts_Query extends Zend_Gdata_Query {
         }
         return $this;
     }
-    
-    
+
+
     /**
      * @return string orderby
      */

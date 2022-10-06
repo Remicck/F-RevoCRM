@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : ron.php
 // Begin       : 2004-03-03
@@ -28,7 +29,7 @@
 // Romanian, Moldavian, Moldovan
 
 global $l;
-$l = Array();
+$l = array();
 
 // PAGE META DESCRIPTORS --------------------------------------
 

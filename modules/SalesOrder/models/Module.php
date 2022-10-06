@@ -8,7 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class SalesOrder_Module_Model extends Inventory_Module_Model{
-
+class SalesOrder_Module_Model extends Inventory_Module_Model
+{
 }
-?>

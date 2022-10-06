@@ -8,17 +8,18 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Rss_DeleteAjax_Action extends Vtiger_Delete_Action {
+class Rss_DeleteAjax_Action extends Vtiger_Delete_Action
+{
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $recordId = $request->get('record');
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$recordId = $request->get('record');
+        $recordModel = Rss_Record_Model::getInstanceById($recordId, $moduleName);
+        $recordModel->delete();
 
-		$recordModel = Rss_Record_Model::getInstanceById($recordId, $moduleName);
-		$recordModel->delete();
-
-		$response = new Vtiger_Response();
-		$response->setResult(array('record' => $recordId, 'module' => $moduleName, 'deleted' => true));
-		$response->emit();
-	}
+        $response = new Vtiger_Response();
+        $response->setResult(array('record' => $recordId, 'module' => $moduleName, 'deleted' => true));
+        $response->emit();
+    }
 }

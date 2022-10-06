@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,15 +12,17 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__));
- 
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__));
+}
+
 /**
  */
 require_once(LOG4PHP_DIR . '/LoggerLevel.php');
@@ -34,90 +36,90 @@ require_once(LOG4PHP_DIR . '/spi/LoggerLoggingEvent.php');
  * @package log4php
  * @see Logger
  */
-class LoggerCategory {
-
+class LoggerCategory
+{
     /**
-     * Additivity is set to true by default, that is children inherit the 
+     * Additivity is set to true by default, that is children inherit the
      * appenders of their ancestors by default.
      * @var boolean
      */
-    var $additive       = true;
-    
+    public $additive       = true;
+
     /**
      * @var string fully qualified class name
-     */  
-    var $fqcn           = 'LoggerCategory';
+     */
+    public $fqcn           = 'LoggerCategory';
 
     /**
      * @var LoggerLevel The assigned level of this category.
      */
-    var $level          = null;
-    
+    public $level          = null;
+
     /**
      * @var string name of this category.
      */
-    var $name           = '';
-    
+    public $name           = '';
+
     /**
      * @var Logger The parent of this category.
      */
-    var $parent         = null;
+    public $parent         = null;
 
     /**
      * @var LoggerHierarchy the object repository
      */
-    var $repository     = null; 
+    public $repository     = null;
 
     /**
      * @var array collection of appenders
      * @see LoggerAppender
      */
-    var $aai            = array();
-    
-/* --------------------------------------------------------------------------*/
-/* --------------------------------------------------------------------------*/
-/* --------------------------------------------------------------------------*/
+    public $aai            = array();
+
+    /* --------------------------------------------------------------------------*/
+    /* --------------------------------------------------------------------------*/
+    /* --------------------------------------------------------------------------*/
 
     /**
      * Constructor.
      *
-     * @param  string  $name  Category name   
+     * @param  string  $name  Category name
      */
-    function LoggerCategory($name)
+    public function LoggerCategory($name)
     {
         $this->name = $name;
     }
-    
+
     /**
      * Add a new Appender to the list of appenders of this Category instance.
      *
      * @param LoggerAppender $newAppender
      */
-    function addAppender(&$newAppender)
+    public function addAppender(&$newAppender)
     {
         $appenderName = $newAppender->getName();
         $this->aai[$appenderName] =& $newAppender;
-    } 
-            
+    }
+
     /**
      * If assertion parameter is false, then logs msg as an error statement.
      *
      * @param bool $assertion
      * @param string $msg message to log
      */
-    function assertLog($assertion = true, $msg = '')
+    public function assertLog($assertion = true, $msg = '')
     {
         if ($assertion == false) {
             $this->error($msg);
         }
-    } 
+    }
 
     /**
      * Call the appenders in the hierarchy starting at this.
      *
-     * @param LoggerLoggingEvent $event 
+     * @param LoggerLoggingEvent $event
      */
-    function callAppenders($event) 
+    public function callAppenders($event)
     {
         if (sizeof($this->aai) > 0) {
             foreach (array_keys($this->aai) as $appenderName) {
@@ -128,14 +130,14 @@ class LoggerCategory {
             $this->parent->callAppenders($event);
         }
     }
-    
+
     /**
      * Log a message object with the DEBUG level including the caller.
      *
      * @param mixed $message message
      * @param mixed $caller caller object or caller string id
      */
-    function debug($message, $caller = null)
+    public function debug($message, $caller = null)
     {
         $debugLevel = LoggerLevel::getLevelDebug();
         if ($this->repository->isDisabled($debugLevel)) {
@@ -144,7 +146,7 @@ class LoggerCategory {
         if ($debugLevel->isGreaterOrEqual($this->getEffectiveLevel())) {
             $this->forcedLog($this->fqcn, $caller, $debugLevel, $message);
         }
-    } 
+    }
 
     /**
      * Log a message object with the ERROR level including the caller.
@@ -152,7 +154,7 @@ class LoggerCategory {
      * @param mixed $message message
      * @param mixed $caller caller object or caller string id
      */
-    function error($message, $caller = null)
+    public function error($message, $caller = null)
     {
         $errorLevel = LoggerLevel::getLevelError();
         if ($this->repository->isDisabled($errorLevel)) {
@@ -162,7 +164,7 @@ class LoggerCategory {
             $this->forcedLog($this->fqcn, $caller, $errorLevel, $message);
         }
     }
-  
+
     /**
      * Deprecated. Please use LoggerManager::exists() instead.
      *
@@ -170,18 +172,18 @@ class LoggerCategory {
      * @see LoggerManager::exists()
      * @deprecated
      */
-    function exists($name)
+    public function exists($name)
     {
         return LoggerManager::exists($name);
-    } 
- 
+    }
+
     /**
      * Log a message object with the FATAL level including the caller.
      *
      * @param mixed $message message
      * @param mixed $caller caller object or caller string id
      */
-    function fatal($message, $caller = null)
+    public function fatal($message, $caller = null)
     {
         $fatalLevel = LoggerLevel::getLevelFatal();
         if ($this->repository->isDisabled($fatalLevel)) {
@@ -190,8 +192,8 @@ class LoggerCategory {
         if ($fatalLevel->isGreaterOrEqual($this->getEffectiveLevel())) {
             $this->forcedLog($this->fqcn, $caller, $fatalLevel, $message);
         }
-    } 
-  
+    }
+
     /**
      * This method creates a new logging event and logs the event without further checks.
      *
@@ -200,30 +202,30 @@ class LoggerCategory {
      *
      * @param string $fqcn Fully Qualified Class Name of the Logger
      * @param mixed $caller caller object or caller string id
-     * @param LoggerLevel $level log level     
+     * @param LoggerLevel $level log level
      * @param mixed $message message
-     * @see LoggerLoggingEvent          
+     * @see LoggerLoggingEvent
      */
-    function forcedLog($fqcn, $caller, $level, $message)
+    public function forcedLog($fqcn, $caller, $level, $message)
     {
         // $fqcn = is_object($caller) ? get_class($caller) : (string)$caller;
         $this->callAppenders(new LoggerLoggingEvent($fqcn, $this, $level, $message));
-    } 
+    }
 
     /**
      * Get the additivity flag for this Category instance.
      * @return boolean
      */
-    function getAdditivity()
+    public function getAdditivity()
     {
         return $this->additive;
     }
- 
+
     /**
      * Get the appenders contained in this category as an array.
      * @return array collection of appenders
      */
-    function &getAllAppenders() 
+    public function &getAllAppenders()
     {
         $appenders = array();
         $appenderNames = array_keys($this->aai);
@@ -232,146 +234,147 @@ class LoggerCategory {
             $appenderName = $appenderNames[$i];
             $appenders[] =& $this->aai[$appenderName];
         }
-        return $appenders; 
+        return $appenders;
     }
-    
+
     /**
      * Look for the appender named as name.
      * @return LoggerAppender
      */
-    function &getAppender($name) 
+    public function &getAppender($name)
     {
         return $this->aai[$name];
     }
-    
+
     /**
      * Please use the {@link getEffectiveLevel()} method instead.
      * @deprecated
      */
-    function getChainedPriority()
+    public function getChainedPriority()
     {
         return $this->getEffectiveLevel();
-    } 
- 
+    }
+
     /**
      * Please use {@link LoggerManager::getCurrentLoggers()} instead.
      * @deprecated
      */
-    function getCurrentCategories()
+    public function getCurrentCategories()
     {
         return LoggerManager::getCurrentLoggers();
-    } 
- 
+    }
+
     /**
      * Please use {@link LoggerManager::getLoggerRepository()} instead.
-     * @deprecated 
+     * @deprecated
      */
-    function &getDefaultHierarchy()
+    public function &getDefaultHierarchy()
     {
         return LoggerManager::getLoggerRepository();
-    } 
- 
+    }
+
     /**
      * @deprecated Use {@link getLoggerRepository()}
-     * @return LoggerHierarchy 
+     * @return LoggerHierarchy
      */
-    function &getHierarchy()
+    public function &getHierarchy()
     {
         return $this->getLoggerRepository();
-    } 
+    }
 
     /**
      * Starting from this category, search the category hierarchy for a non-null level and return it.
      * @see LoggerLevel
      * @return LoggerLevel or null
      */
-    function getEffectiveLevel()
+    public function getEffectiveLevel()
     {
-        for($c = $this; $c != null; $c = $c->parent) {
-            if($c->level !== null)
-            	return $c->level;
+        for ($c = $this; $c != null; $c = $c->parent) {
+            if ($c->level !== null) {
+                return $c->level;
+            }
         }
         return null;
     }
-  
+
     /**
      * Retrieve a category with named as the name parameter.
      * @return Logger
      */
-    function &getInstance($name)
+    public function &getInstance($name)
     {
         return LoggerManager::getLogger($name);
     }
 
     /**
      * Returns the assigned Level, if any, for this Category.
-     * @return LoggerLevel or null 
+     * @return LoggerLevel or null
      */
-    function getLevel()
+    public function getLevel()
     {
         return $this->level;
-    } 
+    }
 
     /**
      * Return the the repository where this Category is attached.
      * @return LoggerHierarchy
      */
-    function &getLoggerRepository()
+    public function &getLoggerRepository()
     {
         return $this->repository;
-    } 
+    }
 
     /**
      * Return the category name.
      * @return string
      */
-    function getName()
+    public function getName()
     {
         return $this->name;
-    } 
+    }
 
     /**
      * Returns the parent of this category.
      * @return Logger
      */
-    function &getParent() 
+    public function &getParent()
     {
         return $this->parent;
-    }      
+    }
 
     /**
      * Please use getLevel() instead.
      * @deprecated
      */
-    function getPriority()
+    public function getPriority()
     {
         return $this->getLevel();
     }
-          
+
     /**
      * Return the inherited ResourceBundle for this category.
      */
-    function getResourceBundle()
+    public function getResourceBundle()
     {
         return;
-    } 
+    }
 
     /**
      * Returns the string resource coresponding to key in this category's inherited resource bundle.
      */
-    function getResourceBundleString($key)
+    public function getResourceBundleString($key)
     {
         return;
-    } 
+    }
 
     /**
      * Return the root of the default category hierrachy.
      * @return LoggerRoot
      */
-    function &getRoot()
+    public function &getRoot()
     {
         return LoggerManager::getRootLogger();
-    } 
+    }
 
     /**
      * Log a message object with the INFO Level.
@@ -379,7 +382,7 @@ class LoggerCategory {
      * @param mixed $message message
      * @param mixed $caller caller object or caller string id
      */
-    function info($message, $caller = null)
+    public function info($message, $caller = null)
     {
         $infoLevel = LoggerLevel::getLevelInfo();
         if ($this->repository->isDisabled($infoLevel)) {
@@ -389,29 +392,29 @@ class LoggerCategory {
             $this->forcedLog($this->fqcn, $caller, $infoLevel, $message);
         }
     }
-     
+
     /**
      * Is the appender passed as parameter attached to this category?
      *
      * @param LoggerAppender $appender
      */
-    function isAttached($appender)
+    public function isAttached($appender)
     {
         return in_array($appender->getName(), array_keys($this->aai));
-    } 
-           
+    }
+
     /**
      * Check whether this category is enabled for the DEBUG Level.
      * @return boolean
      */
-    function isDebugEnabled()
+    public function isDebugEnabled()
     {
-        $debugLevel = LoggerLevel::getLevelDebug(); 
+        $debugLevel = LoggerLevel::getLevelDebug();
         if ($this->repository->isDisabled($debugLevel)) {
             return false;
         }
         return ($debugLevel->isGreaterOrEqual($this->getEffectiveLevel()));
-    }       
+    }
 
     /**
      * Check whether this category is enabled for a given Level passed as parameter.
@@ -419,35 +422,35 @@ class LoggerCategory {
      * @param LoggerLevel level
      * @return boolean
      */
-    function isEnabledFor($level)
+    public function isEnabledFor($level)
     {
         if ($this->repository->isDisabled($level)) {
             return false;
         }
         return (bool)($level->isGreaterOrEqual($this->getEffectiveLevel()));
-    } 
+    }
 
     /**
      * Check whether this category is enabled for the info Level.
      * @return boolean
      * @see LoggerLevel
      */
-    function isInfoEnabled()
+    public function isInfoEnabled()
     {
         $infoLevel = LoggerLevel::getLevelInfo();
         if ($this->repository->isDisabled($infoLevel)) {
             return false;
         }
         return ($infoLevel->isGreaterOrEqual($this->getEffectiveLevel()));
-    } 
+    }
 
     /**
      * Log a localized and parameterized message.
      */
-    function l7dlog($priority, $key, $params, $t)
+    public function l7dlog($priority, $key, $params, $t)
     {
         return;
-    } 
+    }
 
     /**
      * This generic form is intended to be used by wrappers.
@@ -456,7 +459,7 @@ class LoggerCategory {
      * @param mixed $message message
      * @param mixed $caller caller object or caller string id
      */
-    function log($priority, $message, $caller = null)
+    public function log($priority, $message, $caller = null)
     {
         if ($this->repository->isDisabled($priority)) {
             return;
@@ -469,21 +472,21 @@ class LoggerCategory {
     /**
      * Remove all previously added appenders from this Category instance.
      */
-    function removeAllAppenders()
+    public function removeAllAppenders()
     {
         $appenderNames = array_keys($this->aai);
         $enumAppenders = sizeof($appenderNames);
         for ($i = 0; $i < $enumAppenders; $i++) {
-            $this->removeAppender($appenderNames[$i]); 
+            $this->removeAppender($appenderNames[$i]);
         }
-    } 
-            
+    }
+
     /**
      * Remove the appender passed as parameter form the list of appenders.
      *
      * @param mixed $appender can be an appender name or a {@link LoggerAppender} object
      */
-    function removeAppender($appender)
+    public function removeAppender($appender)
     {
         if (is_a($appender, 'loggerappender')) {
             $appender->close();
@@ -492,26 +495,26 @@ class LoggerCategory {
             $this->aai[$appender]->close();
             unset($this->aai[$appender]);
         }
-    } 
+    }
 
     /**
      * Set the additivity flag for this Category instance.
      *
      * @param boolean $additive
      */
-    function setAdditivity($additive) 
+    public function setAdditivity($additive)
     {
         $this->additive = (bool)$additive;
     }
-    
+
     /**
      * @deprecated Please use {@link setLevel()} instead.
      * @see setLevel()
      */
-    function setPriority($priority)
+    public function setPriority($priority)
     {
         $this->setLevel($priority);
-    } 
+    }
 
     /**
      * Only the Hiearchy class can set the hiearchy of a
@@ -519,7 +522,7 @@ class LoggerCategory {
      *
      * @param LoggerHierarchy &$repository
      */
-    function setHierarchy(&$repository)
+    public function setHierarchy(&$repository)
     {
         $this->repository =& $repository;
     }
@@ -527,37 +530,37 @@ class LoggerCategory {
     /**
      * Set the level of this Category.
      *
-     * @param LoggerLevel $level a level string or a level costant 
+     * @param LoggerLevel $level a level string or a level costant
      */
-    function setLevel($level)
+    public function setLevel($level)
     {
         $this->level = $level;
-    } 
+    }
 
     /**
-     * Set the resource bundle to be used with localized logging methods 
+     * Set the resource bundle to be used with localized logging methods
      */
-    function setResourceBundle($bundle)
+    public function setResourceBundle($bundle)
     {
         return;
-    } 
-           
+    }
+
     /**
      * @deprecated use {@link LoggerManager::shutdown()} instead.
      * @see LoggerManager::shutdown()
      */
-    function shutdown()
+    public function shutdown()
     {
         LoggerManager::shutdown();
-    } 
- 
+    }
+
     /**
      * Log a message with the WARN level.
      *
      * @param mixed $message message
      * @param mixed $caller caller object or caller string id
      */
-    function warn($message, $caller = null)
+    public function warn($message, $caller = null)
     {
         $warnLevel = LoggerLevel::getLevelWarn();
         if ($this->repository->isDisabled($warnLevel)) {
@@ -567,6 +570,4 @@ class LoggerCategory {
             $this->forcedLog($this->fqcn, $caller, $warnLevel, $message);
         }
     }
-
-}  
-?>
+}

@@ -8,14 +8,14 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_RecurringEditCheck_View extends Vtiger_Index_View {
+class Calendar_RecurringEditCheck_View extends Vtiger_Index_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-
-		$viewer = $this->getViewer($request);
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->view('RecurringEditView.tpl', $moduleName);
-	}
-
+        $viewer = $this->getViewer($request);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->view('RecurringEditView.tpl', $moduleName);
+    }
 }

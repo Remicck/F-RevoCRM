@@ -13,62 +13,65 @@ require_once 'data/VTEntityDelta.php';
 require_once 'include/Webservices/DataTransform.php';
 require_once 'modules/WSAPP/SyncServer.php';
 
-class WSAPPAssignToTracker extends VTEventHandler{
-	 function  __construct() {
+class WSAPPAssignToTracker extends VTEventHandler
+{
+    public function __construct()
+    {
+    }
 
-	}
+    public function handleEvent($eventName, $entityData)
+    {
+        global $current_user;
+        $db = PearDatabase::getInstance();
+        $moduleName = $entityData->getModuleName();
 
-	function handleEvent($eventName, $entityData) {
-		global $current_user;
-		$db = PearDatabase::getInstance();
-		$moduleName = $entityData->getModuleName();
-		
-		if ($moduleName == 'Users') { 
-			return; 
-		}	 
-		
-		$recordId = $entityData->getId();
-		$vtEntityDelta = new VTEntityDelta ();
-		$newEntityData = $vtEntityDelta->getNewEntity($moduleName,$recordId);
-		$recordValues = $newEntityData->getData();
-		$isAssignToModified = $this->isAssignToChanged($moduleName,$recordId,$current_user);
-		if(!$isAssignToModified){
-			return;
-		}
-		$wsModuleName = $this->getWsModuleName($moduleName);
-		if($wsModuleName =="Calendar")
-		{
-				$wsModuleName = vtws_getCalendarEntityType($recordId);
-		}
-		$handler = vtws_getModuleHandlerFromName($wsModuleName, $current_user);
-		$meta = $handler->getMeta();
-		$recordWsValues = DataTransform::sanitizeData($recordValues,$meta);
-		$syncServer = new SyncServer();
-		$syncServer->markRecordAsDeleteForAllCleints($recordWsValues);
-	}
+        if ($moduleName == 'Users') {
+            return;
+        }
 
-	function isAssignToChanged($moduleName,$recordId,$user){
-		$wsModuleName = $this->getWsModuleName($moduleName);
-		$handler = vtws_getModuleHandlerFromName($wsModuleName, $user);
-		$meta = $handler->getMeta();
-		$moduleOwnerFields = $meta->getOwnerFields();
-		$assignToChanged = false;
-		$vtEntityDelta = new VTEntityDelta ();
-		foreach($moduleOwnerFields as $ownerField){
-			$assignToChanged = $vtEntityDelta->hasChanged($moduleName, $recordId, $ownerField);
-			if($assignToChanged)
-				break;
-		}
-		return $assignToChanged;
-	}
+        $recordId = $entityData->getId();
+        $vtEntityDelta = new VTEntityDelta();
+        $newEntityData = $vtEntityDelta->getNewEntity($moduleName, $recordId);
+        $recordValues = $newEntityData->getData();
+        $isAssignToModified = $this->isAssignToChanged($moduleName, $recordId, $current_user);
+        if (!$isAssignToModified) {
+            return;
+        }
+        $wsModuleName = $this->getWsModuleName($moduleName);
+        if ($wsModuleName =="Calendar") {
+            $wsModuleName = vtws_getCalendarEntityType($recordId);
+        }
+        $handler = vtws_getModuleHandlerFromName($wsModuleName, $current_user);
+        $meta = $handler->getMeta();
+        $recordWsValues = DataTransform::sanitizeData($recordValues, $meta);
+        $syncServer = new SyncServer();
+        $syncServer->markRecordAsDeleteForAllCleints($recordWsValues);
+    }
 
-	function getWsModuleName($workFlowModuleName){
-		//TODO: Handle getting the webservice modulename in a better way
-		$wsModuleName = $workFlowModuleName;
-		if($workFlowModuleName == "Activity")
-			$wsModuleName = "Calendar";
-		return $wsModuleName;
-	}
+    public function isAssignToChanged($moduleName, $recordId, $user)
+    {
+        $wsModuleName = $this->getWsModuleName($moduleName);
+        $handler = vtws_getModuleHandlerFromName($wsModuleName, $user);
+        $meta = $handler->getMeta();
+        $moduleOwnerFields = $meta->getOwnerFields();
+        $assignToChanged = false;
+        $vtEntityDelta = new VTEntityDelta();
+        foreach ($moduleOwnerFields as $ownerField) {
+            $assignToChanged = $vtEntityDelta->hasChanged($moduleName, $recordId, $ownerField);
+            if ($assignToChanged) {
+                break;
+            }
+        }
+        return $assignToChanged;
+    }
+
+    public function getWsModuleName($workFlowModuleName)
+    {
+        //TODO: Handle getting the webservice modulename in a better way
+        $wsModuleName = $workFlowModuleName;
+        if ($workFlowModuleName == "Activity") {
+            $wsModuleName = "Calendar";
+        }
+        return $wsModuleName;
+    }
 }
-
-?>

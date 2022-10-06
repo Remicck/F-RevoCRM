@@ -8,11 +8,12 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_TagCloudSearchAjax_View extends Vtiger_IndexAjax_View {
-
-    public function requiresPermission(Vtiger_Request $request){
+class Vtiger_TagCloudSearchAjax_View extends Vtiger_IndexAjax_View
+{
+    public function requiresPermission(Vtiger_Request $request)
+    {
         $permissions = parent::requiresPermission($request);
-        if($request->get('module') != 'Dashboard'){
+        if ($request->get('module') != 'Dashboard') {
             $request->set('custom_module', 'Dashboard');
             $permissions[] = array('module_parameter' => 'custom_module', 'action' => 'DetailView');
         }
@@ -20,20 +21,17 @@ class Vtiger_TagCloudSearchAjax_View extends Vtiger_IndexAjax_View {
         return $permissions;
     }
 
-    
-    function process(Vtiger_Request $request) {
-		
-		$tagId = $request->get('tag_id');
-		$taggedRecords = Vtiger_Tag_Model::getTaggedRecords($tagId);
-		
-		$viewer = $this->getViewer($request);
-		
-		$viewer->assign('TAGGED_RECORDS',$taggedRecords);
-		$viewer->assign('TAG_NAME',$request->get('tag_name'));
-		
-		echo $viewer->view('TagCloudResults.tpl', $module, true);
-	}
-	
-	
-	
+
+    public function process(Vtiger_Request $request)
+    {
+        $tagId = $request->get('tag_id');
+        $taggedRecords = Vtiger_Tag_Model::getTaggedRecords($tagId);
+
+        $viewer = $this->getViewer($request);
+
+        $viewer->assign('TAGGED_RECORDS', $taggedRecords);
+        $viewer->assign('TAG_NAME', $request->get('tag_name'));
+
+        echo $viewer->view('TagCloudResults.tpl', $module, true);
+    }
 }

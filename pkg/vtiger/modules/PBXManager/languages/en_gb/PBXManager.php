@@ -8,26 +8,26 @@
  * All Rights Reserved.
  *************************************************************************************/
 $languageStrings = array(
-	
+
     //Blocks
     'LBL_PBXMANAGER_INFORMATION' => 'Call Details',
     'LBL_CUSTOM_INFORMATION'=>'Custom Information',
-    
+
     // list view settings links
     'LBL_SERVER_CONFIGURATION' => 'Provider Configuration',
-    
+
     //Detail view header title
     'LBL_CALL_FROM' => 'Call From',
     'LBL_CALL_TO' => 'Call To',
-    
-    //Incoming call pop-up 
-    'LBL_HIDDEN' => '(HIDDEN)', 
-  
+
+    //Incoming call pop-up
+    'LBL_HIDDEN' => '(HIDDEN)',
+
     // Fields
     'Total Duration' => 'Duration (sec)',
     'Bill Duration'  => 'Bill Duration (sec)',
     'Recording URL' => 'Recording',
-    
+
     'SINGLE_PBXManager' => 'Call Record' ,
 
 );

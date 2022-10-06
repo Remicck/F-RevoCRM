@@ -8,32 +8,33 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Emails_BasicAjax_Action extends Vtiger_Action_Controller {
+class Emails_BasicAjax_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
-	
-	public function checkPermission(Vtiger_Request $request) {
-		return parent::checkPermission($request);
-	}
+    public function checkPermission(Vtiger_Request $request)
+    {
+        return parent::checkPermission($request);
+    }
 
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->get('module');
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-		$searchValue = $request->get('searchValue');
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->get('module');
+        $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+        $searchValue = $request->get('searchValue');
 
-		$emailsResult = array();
-		if ($searchValue) {
-			$emailsResult = $moduleModel->searchEmails($request->get('searchValue'));
-		}
+        $emailsResult = array();
+        if ($searchValue) {
+            $emailsResult = $moduleModel->searchEmails($request->get('searchValue'));
+        }
 
-		$response = new Vtiger_Response();
-		$response->setResult($emailsResult);
-		$response->emit();
-	}
+        $response = new Vtiger_Response();
+        $response->setResult($emailsResult);
+        $response->emit();
+    }
 }
-
-?>

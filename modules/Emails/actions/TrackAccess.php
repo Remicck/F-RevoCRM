@@ -22,60 +22,64 @@ require_once 'include/utils/utils.php';
 vimport('includes.http.Request');
 vimport('includes.runtime.Globals');
 vimport('includes.runtime.BaseModel');
-vimport ('includes.runtime.Controller');
+vimport('includes.runtime.Controller');
 vimport('includes.runtime.LanguageHandler');
 
-class Emails_TrackAccess_Action extends Vtiger_Action_Controller {
+class Emails_TrackAccess_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	}
-	
-	public function checkPermission(Vtiger_Request $request) {
-		return parent::checkPermission($request);
-	}
-	
-	public function process(Vtiger_Request $request) {
-		if (vglobal('application_unique_key') !== $request->get('applicationKey')) {
-			exit;
-		}
-		if((strpos($_SERVER['HTTP_REFERER'], vglobal('site_URL')) !== false)) {
-			exit;
-		}
+    public function checkPermission(Vtiger_Request $request)
+    {
+        return parent::checkPermission($request);
+    }
 
-		global $current_user;
-		$current_user = Users::getActiveAdminUser();
-		
-		if($request->get('method') == 'click') {
-			$this->clickHandler($request);
-		}else{
-			$parentId = $request->get('parentId');
-			$recordId = $request->get('record');
+    public function process(Vtiger_Request $request)
+    {
+        if (vglobal('application_unique_key') !== $request->get('applicationKey')) {
+            exit;
+        }
+        if ((strpos($_SERVER['HTTP_REFERER'], vglobal('site_URL')) !== false)) {
+            exit;
+        }
 
-			if ($parentId && $recordId) {
-				$recordModel = Emails_Record_Model::getInstanceById($recordId);
-				$recordModel->updateTrackDetails($parentId);
-				Vtiger_ShortURL_Helper::sendTrackerImage();
-			}
-		}
-	}
-	
-	public function clickHandler(Vtiger_Request $request) {
-		$parentId = $request->get('parentId');
-		$recordId = $request->get('record');
+        global $current_user;
+        $current_user = Users::getActiveAdminUser();
 
-		if ($parentId && $recordId) {
-			$recordModel = Emails_Record_Model::getInstanceById($recordId);
-			$recordModel->trackClicks($parentId);
-		}
-		
-		$redirectUrl = $request->get('redirectUrl');
-		if(!empty($redirectUrl)) {
-			return Vtiger_Functions::redirectUrl(rawurldecode($redirectUrl));
-		}
-	}
+        if ($request->get('method') == 'click') {
+            $this->clickHandler($request);
+        } else {
+            $parentId = $request->get('parentId');
+            $recordId = $request->get('record');
+
+            if ($parentId && $recordId) {
+                $recordModel = Emails_Record_Model::getInstanceById($recordId);
+                $recordModel->updateTrackDetails($parentId);
+                Vtiger_ShortURL_Helper::sendTrackerImage();
+            }
+        }
+    }
+
+    public function clickHandler(Vtiger_Request $request)
+    {
+        $parentId = $request->get('parentId');
+        $recordId = $request->get('record');
+
+        if ($parentId && $recordId) {
+            $recordModel = Emails_Record_Model::getInstanceById($recordId);
+            $recordModel->trackClicks($parentId);
+        }
+
+        $redirectUrl = $request->get('redirectUrl');
+        if (!empty($redirectUrl)) {
+            return Vtiger_Functions::redirectUrl(rawurldecode($redirectUrl));
+        }
+    }
 }
 
 $track = new Emails_TrackAccess_Action();

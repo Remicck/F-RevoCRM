@@ -44,8 +44,7 @@ require_once('Zend/Gdata/Query.php');
  */
 class Zend_Gdata_Spreadsheets_CellQuery extends Zend_Gdata_Query
 {
-
-    const SPREADSHEETS_CELL_FEED_URI = 'https://spreadsheets.google.com/feeds/cells';
+    public const SPREADSHEETS_CELL_FEED_URI = 'https://spreadsheets.google.com/feeds/cells';
 
     protected $_defaultFeedUri = self::SPREADSHEETS_CELL_FEED_URI;
     protected $_visibility = 'private';
@@ -332,8 +331,8 @@ class Zend_Gdata_Spreadsheets_CellQuery extends Zend_Gdata_Query
     public function setReturnEmpty($value)
     {
         if (is_bool($value)) {
-            $this->_params['return-empty'] = ($value?'true':'false');
-        } else if ($value != null) {
+            $this->_params['return-empty'] = ($value ? 'true' : 'false');
+        } elseif ($value != null) {
             $this->_params['return-empty'] = $value;
         } else {
             unset($this->_params['return-empty']);
@@ -413,5 +412,4 @@ class Zend_Gdata_Spreadsheets_CellQuery extends Zend_Gdata_Query
     {
         return parent::getQueryString();
     }
-
 }

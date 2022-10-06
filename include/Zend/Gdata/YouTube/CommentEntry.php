@@ -37,7 +37,6 @@ require_once 'Zend/Gdata/Media/Feed.php';
  */
 class Zend_Gdata_YouTube_CommentEntry extends Zend_Gdata_Entry
 {
-
     /**
      * The classname for individual feed elements.
      *
@@ -55,5 +54,4 @@ class Zend_Gdata_YouTube_CommentEntry extends Zend_Gdata_Entry
         $this->registerAllNamespaces(Zend_Gdata_YouTube::$namespaces);
         parent::__construct($element);
     }
-
 }

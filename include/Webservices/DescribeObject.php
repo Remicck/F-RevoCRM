@@ -7,35 +7,33 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  *************************************************************************************/
-	
-	function vtws_describe($elementType,$user){
-		
-		global $log,$adb,$app_strings;
 
-		//setting $app_strings 
-		if (!$app_strings) {
-			$currentLanguage = Vtiger_Language_Handler::getLanguage();
-			$moduleLanguageStrings = Vtiger_Language_Handler::getModuleStringsFromFile($currentLanguage);
-			$app_strings = $moduleLanguageStrings['languageStrings'];
-		}
+function vtws_describe($elementType, $user)
+{
+    global $log,$adb,$app_strings;
 
-		$webserviceObject = VtigerWebserviceObject::fromName($adb,$elementType);
-		$handlerPath = $webserviceObject->getHandlerPath();
-		$handlerClass = $webserviceObject->getHandlerClass();
-		
-		require_once $handlerPath;
-		
-		$handler = new $handlerClass($webserviceObject,$user,$adb,$log);
-		$meta = $handler->getMeta();
-		
-		$types = vtws_listtypes(null, $user);
-		if(!in_array($elementType,$types['types'])){
-			throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED,"Permission to perform the operation is denied");
-		}
-		
-		$entity = $handler->describe($elementType);
-		VTWS_PreserveGlobal::flush();
-		return $entity;
-	}
-	
-?>
+    //setting $app_strings
+    if (!$app_strings) {
+        $currentLanguage = Vtiger_Language_Handler::getLanguage();
+        $moduleLanguageStrings = Vtiger_Language_Handler::getModuleStringsFromFile($currentLanguage);
+        $app_strings = $moduleLanguageStrings['languageStrings'];
+    }
+
+    $webserviceObject = VtigerWebserviceObject::fromName($adb, $elementType);
+    $handlerPath = $webserviceObject->getHandlerPath();
+    $handlerClass = $webserviceObject->getHandlerClass();
+
+    require_once $handlerPath;
+
+    $handler = new $handlerClass($webserviceObject, $user, $adb, $log);
+    $meta = $handler->getMeta();
+
+    $types = vtws_listtypes(null, $user);
+    if (!in_array($elementType, $types['types'])) {
+        throw new WebServiceException(WebServiceErrorCode::$ACCESSDENIED, "Permission to perform the operation is denied");
+    }
+
+    $entity = $handler->describe($elementType);
+    VTWS_PreserveGlobal::flush();
+    return $entity;
+}

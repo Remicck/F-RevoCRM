@@ -19,7 +19,7 @@ $lang = array(
     '_dateTimeMid' => "%a %e %b %Y %H:%M",
     '_dateTimeSmall' => "%d/%m/%Y %H:%M",
 
-	"You don't have permissions to upload files." =>
+    "You don't have permissions to upload files." =>
     "Nincs jogosultsága fájlokat feltölteni.",
 
     "You don't have permissions to browse server." =>
@@ -252,5 +252,3 @@ $lang = array(
     "Download files" =>
     "Fájlok letöltése",
 );
-
-?>

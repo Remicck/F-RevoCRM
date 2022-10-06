@@ -8,54 +8,56 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class PDFTemplates_Save_Action extends Vtiger_Save_Action {
+class PDFTemplates_Save_Action extends Vtiger_Save_Action
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        return array();
+    }
 
-    public function requiresPermission(\Vtiger_Request $request) {
-		return array();
-	}
-    
-    public function checkPermission($request) {
+    public function checkPermission($request)
+    {
         $moduleName = $request->getModule();
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-        if(!$moduleModel->isActive()){
+        $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+        if (!$moduleModel->isActive()) {
             return false;
         }
         return true;
     }
-    
-	public function process(Vtiger_Request $request) {
-		$site_URL = vglobal('site_URL');
-		$moduleName = $request->getModule();
-		$record = $request->get('record');
-		$emitResponse = $request->get('emitResponse');
-		$recordModel = new PDFTemplates_Record_Model();
-		$recordModel->setModule($moduleName);
 
-		if (!empty($record)) {
-			$recordModel->setId($record);
-		}
+    public function process(Vtiger_Request $request)
+    {
+        $site_URL = vglobal('site_URL');
+        $moduleName = $request->getModule();
+        $record = $request->get('record');
+        $emitResponse = $request->get('emitResponse');
+        $recordModel = new PDFTemplates_Record_Model();
+        $recordModel->setModule($moduleName);
 
-		$recordModel->set('templatename', $request->get('templatename'));
-		$recordModel->set('description', $request->get('description'));
-		$recordModel->set('subject', $request->get('subject'));
-		$recordModel->set('module', $request->get('modulename'));
-		$recordModel->set('systemtemplate', $request->get('systemtemplate'));
-		$content = $request->getRaw('templatecontent');
-		$processedContent = Emails_Mailer_Model::getProcessedContent($content); // To remove script tags
-		$recordModel->set('body', $processedContent);
+        if (!empty($record)) {
+            $recordModel->setId($record);
+        }
 
-		$recordId = $recordModel->save();
-		$recordModel->updateImageName($recordId);
-		if ($request->get('returnmodule') && $request->get('returnview')){
-			$loadUrl = 'index.php?'.$request->getReturnURL();
-		} else {
-			if ($request->get('returnmodule') && $request->get('returnview')) {
-				$loadUrl = 'index.php?' . $request->getReturnURL();
-			} else {
-				$loadUrl = $recordModel->getDetailViewUrl();
-			}
-		}
-		header("Location: $loadUrl");
-	}
+        $recordModel->set('templatename', $request->get('templatename'));
+        $recordModel->set('description', $request->get('description'));
+        $recordModel->set('subject', $request->get('subject'));
+        $recordModel->set('module', $request->get('modulename'));
+        $recordModel->set('systemtemplate', $request->get('systemtemplate'));
+        $content = $request->getRaw('templatecontent');
+        $processedContent = Emails_Mailer_Model::getProcessedContent($content); // To remove script tags
+        $recordModel->set('body', $processedContent);
 
+        $recordId = $recordModel->save();
+        $recordModel->updateImageName($recordId);
+        if ($request->get('returnmodule') && $request->get('returnview')) {
+            $loadUrl = 'index.php?'.$request->getReturnURL();
+        } else {
+            if ($request->get('returnmodule') && $request->get('returnview')) {
+                $loadUrl = 'index.php?' . $request->getReturnURL();
+            } else {
+                $loadUrl = $recordModel->getDetailViewUrl();
+            }
+        }
+        header("Location: $loadUrl");
+    }
 }

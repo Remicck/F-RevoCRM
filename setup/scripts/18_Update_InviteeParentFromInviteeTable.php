@@ -15,22 +15,25 @@ global $adb;
 $result = $adb->query("select * from vtiger_invitees");
 // 取得した値を元に以下の関数を実行。
 $rows = $adb->num_rows($result);
-for ($i=0; $i < $rows; $i++) { 
-	$activityid = $adb->query_result($result,$i,'activityid');
-	$inviteeid = $adb->query_result($result,$i,'inviteeid');
-	$id = getEventIdFromInvitee($activityid, $inviteeid);
-	if(!$id) continue;
+for ($i=0; $i < $rows; $i++) {
+    $activityid = $adb->query_result($result, $i, 'activityid');
+    $inviteeid = $adb->query_result($result, $i, 'inviteeid');
+    $id = getEventIdFromInvitee($activityid, $inviteeid);
+    if (!$id) {
+        continue;
+    }
 
-	$adb->query("update vtiger_activity set invitee_parentid=$activityid where (invitee_parentid is null or invitee_parentid = 0) and activityid=$id");
+    $adb->query("update vtiger_activity set invitee_parentid=$activityid where (invitee_parentid is null or invitee_parentid = 0) and activityid=$id");
 }
 
 $adb->query("update vtiger_activity set invitee_parentid=activityid where (invitee_parentid is null or invitee_parentid = 0)");
 
-function getEventIdFromInvitee($activityid, $userid) {
-	global $adb;
+function getEventIdFromInvitee($activityid, $userid)
+{
+    global $adb;
 
-	$result = $adb->pquery(
-		"SELECT
+    $result = $adb->pquery(
+        "SELECT
 			a1.activityid
 		FROM
 			vtiger_activity a1
@@ -56,11 +59,13 @@ function getEventIdFromInvitee($activityid, $userid) {
 					AND a1.location = a2.location
 					AND a1.recurringtype = a2.recurringtype
 			)
-	",array($userid, $activityid));
+	",
+        array($userid, $activityid)
+    );
 
-	if($adb->num_rows($result) > 0) {
-		$id = $adb->query_result($result, 0, "activityid");
-	}
+    if ($adb->num_rows($result) > 0) {
+        $id = $adb->query_result($result, 0, "activityid");
+    }
 
-	return $id;
+    return $id;
 }

@@ -8,21 +8,23 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class MailManager_DraftFolder_Model extends MailManager_Folder_Model {
+class MailManager_DraftFolder_Model extends MailManager_Folder_Model
+{
+    public function hasPrevPage()
+    {
+        return ($this->mPageStart <= $this->mCount  && ($this->mPageCurrent > 0));
+    }
 
-	public function hasPrevPage() {
-		return ($this->mPageStart <= $this->mCount  && ($this->mPageCurrent > 0));
-	}
+    public function hasNextPage()
+    {
+        return ($this->mPageEnd < $this->mCount);
+    }
 
-	public function hasNextPage() {
-		return ($this->mPageEnd < $this->mCount);
-	}
-
-	public function pageInfo() {
-		$s = max(1, $this->mPageCurrent * $this->mPageLimit+1);
-		$e = min($s+$this->mPageLimit-1, $this->mCount);
-		$t = $this->mCount;
-		return sprintf("%s - %s of %s", $s, $e, $t);
-	}
+    public function pageInfo()
+    {
+        $s = max(1, $this->mPageCurrent * $this->mPageLimit+1);
+        $e = min($s+$this->mPageLimit-1, $this->mCount);
+        $t = $this->mCount;
+        return sprintf("%s - %s of %s", $s, $e, $t);
+    }
 }
-?>

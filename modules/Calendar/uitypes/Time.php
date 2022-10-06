@@ -8,56 +8,55 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_Time_UIType extends Vtiger_Time_UIType {
+class Calendar_Time_UIType extends Vtiger_Time_UIType
+{
+    public function getEditViewDisplayValue($value)
+    {
+        if (!empty($value)) {
+            return parent::getEditViewDisplayValue($value);
+        }
 
+        $specialTimeFields = array('time_start', 'time_end');
 
-	public function getEditViewDisplayValue($value) {
-		if(!empty($value)) {
-			return parent::getEditViewDisplayValue($value);
-		}
+        $fieldInstance = $this->get('field')->getWebserviceFieldObject();
+        $fieldName = $fieldInstance->getFieldName();
 
-		$specialTimeFields = array('time_start', 'time_end');
+        if (!in_array($fieldName, $specialTimeFields)) {
+            return parent::getEditViewDisplayValue($value);
+        } else {
+            return $this->getDisplayTimeDifferenceValue($fieldName, $value);
+        }
+    }
 
-		$fieldInstance = $this->get('field')->getWebserviceFieldObject();
-		$fieldName = $fieldInstance->getFieldName();
+    /**
+     * Function to get the calendar event call duration value in hour format
+     * @param type $fieldName
+     * @param type $value
+     * @return <Vtiger_Time_UIType> - getTimeValue
+     */
+    public function getDisplayTimeDifferenceValue($fieldName, $value)
+    {
+        $userModel = Users_Privileges_Model::getCurrentUserModel();
+        $date = new DateTime($value);
 
-		if(!in_array($fieldName, $specialTimeFields)){
-			return parent::getEditViewDisplayValue($value);
-		}else{
-			return $this->getDisplayTimeDifferenceValue($fieldName, $value);
-		}
-		
-	}
+        //No need to set the time zone as DateTimeField::getDisplayTime API is already doing this
+        /*if(empty($value)) {
+            $timeZone = $userModel->get('time_zone');
+            $targetTimeZone = new DateTimeZone($timeZone);
+            $date->setTimezone($targetTimeZone);
+        }*/
 
-	/**
-	 * Function to get the calendar event call duration value in hour format
-	 * @param type $fieldName
-	 * @param type $value
-	 * @return <Vtiger_Time_UIType> - getTimeValue 
-	 */
-	public function getDisplayTimeDifferenceValue($fieldName, $value){
-		$userModel = Users_Privileges_Model::getCurrentUserModel();
-		$date = new DateTime($value);
-		
-		//No need to set the time zone as DateTimeField::getDisplayTime API is already doing this
-		/*if(empty($value)) {
-			$timeZone = $userModel->get('time_zone');
-			$targetTimeZone = new DateTimeZone($timeZone);
-			$date->setTimezone($targetTimeZone);
-		}*/
-		
-		if ($fieldName == 'time_end' && empty($value)) {
-			if ($userModel->get('defaultactivitytype') == 'Call') {
-				$defaultCallDuration = $userModel->get('callduration');
-			} else {
-				$defaultCallDuration = $userModel->get('othereventduration');
-			}
-			$date->modify("+{$defaultCallDuration} minutes");
-		}
+        if ($fieldName == 'time_end' && empty($value)) {
+            if ($userModel->get('defaultactivitytype') == 'Call') {
+                $defaultCallDuration = $userModel->get('callduration');
+            } else {
+                $defaultCallDuration = $userModel->get('othereventduration');
+            }
+            $date->modify("+{$defaultCallDuration} minutes");
+        }
 
-		$dateTimeField = new DateTimeField($date->format('Y-m-d H:i:s'));
-		$value = $dateTimeField->getDisplayTime();
-		return $value;
-	}
-
+        $dateTimeField = new DateTimeField($date->format('Y-m-d H:i:s'));
+        $value = $dateTimeField->getDisplayTime();
+        return $value;
+    }
 }

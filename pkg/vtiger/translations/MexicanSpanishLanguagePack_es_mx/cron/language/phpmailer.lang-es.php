@@ -1,6 +1,6 @@
 <?php
 /**
- * PHPMailer language file.  
+ * PHPMailer language file.
  * Versión en español
  */
 
@@ -20,4 +20,3 @@ $PHPMAILER_LANG["connect_host"] = 'Error SMTP: No se pudo conectar al servidor S
 $PHPMAILER_LANG["file_access"] = 'No se pudo acceder al archivo: ';
 $PHPMAILER_LANG["file_open"] = 'Error de Archivo: No se pudo abrir el archivo: ';
 $PHPMAILER_LANG["encoding"] = 'Codificación desconocida: ';
-?>

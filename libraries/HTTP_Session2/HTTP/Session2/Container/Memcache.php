@@ -80,7 +80,8 @@ class HTTP_Session2_Container_Memcache extends HTTP_Session2_Container
         throw new HTTP_Session2_Exception(
             'The given memcache object was not valid in file '
             . __FILE__ . ' at line ' . __LINE__,
-            HTTP_Session2::ERR_SYSTEM_PRECONDITION);
+            HTTP_Session2::ERR_SYSTEM_PRECONDITION
+        );
     }
 
     /**
@@ -138,10 +139,12 @@ class HTTP_Session2_Container_Memcache extends HTTP_Session2_Container
      */
     public function write($id, $data)
     {
-        $this->mc->set($this->options['prefix'] . $id,
+        $this->mc->set(
+            $this->options['prefix'] . $id,
             $data,
             MEMCACHE_COMPRESSED,
-            time() + ini_get('session.gc_maxlifetime'));
+            time() + ini_get('session.gc_maxlifetime')
+        );
 
         return true;
     }

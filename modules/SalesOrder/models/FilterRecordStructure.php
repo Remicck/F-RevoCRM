@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class SalesOrder_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model {
+class SalesOrder_FilterRecordStructure_Model extends Inventory_FilterRecordStructure_Model
+{
 }

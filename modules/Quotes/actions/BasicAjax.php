@@ -8,5 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class Quotes_BasicAjax_Action extends Inventory_BasicAjax_Action {
+class Quotes_BasicAjax_Action extends Inventory_BasicAjax_Action
+{
 }

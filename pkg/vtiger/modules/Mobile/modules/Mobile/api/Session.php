@@ -9,35 +9,39 @@
  ************************************************************************************/
 include_once 'libraries/HTTP_Session/Session.php';
 
-class Mobile_API_Session {
+class Mobile_API_Session
+{
+    public function __construct()
+    {
+    }
 
-	function __construct() {
-	}
+    public static function destroy($sessionid = false)
+    {
+        HTTP_Session::destroy($sessionid);
+    }
 
-	static function destroy($sessionid = false) {
-		HTTP_Session::destroy($sessionid);
-	}
+    public static function init($sessionid = false)
+    {
+        if (empty($sessionid)) {
+            HTTP_Session::start(null, null);
+            $sessionid = HTTP_Session::id();
+        } else {
+            HTTP_Session::start(null, $sessionid);
+        }
 
-	static function init($sessionid = false) {
-		if(empty($sessionid)) {
-			HTTP_Session::start(null, null);
-			$sessionid = HTTP_Session::id();
-		} else {
-			HTTP_Session::start(null, $sessionid);
-		}
+        if (HTTP_Session::isIdle() || HTTP_Session::isExpired()) {
+            return false;
+        }
+        return $sessionid;
+    }
 
-		if(HTTP_Session::isIdle() || HTTP_Session::isExpired()) {
-			return false;
-		}
-		return $sessionid;
-	}
+    public static function get($key, $defvalue = '')
+    {
+        return HTTP_Session::get($key, $defvalue);
+    }
 
-	static function get($key, $defvalue = '') {
-		return HTTP_Session::get($key, $defvalue);
-	}
-
-	static function set($key, $value) {
-		HTTP_Session::set($key, $value);
-	}
-
+    public static function set($key, $value)
+    {
+        HTTP_Session::set($key, $value);
+    }
 }

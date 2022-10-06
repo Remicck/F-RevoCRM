@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Services_Relation_Model extends Products_Relation_Model{
+class Services_Relation_Model extends Products_Relation_Model
+{
 }

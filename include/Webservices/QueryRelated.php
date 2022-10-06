@@ -11,7 +11,8 @@
 include_once 'include/Webservices/Query.php';
 include_once 'include/Webservices/RelatedTypes.php';
 
-function vtws_query_related($query, $id, $relatedLabel, $user, $filterClause = null) {
+function vtws_query_related($query, $id, $relatedLabel, $user, $filterClause = null)
+{
     global $log, $adb;
 
     $webserviceObject = VtigerWebserviceObject::fromId($adb, $id);
@@ -22,12 +23,12 @@ function vtws_query_related($query, $id, $relatedLabel, $user, $filterClause = n
     $meta = $handler->getMeta();
     $entityName = $meta->getObjectEntityName($id);
 
-	// Extract related module name from query.
+    // Extract related module name from query.
     $relatedType = null;
     if (preg_match("/FROM\s+([^\s]+)/i", $query, $m)) {
-	    $relatedType = trim($m[1]);
+        $relatedType = trim($m[1]);
     }
-    
+
     // Check for presence of expected relation.
     $found = false;
     $relatedTypes = vtws_relatedtypes($entityName, $user);
@@ -41,10 +42,10 @@ function vtws_query_related($query, $id, $relatedLabel, $user, $filterClause = n
     if (!$found) {
         throw new WebServiceException(WebServiceErrorCode::$UNKOWNENTITY, "Relation specified is incorrect");
     }
-    
+
     vtws_preserveGlobal('currentModule', $entityName);
 
-	// Fetch related record IDs - so we can further retrieve complete information using vtws_query 
+    // Fetch related record IDs - so we can further retrieve complete information using vtws_query
     $relatedWebserviceObject = VtigerWebserviceObject::fromName($adb, $relatedType);
     $relatedHandlerPath  = $relatedWebserviceObject->getHandlerPath();
     $relatedHandlerClass = $relatedWebserviceObject->getHandlerClass();
@@ -52,11 +53,11 @@ function vtws_query_related($query, $id, $relatedLabel, $user, $filterClause = n
     $relatedHandler = new $relatedHandlerClass($relatedWebserviceObject, $user, $adb, $log);
     $relatedIds = $handler->relatedIds($id, $relatedType, $relatedLabel, $relatedHandler);
 
-	// Initialize return value
-	$relatedRecords = array();
-	
-	// Rewrite query and extract related records if there at least one.
-    if (!empty($relatedIds)) {    	
+    // Initialize return value
+    $relatedRecords = array();
+
+    // Rewrite query and extract related records if there at least one.
+    if (!empty($relatedIds)) {
         $relatedIdClause = "id IN ('".implode("','", $relatedIds)."')";
         if (stripos($query, 'WHERE') == false) {
             $query .= " WHERE " . $relatedIdClause;
@@ -65,13 +66,13 @@ function vtws_query_related($query, $id, $relatedLabel, $user, $filterClause = n
             $query = $queryParts[0] ." WHERE " . $relatedIdClause;
             $query .= " AND " .$queryParts[1];
         }
-        if(!empty($filterClause)){
+        if (!empty($filterClause)) {
             $query .= " " . $filterClause;
         }
         $query.=";";
         $relatedRecords = vtws_query($query, $user);
     }
 
-	VTWS_PreserveGlobal::flush();	
+    VTWS_PreserveGlobal::flush();
     return $relatedRecords;
 }

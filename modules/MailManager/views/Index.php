@@ -8,4 +8,6 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-class MailManager_Index_View extends MailManager_List_View { }
+class MailManager_Index_View extends MailManager_List_View
+{
+}

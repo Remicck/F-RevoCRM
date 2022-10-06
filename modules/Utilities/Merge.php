@@ -18,7 +18,7 @@ $randomfilename = "vt_" . str_replace(array("."," "), "", microtime());
 
 $mergeFileName = vtlib_purify($_REQUEST['mergefile']);
 //get the particular file from db and store it in the local hard disk.
-//store the path to the location where the file is stored and pass it  as parameter to the method 
+//store the path to the location where the file is stored and pass it  as parameter to the method
 $sql = "select filename,data,filesize from vtiger_wordtemplatestorage where filename=?";
 $result = $adb->pquery($sql, array($mergeFileName));
 $temparray = $adb->fetch_array($result);
@@ -31,8 +31,8 @@ $filename= $randomfilename . "_word.doc";
 $filesize=$temparray['filesize'];
 $wordtemplatedownloadpath =$_SERVER['DOCUMENT_ROOT'] ."/test/wordtemplatedownload/";
 checkFileAccess($wordtemplatedownloadpath);
-$handle = fopen($wordtemplatedownloadpath .$filename,"wb") ;
-fwrite($handle,base64_decode($fileContent),$filesize);
+$handle = fopen($wordtemplatedownloadpath .$filename, "wb") ;
+fwrite($handle, base64_decode($fileContent), $filesize);
 fclose($handle);
 
 
@@ -41,19 +41,17 @@ $result = $adb->pquery($query, array($_REQUEST['record']));
 
 $y=$adb->num_fields($result);
 
-for ($x=0; $x<$y; $x++)
-{
+for ($x=0; $x<$y; $x++) {
     $columnNames[$x] = "CONTACT_".strtoupper($adb->field_name($result, $x));
-} 
+}
 
 $columnValues = $adb->fetch_array($result);
-for ($x=0; $x<$y; $x++)
-{
+for ($x=0; $x<$y; $x++) {
     $columnValString[$x] = $columnValues[$x];
 }
 
-$columnString = implode(",",$columnNames);
-$columnValString = implode(",",$columnValString);
+$columnString = implode(",", $columnNames);
+$columnValString = implode(",", $columnValString);
 
 echo"<script type=\"text/javascript\">
 var dHdr = '$columnString';

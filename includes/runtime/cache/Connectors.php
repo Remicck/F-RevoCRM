@@ -8,27 +8,33 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_Cache_Connector_Memory {
-	function set($key, $value) {
-		$this->$key = $value;
-	}
-	function get($key) {
-		return isset($this->$key)? $this->$key : false;
-	}
+class Vtiger_Cache_Connector_Memory
+{
+    public function set($key, $value)
+    {
+        $this->$key = $value;
+    }
+    public function get($key)
+    {
+        return isset($this->$key) ? $this->$key : false;
+    }
 
-	function flush(){
-		return true;
-	}
+    public function flush()
+    {
+        return true;
+    }
 
-	function delete($key){
-		$this->$key = null;
-	}
+    public function delete($key)
+    {
+        $this->$key = null;
+    }
 
-	public static function getInstance() {
-		static $singleton = NULL;
-		if ($singleton === NULL) {
-			$singleton = new self();
-		}
-		return $singleton;
-	}
+    public static function getInstance()
+    {
+        static $singleton = null;
+        if ($singleton === null) {
+            $singleton = new self();
+        }
+        return $singleton;
+    }
 }

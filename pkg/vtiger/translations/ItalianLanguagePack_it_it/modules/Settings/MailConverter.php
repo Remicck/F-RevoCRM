@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-	'MailConverter'   =>   "Mail Converter",
+    'MailConverter'   =>   "Mail Converter",
     'MailConverter_Description'   =>   "Convertire le email a rispettivi record",
     'MAILBOX'   =>   "Posta",
     'RULE'   =>   "Regola",

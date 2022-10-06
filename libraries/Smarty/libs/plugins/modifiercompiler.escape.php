@@ -9,7 +9,7 @@
 /**
  * @ignore
  */
-require_once( SMARTY_PLUGINS_DIR .'shared.literal_compiler_param.php' );
+require_once(SMARTY_PLUGINS_DIR .'shared.literal_compiler_param.php');
 
 /**
  * Smarty escape modifier plugin
@@ -70,7 +70,6 @@ function smarty_modifiercompiler_escape($params, $compiler)
             case 'javascript':
                 // escape quotes and backslashes, newlines, etc.
                 return 'strtr(' . $params[0] . ', array("\\\\" => "\\\\\\\\", "\'" => "\\\\\'", "\"" => "\\\\\"", "\\r" => "\\\\r", "\\n" => "\\\n", "</" => "<\/" ))';
-
         }
     } catch(SmartyException $e) {
         // pass through to regular plugin fallback
@@ -84,7 +83,5 @@ function smarty_modifiercompiler_escape($params, $compiler)
         $compiler->template->required_plugins['compiled']['escape']['modifier']['file'] = SMARTY_PLUGINS_DIR .'modifier.escape.php';
         $compiler->template->required_plugins['compiled']['escape']['modifier']['function'] = 'smarty_modifier_escape';
     }
-    return 'smarty_modifier_escape(' . join( ', ', $params ) . ')';
+    return 'smarty_modifier_escape(' . join(', ', $params) . ')';
 }
-
-?>

@@ -8,23 +8,23 @@
  * All Rights Reserved.
  * ***********************************************************************************/
 
-class CustomerPortal_FetchCompanyDetails extends CustomerPortal_API_Abstract {
+class CustomerPortal_FetchCompanyDetails extends CustomerPortal_API_Abstract
+{
+    public function process(CustomerPortal_API_Request $request)
+    {
+        $current_user = $this->getActiveUser();
+        $response = new CustomerPortal_API_Response();
 
-	function process(CustomerPortal_API_Request $request) {
-		$current_user = $this->getActiveUser();
-		$response = new CustomerPortal_API_Response();
-
-		if ($current_user) {
-			$company_id = vtws_getCompanyId();
-			$companyDetails = vtws_retrieve($company_id, $current_user);
-			$companyDetailsModel = new Settings_Vtiger_CompanyDetails_Model();
-			$companyDetailsModel->set('logoname', $companyDetails['logoname']);
-			$filePath = $companyDetailsModel->getLogoPath();
-			$imageInfo = getimagesize($filePath);
-			$companyDetails['mime'] = $imageInfo['mime'];
-			$response->setResult($companyDetails);
-		}
-		return $response;
-	}
-
+        if ($current_user) {
+            $company_id = vtws_getCompanyId();
+            $companyDetails = vtws_retrieve($company_id, $current_user);
+            $companyDetailsModel = new Settings_Vtiger_CompanyDetails_Model();
+            $companyDetailsModel->set('logoname', $companyDetails['logoname']);
+            $filePath = $companyDetailsModel->getLogoPath();
+            $imageInfo = getimagesize($filePath);
+            $companyDetails['mime'] = $imageInfo['mime'];
+            $response->setResult($companyDetails);
+        }
+        return $response;
+    }
 }

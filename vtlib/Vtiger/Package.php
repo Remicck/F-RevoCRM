@@ -13,16 +13,17 @@ require_once('vtlib/Vtiger/PackageUpdate.php');
  * Package Manager class for vtiger Modules.
  * @package vtlib
  */
-class Vtiger_Package extends Vtiger_PackageUpdate {
-
-	/**
-	 * Constructor
-	 */
-        function __construct() {
-            parent::__construct();
-        }
-	function Vtiger_Package() {
-            self::__construct();
-	}
+class Vtiger_Package extends Vtiger_PackageUpdate
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    public function Vtiger_Package()
+    {
+        self::__construct();
+    }
 }
-?>

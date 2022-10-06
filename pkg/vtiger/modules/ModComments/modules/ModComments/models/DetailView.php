@@ -8,15 +8,15 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class ModComments_DetailView_Model extends Vtiger_DetailView_Model {
-
-	/**
-	 * Function to get the detail view links (links and widgets)
-	 * @param <array> $linkParams - parameters which will be used to calicaulate the params
-	 * @return <array> - empty array
-	 */
-	public function getDetailViewLinks($linkParams) {
-		return array();
-	}
-
+class ModComments_DetailView_Model extends Vtiger_DetailView_Model
+{
+    /**
+     * Function to get the detail view links (links and widgets)
+     * @param <array> $linkParams - parameters which will be used to calicaulate the params
+     * @return <array> - empty array
+     */
+    public function getDetailViewLinks($linkParams)
+    {
+        return array();
+    }
 }

@@ -8,19 +8,19 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-    'ALVT'                         => 'Top Comptes'                 , 
-    'PLVT'                         => 'Top Affaires'                , 
-    'QLTQ'                         => 'Top Devis'                   , 
-    'CVLVT'                        => 'Indicateurs Clé'            , 
-    'HLT'                          => 'Top Support Tickets'         , 
-    'GRT'                          => 'Mes assignations de groupe'  , 
-    'OLTSO'                        => 'Top Bons de commande'        , 
-    'ILTI'                         => 'Top Factures'                , 
-    'HDB'                          => 'Tableau de bord'             , 
-    'OLTPO'                        => 'Top Commandes Fournisseurs'  , 
-    'LTFAQ'                        => 'Mes FAQ récentes'           , 
-    'UA'                           => 'Activités à venir'         , 
-    'PA'                           => 'En attente'                  , 
+    'ALVT'                         => 'Top Comptes'                 ,
+    'PLVT'                         => 'Top Affaires'                ,
+    'QLTQ'                         => 'Top Devis'                   ,
+    'CVLVT'                        => 'Indicateurs Clé'            ,
+    'HLT'                          => 'Top Support Tickets'         ,
+    'GRT'                          => 'Mes assignations de groupe'  ,
+    'OLTSO'                        => 'Top Bons de commande'        ,
+    'ILTI'                         => 'Top Factures'                ,
+    'HDB'                          => 'Tableau de bord'             ,
+    'OLTPO'                        => 'Top Commandes Fournisseurs'  ,
+    'LTFAQ'                        => 'Mes FAQ récentes'           ,
+    'UA'                           => 'Activités à venir'         ,
+    'PA'                           => 'En attente'                  ,
     'Home'                         => 'Tableau de bord'                     ,
 
     'LBL_SAVE_ORDER' => 'Enregistrer La Commande',
@@ -29,6 +29,6 @@ $languageStrings = array(
 );
 
 $jsLanguageStrings = array(
-	'JS_TAB_NAME_SHOULD_NOT_BE_EMPTY' => 'Nom du tableau de bord ne peut pas être vide',
-	'JS_NO_DATA_AVAILABLE' => 'Pas de données disponibles',
+    'JS_TAB_NAME_SHOULD_NOT_BE_EMPTY' => 'Nom du tableau de bord ne peut pas être vide',
+    'JS_NO_DATA_AVAILABLE' => 'Pas de données disponibles',
 );

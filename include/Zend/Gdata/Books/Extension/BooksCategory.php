@@ -38,7 +38,6 @@ require_once 'Zend/Gdata/App/Extension/Category.php';
 class Zend_Gdata_Books_Extension_BooksCategory extends
     Zend_Gdata_App_Extension_Category
 {
-
     /**
      * Constructor for Zend_Gdata_Books_Extension_BooksCategory which
      * Describes a books category
@@ -55,5 +54,4 @@ class Zend_Gdata_Books_Extension_BooksCategory extends
         $this->registerAllNamespaces(Zend_Gdata_Books::$namespaces);
         parent::__construct($term, $scheme, $label);
     }
-
 }

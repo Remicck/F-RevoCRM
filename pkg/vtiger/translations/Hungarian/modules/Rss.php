@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'RSS hírcsatorna Források',
     'LBL_ADD_FEED_SOURCE' => 'Add hírcsatorna forrás',
@@ -16,19 +16,16 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Beállítás alapértelmezettként',
     'LBL_SENDER' => 'adó',
     'LBL_FEED_SOURCE' => 'Takarmány Forrás',
-    'LBL_ENTER_FEED_SOURCE' => 'Adja meg a hírcsatorna forrás',  
+    'LBL_ENTER_FEED_SOURCE' => 'Adja meg a hírcsatorna forrás',
     'SINGLE_Rss' => 'RSS hírcsatorna',
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss Sikeresen mentve',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss Sikeresen mentve',
     'JS_INVALID_RSS_URL' => 'Invalid Rss Url',
     'JS_RSS_MADE_AS_DEFAULT' => 'Rss Made alapértelmezett',
-    
+
 
   'JS_NO_RECORDS' => 'Nincs Bejegyzés',
 
 );
-
-
-?>

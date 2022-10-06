@@ -8,15 +8,17 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Calendar_ActivityReminder_Action extends Vtiger_Action_Controller{
+class Calendar_ActivityReminder_Action extends Vtiger_Action_Controller
+{
+    public function __construct()
+    {
+        $this->exposeMethod('getReminders');
+        $this->exposeMethod('postpone');
+    }
 
-	function __construct() {
-		$this->exposeMethod('getReminders');
-		$this->exposeMethod('postpone');
-	}
-
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
 
         if (vtlib_isModuleActive($request->getModule())) {
             $mode = $request->getMode();
@@ -37,33 +39,35 @@ class Calendar_ActivityReminder_Action extends Vtiger_Action_Controller{
         }
 
         return $permissions;
-	}
+    }
 
-	public function process(Vtiger_Request $request) {
-		$mode = $request->getMode();
-		if(!empty($mode) && $this->isMethodExposed($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->getMode();
+        if (!empty($mode) && $this->isMethodExposed($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
 
-	}
+    public function getReminders(Vtiger_Request $request)
+    {
+        $recordModels = Calendar_Module_Model::getCalendarReminder();
+        foreach ($recordModels as $record) {
+            $records[] = $record->getDisplayableValues();
+            $record->updateReminderStatus();
+        }
 
-	function getReminders(Vtiger_Request $request) {
-		$recordModels = Calendar_Module_Model::getCalendarReminder();
-		foreach($recordModels as $record) {
-			$records[] = $record->getDisplayableValues();
-			$record->updateReminderStatus();
-		}
+        $response = new Vtiger_Response();
+        $response->setResult($records);
+        $response->emit();
+    }
 
-		$response = new Vtiger_Response();
-		$response->setResult($records);
-		$response->emit();
-	}
-
-	function postpone(Vtiger_Request $request) {
-			$recordId = $request->get('record');
-			$module = $request->getModule();
-			$recordModel = Vtiger_Record_Model::getInstanceById($recordId, $module);
-			$recordModel->updateReminderStatus(0);
-		}
-	}
+    public function postpone(Vtiger_Request $request)
+    {
+        $recordId = $request->get('record');
+        $module = $request->getModule();
+        $recordModel = Vtiger_Record_Model::getInstanceById($recordId, $module);
+        $recordModel->updateReminderStatus(0);
+    }
+}

@@ -8,5 +8,6 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Contacts_SaveAjax_Action extends Vtiger_SaveAjax_Action {
+class Contacts_SaveAjax_Action extends Vtiger_SaveAjax_Action
+{
 }

@@ -8,165 +8,180 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Vtiger_MiniList_Model extends Vtiger_Widget_Model {
+class Vtiger_MiniList_Model extends Vtiger_Widget_Model
+{
+    protected $widgetModel;
+    protected $extraData;
 
-	protected $widgetModel;
-	protected $extraData;
+    protected $listviewController;
+    protected $queryGenerator;
+    protected $listviewHeaders;
+    protected $listviewRecords;
+    protected $targetModuleModel;
 
-	protected $listviewController;
-	protected $queryGenerator;
-	protected $listviewHeaders;
-	protected $listviewRecords;
-	protected $targetModuleModel;
+    public function setWidgetModel($widgetModel)
+    {
+        $this->widgetModel = $widgetModel;
+        $this->extraData = $this->widgetModel->get('data');
 
-	public function setWidgetModel($widgetModel) {
-		$this->widgetModel = $widgetModel;
-		$this->extraData = $this->widgetModel->get('data');
+        // Decode data if not done already.
+        if (is_string($this->extraData)) {
+            $this->extraData = Zend_Json::decode(decode_html($this->extraData));
+        }
+        if ($this->extraData == null) {
+            throw new Exception("Invalid data");
+        }
+    }
 
-		// Decode data if not done already.
-		if (is_string($this->extraData)) {
-			$this->extraData = Zend_Json::decode(decode_html($this->extraData));
-		}
-		if ($this->extraData == NULL) {
-			throw new Exception("Invalid data");
-		}
-	}
+    public function getTargetModule()
+    {
+        return $this->extraData['module'];
+    }
 
-	public function getTargetModule() {
-		return $this->extraData['module'];
-	}
+    public function getTargetFields()
+    {
+        $fields = $this->extraData['fields'];
+        if (!in_array("id", $fields)) {
+            $fields[] = "id";
+        }
+        return $fields;
+    }
 
-	public function getTargetFields() {
-		$fields = $this->extraData['fields'];
-		if (!in_array("id", $fields)) $fields[] = "id";
-		return $fields;
-	}
+    public function getTargetModuleModel()
+    {
+        if (!$this->targetModuleModel) {
+            $this->targetModuleModel = Vtiger_Module_Model::getInstance($this->getTargetModule());
+        }
+        return $this->targetModuleModel;
+    }
 
-	public function getTargetModuleModel() {
-		if (!$this->targetModuleModel) {
-			$this->targetModuleModel = Vtiger_Module_Model::getInstance($this->getTargetModule());
-		}
-		return $this->targetModuleModel;
-	}
+    protected function initListViewController()
+    {
+        if (!$this->listviewController) {
+            $currentUserModel = Users_Record_Model::getCurrentUserModel();
+            $db = PearDatabase::getInstance();
 
-	protected function initListViewController() {
-		if (!$this->listviewController) {
-			$currentUserModel = Users_Record_Model::getCurrentUserModel();
-			$db = PearDatabase::getInstance();
+            $filterid = $this->widgetModel->get('filterid');
+            $this->queryGenerator = new EnhancedQueryGenerator($this->getTargetModule(), $currentUserModel);
+            $this->queryGenerator->initForCustomViewById($filterid);
+            $this->queryGenerator->setFields($this->getTargetFields());
 
-			$filterid = $this->widgetModel->get('filterid');
-			$this->queryGenerator = new EnhancedQueryGenerator($this->getTargetModule(), $currentUserModel);
-			$this->queryGenerator->initForCustomViewById($filterid);
-			$this->queryGenerator->setFields( $this->getTargetFields() );
+            if (!$this->listviewController) {
+                $this->listviewController = new ListViewController($db, $currentUserModel, $this->queryGenerator);
+            }
 
-			if (!$this->listviewController) {
-				$this->listviewController = new ListViewController($db, $currentUserModel, $this->queryGenerator);
-			}
+            $this->listviewHeaders = $this->listviewRecords = null;
+        }
+    }
 
-			$this->listviewHeaders = $this->listviewRecords = NULL;
-		}
-	}
+    public function getTitle($prefix='')
+    {
+        $this->initListViewController();
 
-	public function getTitle($prefix='') {
-		$this->initListViewController();
+        $db = PearDatabase::getInstance();
 
-		$db = PearDatabase::getInstance();
+        $suffix = '';
+        $customviewrs = $db->pquery('SELECT viewname FROM vtiger_customview WHERE cvid=?', array($this->widgetModel->get('filterid')));
+        if ($db->num_rows($customviewrs)) {
+            $customview = $db->fetch_array($customviewrs);
+            $suffix = ' - ' . $customview['viewname'];
+        }
+        return $prefix . vtranslate($this->getTargetModuleModel()->label, $this->getTargetModule()). $suffix;
+    }
 
-		$suffix = '';
-		$customviewrs = $db->pquery('SELECT viewname FROM vtiger_customview WHERE cvid=?', array($this->widgetModel->get('filterid')));
-		if ($db->num_rows($customviewrs)) {
-			$customview = $db->fetch_array($customviewrs);
-			$suffix = ' - ' . $customview['viewname'];
-		}
-		return $prefix . vtranslate($this->getTargetModuleModel()->label, $this->getTargetModule()). $suffix;
-	}
+    public function getHeaders()
+    {
+        $this->initListViewController();
 
-	public function getHeaders() {
-		$this->initListViewController();
+        if (!$this->listviewHeaders) {
+            $headerFieldModels = array();
+            foreach ($this->listviewController->getListViewHeaderFields() as $fieldName => $webserviceField) {
+                $fieldObj = Vtiger_Field::getInstance($webserviceField->getFieldId());
+                $headerFieldModels[$fieldName] = Vtiger_Field_Model::getInstanceFromFieldObject($fieldObj);
+            }
+            $this->listviewHeaders = $headerFieldModels;
+        }
+        return $this->listviewHeaders;
+    }
 
-		if (!$this->listviewHeaders) {
-			$headerFieldModels = array();
-			foreach ($this->listviewController->getListViewHeaderFields() as $fieldName => $webserviceField) {
-				$fieldObj = Vtiger_Field::getInstance($webserviceField->getFieldId());
-				$headerFieldModels[$fieldName] = Vtiger_Field_Model::getInstanceFromFieldObject($fieldObj);
-			}
-			$this->listviewHeaders = $headerFieldModels;
-		}
-		return $this->listviewHeaders;
-	}
+    public function getHeaderCount()
+    {
+        if ($this->listviewHeaders) {
+            return count($this->listviewHeaders);
+        }
+        return count($this->getHeaders());
+    }
 
-	public function getHeaderCount() {
-		if($this->listviewHeaders) return count($this->listviewHeaders);
-		return count($this->getHeaders());
-	}
-
-	public function getRecordLimit() {
-		$pageLimit = vglobal('list_max_entries_per_page');
-        if(empty($pageLimit)) {
+    public function getRecordLimit()
+    {
+        $pageLimit = vglobal('list_max_entries_per_page');
+        if (empty($pageLimit)) {
             $pageLimit = 10;
         }
         return intval($pageLimit);
-	}
-    
-    function getStartIndex() {
+    }
+
+    public function getStartIndex()
+    {
         $nextPage = $this->get('nextPage');
         $startIndex = (($nextPage - 1) * $this->getRecordLimit());
         return intval($startIndex);
     }
 
-	public function getRecords() {
+    public function getRecords()
+    {
+        $this->initListViewController();
 
-		$this->initListViewController();
+        if (!$this->listviewRecords) {
+            $db = PearDatabase::getInstance();
 
-		if (!$this->listviewRecords) {
-			$db = PearDatabase::getInstance();
-
-			$paramArray = array();
-			$query = $this->queryGenerator->getQuery();
-			$query .= ' ORDER BY vtiger_crmentity.modifiedtime DESC';
-			$query .= ' LIMIT ? , ?';
-			array_push($paramArray, $this->getStartIndex());
-			array_push($paramArray, $this->getRecordLimit());
-			$query = str_replace(" FROM ", ",vtiger_crmentity.crmid as id FROM ", $query);
-            if($this->getTargetModule() == 'Calendar') {
+            $paramArray = array();
+            $query = $this->queryGenerator->getQuery();
+            $query .= ' ORDER BY vtiger_crmentity.modifiedtime DESC';
+            $query .= ' LIMIT ? , ?';
+            array_push($paramArray, $this->getStartIndex());
+            array_push($paramArray, $this->getRecordLimit());
+            $query = str_replace(" FROM ", ",vtiger_crmentity.crmid as id FROM ", $query);
+            if ($this->getTargetModule() == 'Calendar') {
                 $query = str_replace(" WHERE ", " WHERE vtiger_crmentity.setype = 'Calendar' AND ", $query);
             }
 
-			$result = $db->pquery($query, $paramArray);
+            $result = $db->pquery($query, $paramArray);
 
-			$targetModuleName = $this->getTargetModule();
-			$targetModuleFocus= CRMEntity::getInstance($targetModuleName);
+            $targetModuleName = $this->getTargetModule();
+            $targetModuleFocus= CRMEntity::getInstance($targetModuleName);
 
-			$entries = $this->listviewController->getListViewRecords($targetModuleFocus,$targetModuleName,$result);
+            $entries = $this->listviewController->getListViewRecords($targetModuleFocus, $targetModuleName, $result);
 
-			$this->listviewRecords = array();
-			$index = 0;
-			foreach ($entries as $id => $record) {
-				$rawData = $db->query_result_rowdata($result, $index++);
-				$record['id'] = $id;
-				$this->listviewRecords[$id] = $this->getTargetModuleModel()->getRecordFromArray($record, $rawData);
-			}
-		}
+            $this->listviewRecords = array();
+            $index = 0;
+            foreach ($entries as $id => $record) {
+                $rawData = $db->query_result_rowdata($result, $index++);
+                $record['id'] = $id;
+                $this->listviewRecords[$id] = $this->getTargetModuleModel()->getRecordFromArray($record, $rawData);
+            }
+        }
 
-		return $this->listviewRecords;
-	}
-    
-    function moreRecordExists() {
+        return $this->listviewRecords;
+    }
+
+    public function moreRecordExists()
+    {
         $this->initListViewController();
         $db = PearDatabase::getInstance();
         $query = $this->queryGenerator->getQuery();
-		$paramArray = array();
-        
+        $paramArray = array();
+
         $startIndex = $this->getStartIndex() + $this->getRecordLimit();
         $query .= ' LIMIT ?, ?';
-		array_push($paramArray, $startIndex);
-		array_push($paramArray, $this->getRecordLimit());
-        if($this->getTargetModule() == 'Calendar') {
+        array_push($paramArray, $startIndex);
+        array_push($paramArray, $this->getRecordLimit());
+        if ($this->getTargetModule() == 'Calendar') {
             $query = str_replace(" WHERE ", " WHERE vtiger_crmentity.setype = 'Calendar' AND ", $query);
         }
-        
+
         $result = $db->pquery($query, $paramArray);
-        if($db->num_rows($result) > 0) {
+        if ($db->num_rows($result) > 0) {
             return true;
         }
         return false;

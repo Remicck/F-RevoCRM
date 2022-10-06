@@ -9,40 +9,45 @@
  *************************************************************************************/
 vimport('~~modules/PickList/DependentPickListUtils.php');
 
-class Settings_PickListDependency_Module_Model extends Settings_Vtiger_Module_Model {
+class Settings_PickListDependency_Module_Model extends Settings_Vtiger_Module_Model
+{
+    public $baseTable = 'vtiger_picklist_dependency';
+    public $baseIndex = 'id';
+    public $name = 'PickListDependency';
 
-	var $baseTable = 'vtiger_picklist_dependency';
-	var $baseIndex = 'id';
-	var $name = 'PickListDependency';
+    /**
+     * Function to get the url for default view of the module
+     * @return <string> - url
+     */
+    public function getDefaultUrl()
+    {
+        return 'index.php?module=PickListDependency&parent=Settings&view=List';
+    }
 
-	/**
-	 * Function to get the url for default view of the module
-	 * @return <string> - url
-	 */
-	public function getDefaultUrl() {
-		return 'index.php?module=PickListDependency&parent=Settings&view=List';
-	}
+    /**
+     * Function to get the url for Adding Dependency
+     * @return <string> - url
+     */
+    public function getCreateRecordUrl()
+    {
+        return "javascript:Settings_PickListDependency_Js.triggerAdd(event)";
+    }
 
-	/**
-	 * Function to get the url for Adding Dependency
-	 * @return <string> - url
-	 */
-	public function getCreateRecordUrl() {
-		return "javascript:Settings_PickListDependency_Js.triggerAdd(event)";
-	}
+    public function isPagingSupported()
+    {
+        return false;
+    }
 
-	public function isPagingSupported() {
-		return false;
-	}
+    public static function getAvailablePicklists($module)
+    {
+        return Vtiger_DependencyPicklist::getAvailablePicklists($module);
+    }
 
-	public static function getAvailablePicklists($module) {
-		return Vtiger_DependencyPicklist::getAvailablePicklists($module);
-	}
+    public static function getPicklistSupportedModules()
+    {
+        $adb = PearDatabase::getInstance();
 
-	public static function getPicklistSupportedModules() {
-		$adb = PearDatabase::getInstance();
-
-		$query = "SELECT distinct vtiger_field.tabid, vtiger_tab.tablabel, vtiger_tab.name as tabname FROM vtiger_field
+        $query = "SELECT distinct vtiger_field.tabid, vtiger_tab.tablabel, vtiger_tab.name as tabname FROM vtiger_field
 						INNER JOIN vtiger_tab ON vtiger_tab.tabid = vtiger_field.tabid
 						WHERE uitype IN ('15','16')
 						AND vtiger_field.displaytype = 1
@@ -50,20 +55,20 @@ class Settings_PickListDependency_Module_Model extends Settings_Vtiger_Module_Mo
 						AND vtiger_field.block != 'NULL'
 						AND vtiger_tab.presence != 1
 					GROUP BY vtiger_field.tabid HAVING count(*) > 1";
-		// END
-		$result = $adb->pquery($query, array());
-		while($row = $adb->fetch_array($result)) {
-			$modules[$row['tablabel']] = $row['tabname'];
-		}
-		ksort($modules);
+        // END
+        $result = $adb->pquery($query, array());
+        while ($row = $adb->fetch_array($result)) {
+            $modules[$row['tablabel']] = $row['tabname'];
+        }
+        ksort($modules);
 
-		$modulesModelsList = array();
-		foreach($modules as $moduleLabel => $moduleName) {
-			$instance = new Vtiger_Module_Model();
-			$instance->name = $moduleName;
-			$instance->label = $moduleLabel;
-			$modulesModelsList[] = $instance;
-		}
-		return $modulesModelsList;
-	}
+        $modulesModelsList = array();
+        foreach ($modules as $moduleLabel => $moduleName) {
+            $instance = new Vtiger_Module_Model();
+            $instance->name = $moduleName;
+            $instance->label = $moduleLabel;
+            $modulesModelsList[] = $instance;
+        }
+        return $modulesModelsList;
+    }
 }

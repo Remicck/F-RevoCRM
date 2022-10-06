@@ -9,8 +9,8 @@
 *********************************************************************************/
 
 if (defined('VTIGER_UPGRADE')) {
-	global $current_user, $adb;
-	$db = PearDatabase::getInstance();
+    global $current_user, $adb;
+    $db = PearDatabase::getInstance();
 
     // PDFテンプレートに大きなサイズの画像を張り付ける場合、bodyが途切れるのでtextからlongtextへ変更する
     $db->query('ALTER TABLE vtiger_pdftemplates MODIFY body longtext;');

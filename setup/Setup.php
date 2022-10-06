@@ -1,7 +1,7 @@
 <?php
 
 ini_set('error_reporting', E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-ini_set('display_errors', 1 );
+ini_set('display_errors', 1);
 
 echo "Start Script";
 
@@ -36,46 +36,46 @@ $db->query("alter table vtiger_field modify column columnname varchar(100)");
 //require_once ("scripts/01_hoge.php");
 
 // 不要なモジュールを削除
-require_once ("scripts/10_Delete_Modules.php");
+require_once("scripts/10_Delete_Modules.php");
 
 // 不要な項目を非表示にする
-require_once ("scripts/11_Update_Identifer.php");
+require_once("scripts/11_Update_Identifer.php");
 
 // 設定メニューを整理する
-require_once ("scripts/12_Update_Settings_menu.php");
+require_once("scripts/12_Update_Settings_menu.php");
 
 // ユーザーのデフォルト値を変更
-require_once ("scripts/13_Update_Users.php");
+require_once("scripts/13_Update_Users.php");
 
 // 最終更新日を追加
-require_once ("scripts/14_Add_last_action_date.php");
+require_once("scripts/14_Add_last_action_date.php");
 
 // 活動のクイック作成の項目
-require_once ("scripts/15_Update_Activity.php");
+require_once("scripts/15_Update_Activity.php");
 
 // 住所欄の並び替え
-require_once ("scripts/16_Update_Address.php");
+require_once("scripts/16_Update_Address.php");
 
 // 諸条件を空にする
-require_once ("scripts/17_Update_Inventory.php");
+require_once("scripts/17_Update_Inventory.php");
 
 // 不要な項目を非表示にする
-require_once ("scripts/51_Update_role.php");
+require_once("scripts/51_Update_role.php");
 
 // デフォルトグループ削除
-require_once ("scripts/52_Delete_Groups.php");
+require_once("scripts/52_Delete_Groups.php");
 
 // デフォルトワークフロータスクの無効化
-require_once ("scripts/53_Update_workflowtasks.php");
+require_once("scripts/53_Update_workflowtasks.php");
 
 // サイドバーの整理
-require_once ("scripts/54_Update_SidebarWidget.php");
+require_once("scripts/54_Update_SidebarWidget.php");
 
 // 日本語を追加
-require_once ("scripts/56_Add_JapaneseLanguage.php");
+require_once("scripts/56_Add_JapaneseLanguage.php");
 
 // ポータルをオンにしたときに送られるメールを日本語に修正
-require_once ("scripts/58_Fix_Infportalmail_Tojp.php");
+require_once("scripts/58_Fix_Infportalmail_Tojp.php");
 
 // プロジェクトタスクの終了日をクイッククリエイトに追加
 $db->query('update vtiger_field set quickcreate = 0 where tabid = 41 and fieldname = "enddate"');
@@ -152,8 +152,3 @@ $userRecordModel->save();
 // $db->query("delete from vtiger_links where linklabel in ('".implode('\',\'', $deleteWidgetMenu)."')");
 
 echo "End Script";
-
-
-
-
-

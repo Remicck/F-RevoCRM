@@ -7,11 +7,13 @@
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
  *********************************************************************************/
-if (!defined('VTIGER_UPGRADE')) die('Invalid entry point');
-
-if(defined('VTIGER_UPGRADE')) {
-		// Set of task to be taken care when we are in upgrade mode.
+if (!defined('VTIGER_UPGRADE')) {
+    die('Invalid entry point');
 }
-if(defined('INSTALLATION_MODE')) {
-		// Set of task to be taken care while specifically in installation mode.
+
+if (defined('VTIGER_UPGRADE')) {
+    // Set of task to be taken care when we are in upgrade mode.
+}
+if (defined('INSTALLATION_MODE')) {
+    // Set of task to be taken care while specifically in installation mode.
 }

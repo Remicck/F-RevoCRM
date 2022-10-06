@@ -13,21 +13,23 @@ include_once 'vtlib/Vtiger/Module.php';
 include_once 'includes/main/WebUI.php';
 vimport('includes.http.Request');
 
-class PBXManager_PBXManager_Callbacks {
-    
-    function validateRequest($vtigersecretkey,$request) {
-        if($vtigersecretkey == $request->get('vtigersignature')){
+class PBXManager_PBXManager_Callbacks
+{
+    public function validateRequest($vtigersecretkey, $request)
+    {
+        if ($vtigersecretkey == $request->get('vtigersignature')) {
             return true;
         }
         return false;
     }
 
-    function process($request){
-	$pbxmanagerController = new PBXManager_PBXManager_Controller();
+    public function process($request)
+    {
+        $pbxmanagerController = new PBXManager_PBXManager_Controller();
         $connector = $pbxmanagerController->getConnector();
-        if($this->validateRequest($connector->getVtigerSecretKey(),$request)) {
+        if ($this->validateRequest($connector->getVtigerSecretKey(), $request)) {
             $pbxmanagerController->process($request);
-        }else {
+        } else {
             $response = $connector->getXmlResponse();
             echo $response;
         }
@@ -35,4 +37,3 @@ class PBXManager_PBXManager_Callbacks {
 }
 $pbxmanager = new PBXManager_PBXManager_Callbacks();
 $pbxmanager->process(new Vtiger_Request($_REQUEST));
-?>

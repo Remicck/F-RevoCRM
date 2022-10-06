@@ -1,10 +1,10 @@
 <?php
 /**
  * log4php is a PHP port of the log4j java logging package.
- * 
+ *
  * <p>This framework is based on log4j (see {@link http://jakarta.apache.org/log4j log4j} for details).</p>
- * <p>Design, strategies and part of the methods documentation are developed by log4j team 
- * (Ceki Gülcü as log4j project founder and 
+ * <p>Design, strategies and part of the methods documentation are developed by log4j team
+ * (Ceki Gülcü as log4j project founder and
  * {@link http://jakarta.apache.org/log4j/docs/contributors.html contributors}).</p>
  *
  * <p>PHP port, extensions and modifications by VxR. All rights reserved.<br>
@@ -12,18 +12,20 @@
  *
  * <p>This software is published under the terms of the LGPL License
  * a copy of which has been included with this distribution in the LICENSE file.</p>
- * 
+ *
  * @package log4php
  * @subpackage layouts
  */
 
 /**
- * @ignore 
+ * @ignore
  */
-if (!defined('LOG4PHP_DIR')) define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+if (!defined('LOG4PHP_DIR')) {
+    define('LOG4PHP_DIR', dirname(__FILE__) . '/..');
+}
 
 if (!defined('LOG4PHP_LINE_SEP')) {
-    if (substr(php_uname(), 0, 7) == "Windows") { 
+    if (substr(php_uname(), 0, 7) == "Windows") {
         /**
          * @ignore
          */
@@ -35,31 +37,31 @@ if (!defined('LOG4PHP_LINE_SEP')) {
         define('LOG4PHP_LINE_SEP', "\n");
     }
 }
- 
+
 /**
  */
 require_once(LOG4PHP_DIR . '/LoggerLayout.php');
- 
+
 /**
  * String constant designating no time information. Current value of
  * this constant is <b>NULL</b>.
  */
-define ('LOG4PHP_LOGGER_LAYOUT_NULL_DATE_FORMAT',   'NULL');
+define('LOG4PHP_LOGGER_LAYOUT_NULL_DATE_FORMAT', 'NULL');
 
 /**
  * String constant designating relative time. Current value of
  * this constant is <b>RELATIVE</b>.
  */
-define ('LOG4PHP_LOGGER_LAYOUT_RELATIVE_TIME_DATE_FORMAT', 'RELATIVE');
+define('LOG4PHP_LOGGER_LAYOUT_RELATIVE_TIME_DATE_FORMAT', 'RELATIVE');
 
 /**
  * TTCC layout format consists of time, thread, category and nested
  * diagnostic context information, hence the name.
- * 
+ *
  * <p>Each of the four fields can be individually enabled or
  * disabled. The time format depends on the <b>DateFormat</b> used.</p>
  *
- * <p>If no dateFormat is specified it defaults to '%c'. 
+ * <p>If no dateFormat is specified it defaults to '%c'.
  * See php {@link PHP_MANUAL#date} function for details.</p>
  *
  * Params:
@@ -74,18 +76,18 @@ define ('LOG4PHP_LOGGER_LAYOUT_RELATIVE_TIME_DATE_FORMAT', 'RELATIVE');
  * @package log4php
  * @subpackage layouts
  */
-class LoggerLayoutTTCC extends LoggerLayout {
-
+class LoggerLayoutTTCC extends LoggerLayout
+{
     // Internal representation of options
-    var $threadPrinting    = true;
-    var $categoryPrefixing = true;
-    var $contextPrinting   = true;
-    var $microSecondsPrinting = true;
-    
+    public $threadPrinting    = true;
+    public $categoryPrefixing = true;
+    public $contextPrinting   = true;
+    public $microSecondsPrinting = true;
+
     /**
      * @var string date format. See {@link PHP_MANUAL#strftime} for details
      */
-    var $dateFormat = '%c';
+    public $dateFormat = '%c';
 
     /**
      * Constructor
@@ -93,10 +95,11 @@ class LoggerLayoutTTCC extends LoggerLayout {
      * @param string date format
      * @see dateFormat
      */
-    function LoggerLayoutTTCC($dateFormat = '')
+    public function LoggerLayoutTTCC($dateFormat = '')
     {
-        if (!empty($dateFormat))
+        if (!empty($dateFormat)) {
             $this->dateFormat = $dateFormat;
+        }
         return;
     }
 
@@ -104,18 +107,18 @@ class LoggerLayoutTTCC extends LoggerLayout {
      * The <b>ThreadPrinting</b> option specifies whether the name of the
      * current thread is part of log output or not. This is true by default.
      */
-    function setThreadPrinting($threadPrinting)
+    public function setThreadPrinting($threadPrinting)
     {
-        
-        $this->threadPrinting = is_bool($threadPrinting) ? 
-            $threadPrinting : 
-            (bool)(strtolower($threadPrinting) == 'true'); 
+        $this->threadPrinting = is_bool($threadPrinting) ?
+            $threadPrinting :
+            (bool)(strtolower($threadPrinting) == 'true');
     }
 
     /**
      * @return boolean Returns value of the <b>ThreadPrinting</b> option.
      */
-    function getThreadPrinting() {
+    public function getThreadPrinting()
+    {
         return $this->threadPrinting;
     }
 
@@ -123,7 +126,7 @@ class LoggerLayoutTTCC extends LoggerLayout {
      * The <b>CategoryPrefixing</b> option specifies whether {@link Category}
      * name is part of log output or not. This is true by default.
      */
-    function setCategoryPrefixing($categoryPrefixing)
+    public function setCategoryPrefixing($categoryPrefixing)
     {
         $this->categoryPrefixing = is_bool($categoryPrefixing) ?
             $categoryPrefixing :
@@ -133,7 +136,8 @@ class LoggerLayoutTTCC extends LoggerLayout {
     /**
      * @return boolean Returns value of the <b>CategoryPrefixing</b> option.
      */
-    function getCategoryPrefixing() {
+    public function getCategoryPrefixing()
+    {
         return $this->categoryPrefixing;
     }
 
@@ -142,49 +146,51 @@ class LoggerLayoutTTCC extends LoggerLayout {
      * the nested context information belonging to the current thread.
      * This is true by default.
      */
-    function setContextPrinting($contextPrinting) {
-        $this->contextPrinting = is_bool($contextPrinting) ? 
-            $contextPrinting : 
-            (bool)(strtolower($contextPrinting) == 'true'); 
+    public function setContextPrinting($contextPrinting)
+    {
+        $this->contextPrinting = is_bool($contextPrinting) ?
+            $contextPrinting :
+            (bool)(strtolower($contextPrinting) == 'true');
     }
 
     /**
      * @return boolean Returns value of the <b>ContextPrinting</b> option.
      */
-    function getContextPrinting()
+    public function getContextPrinting()
     {
         return $this->contextPrinting;
     }
-    
+
     /**
      * The <b>MicroSecondsPrinting</b> option specifies if microseconds infos
      * should be printed at the end of timestamp.
      * This is true by default.
      */
-    function setMicroSecondsPrinting($microSecondsPrinting) {
-        $this->microSecondsPrinting = is_bool($microSecondsPrinting) ? 
-            $microSecondsPrinting : 
-            (bool)(strtolower($microSecondsPrinting) == 'true'); 
+    public function setMicroSecondsPrinting($microSecondsPrinting)
+    {
+        $this->microSecondsPrinting = is_bool($microSecondsPrinting) ?
+            $microSecondsPrinting :
+            (bool)(strtolower($microSecondsPrinting) == 'true');
     }
 
     /**
      * @return boolean Returns value of the <b>MicroSecondsPrinting</b> option.
      */
-    function getMicroSecondsPrinting()
+    public function getMicroSecondsPrinting()
     {
         return $this->microSecondsPrinting;
     }
-    
-    
-    function setDateFormat($dateFormat)
+
+
+    public function setDateFormat($dateFormat)
     {
         $this->dateFormat = $dateFormat;
     }
-    
+
     /**
      * @return string
      */
-    function getDateFormat()
+    public function getDateFormat()
     {
         return $this->dateFormat;
     }
@@ -197,44 +203,44 @@ class LoggerLayoutTTCC extends LoggerLayout {
      * @param LoggerLoggingEvent $event
      * @return string
      */
-    function format($event)
+    public function format($event)
     {
         $timeStamp = (float)$event->getTimeStamp();
         $format = strftime($this->dateFormat, (int)$timeStamp);
-        
+
         if ($this->microSecondsPrinting) {
             $usecs = round(($timeStamp - (int)$timeStamp) * 1000);
             $format .= sprintf(',%03d', $usecs);
         }
-            
+
         $format .= ' ';
-        
-        if ($this->threadPrinting)
+
+        if ($this->threadPrinting) {
             $format .= '['.getmypid().'] ';
-       
+        }
+
         $level = $event->getLevel();
         $format .= $level->toString().' ';
-        
-        if($this->categoryPrefixing) {
+
+        if ($this->categoryPrefixing) {
             $format .= $event->getLoggerName().' ';
         }
-       
-        if($this->contextPrinting) {
+
+        if ($this->contextPrinting) {
             $ndc = $event->getNDC();
-            if($ndc != null) {
-    	        $format .= $ndc.' ';
+            if ($ndc != null) {
+                $format .= $ndc.' ';
             }
         }
-        
+
         $format .= '- '.$event->getRenderedMessage();
         $format .= LOG4PHP_LINE_SEP;
-        
+
         return $format;
     }
 
-    function ignoresThrowable()
+    public function ignoresThrowable()
     {
         return true;
     }
 }
-?>

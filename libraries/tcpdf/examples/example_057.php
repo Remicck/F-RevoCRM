@@ -1,4 +1,5 @@
 <?php
+
 //============================================================+
 // File name   : example_057.php
 // Begin       : 2010-04-03
@@ -41,8 +42,8 @@ $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
 $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE.' 057', PDF_HEADER_STRING);
 
 // set header and footer fonts
-$pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
-$pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+$pdf->setHeaderFont(array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+$pdf->setFooterFont(array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
 
 // set default monospaced font
 $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
@@ -53,15 +54,15 @@ $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
 $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
 // set auto page breaks
-$pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+$pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 // set image scale factor
 $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
 // set some language-dependent strings (optional)
 if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
-	require_once(dirname(__FILE__).'/lang/eng.php');
-	$pdf->setLanguageArray($l);
+    require_once(dirname(__FILE__).'/lang/eng.php');
+    $pdf->setLanguageArray($l);
 }
 
 // ---------------------------------------------------------
@@ -80,7 +81,7 @@ $pdf->SetFont('helvetica', '', 11);
 $pdf->SetLineWidth(0.7);
 
 // set color for cell border
-$pdf->SetDrawColor(0,128,255);
+$pdf->SetDrawColor(0, 128, 255);
 
 $pdf->setCellHeightRatio(3);
 
@@ -171,10 +172,10 @@ $pdf->SetFont('helvetica', '', 11);
 $pdf->SetLineWidth(0.508);
 
 // set color for cell border
-$pdf->SetDrawColor(0,128,255);
+$pdf->SetDrawColor(0, 128, 255);
 
 // set filling color
-$pdf->SetFillColor(255,255,128);
+$pdf->SetFillColor(255, 255, 128);
 
 // set cell height ratio
 $pdf->setCellHeightRatio(3);
@@ -228,10 +229,10 @@ $pdf->SetFont('helvetica', '', 11);
 $pdf->SetLineWidth(1);
 
 // set color for cell border
-$pdf->SetDrawColor(0,128,255);
+$pdf->SetDrawColor(0, 128, 255);
 
 // set filling color
-$pdf->SetFillColor(255,255,128);
+$pdf->SetFillColor(255, 255, 128);
 
 $border = array('LTRB' => array('width' => 2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(255, 0, 0)));
 $pdf->Cell(30, 0, 'LTRB', $border, 1, 'C', 1, '', 0, false, 'T', 'C');

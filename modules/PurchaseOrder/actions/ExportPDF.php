@@ -10,5 +10,6 @@
 
 vimport('~~/modules/PurchaseOrder/PurchaseOrderPDFController.php');
 
-class PurchaseOrder_ExportPDF_Action extends Inventory_ExportPDF_Action {
+class PurchaseOrder_ExportPDF_Action extends Inventory_ExportPDF_Action
+{
 }

@@ -37,75 +37,76 @@ require_once PHPEXCEL_ROOT . 'PHPExcel/Shared/PCLZip/pclzip.lib.php';
  */
 class PHPExcel_Shared_ZipArchive
 {
-
-	/**	constants */
-	const OVERWRITE		= 'OVERWRITE';
-	const CREATE		= 'CREATE';
-
-
-	/**
-	 * Temporary storage directory
-	 *
-	 * @var string
-	 */
-	private $_tempDir;
-
-	/**
-	 * Zip Archive Stream Handle
-	 *
-	 * @var string
-	 */
-	private $_zip;
+    /**	constants */
+    public const OVERWRITE		= 'OVERWRITE';
+    public const CREATE		= 'CREATE';
 
 
     /**
-	 * Open a new zip archive
-	 *
-	 * @param	string	$fileName	Filename for the zip archive
-	 * @return	boolean
+     * Temporary storage directory
+     *
+     * @var string
      */
-	public function open($fileName)
-	{
-		$this->_tempDir = PHPExcel_Shared_File::sys_get_temp_dir();
+    private $_tempDir;
 
-		$this->_zip = new PclZip($fileName);
-
-		return true;
-	}
+    /**
+     * Zip Archive Stream Handle
+     *
+     * @var string
+     */
+    private $_zip;
 
 
     /**
-	 * Close this zip archive
-	 *
+     * Open a new zip archive
+     *
+     * @param	string	$fileName	Filename for the zip archive
+     * @return	boolean
      */
-	public function close()
-	{
-	}
+    public function open($fileName)
+    {
+        $this->_tempDir = PHPExcel_Shared_File::sys_get_temp_dir();
+
+        $this->_zip = new PclZip($fileName);
+
+        return true;
+    }
 
 
     /**
-	 * Add a new file to the zip archive from a string of raw data.
-	 *
-	 * @param	string	$localname		Directory/Name of the file to add to the zip archive
-	 * @param	string	$contents		String of data to add to the zip archive
+     * Close this zip archive
+     *
      */
-	public function addFromString($localname, $contents)
-	{
-		$filenameParts = pathinfo($localname);
+    public function close()
+    {
+    }
 
-		$handle = fopen($this->_tempDir.'/'.$filenameParts["basename"], "wb");
-		fwrite($handle, $contents);
-		fclose($handle);
 
-		$res = $this->_zip->add($this->_tempDir.'/'.$filenameParts["basename"],
-								PCLZIP_OPT_REMOVE_PATH, $this->_tempDir,
-								PCLZIP_OPT_ADD_PATH, $filenameParts["dirname"]
-							   );
-		if ($res == 0) {
-			throw new Exception("Error zipping files : " . $this->_zip->errorInfo(true));
-		}
+    /**
+     * Add a new file to the zip archive from a string of raw data.
+     *
+     * @param	string	$localname		Directory/Name of the file to add to the zip archive
+     * @param	string	$contents		String of data to add to the zip archive
+     */
+    public function addFromString($localname, $contents)
+    {
+        $filenameParts = pathinfo($localname);
 
-		unlink($this->_tempDir.'/'.$filenameParts["basename"]);
-	}
+        $handle = fopen($this->_tempDir.'/'.$filenameParts["basename"], "wb");
+        fwrite($handle, $contents);
+        fclose($handle);
 
+        $res = $this->_zip->add(
+            $this->_tempDir.'/'.$filenameParts["basename"],
+            PCLZIP_OPT_REMOVE_PATH,
+            $this->_tempDir,
+            PCLZIP_OPT_ADD_PATH,
+            $filenameParts["dirname"]
+        );
+        if ($res == 0) {
+            throw new Exception("Error zipping files : " . $this->_zip->errorInfo(true));
+        }
+
+        unlink($this->_tempDir.'/'.$filenameParts["basename"]);
+    }
 }

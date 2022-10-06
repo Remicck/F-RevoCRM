@@ -88,6 +88,3 @@ $field->quickcreate = 2;
 $field->summaryfield = 1;
 $field->label= 'last_action_date';
 $blockInstance->addField($field);
-
-
-

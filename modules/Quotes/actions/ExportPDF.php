@@ -10,5 +10,6 @@
 
 vimport('~~/modules/Quotes/QuotePDFController.php');
 
-class Quotes_ExportPDF_Action extends Inventory_ExportPDF_Action {
+class Quotes_ExportPDF_Action extends Inventory_ExportPDF_Action
+{
 }

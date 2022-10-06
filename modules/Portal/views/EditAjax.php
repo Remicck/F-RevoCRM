@@ -8,29 +8,31 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Portal_EditAjax_View extends Vtiger_IndexAjax_View {
+class Portal_EditAjax_View extends Vtiger_IndexAjax_View
+{
+    public function requiresPermission(Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
 
-	public function requiresPermission(Vtiger_Request $request){
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView', 'record_parameter' => 'record');
-		
-		return $permissions;
-	}
-	
-	public function process(Vtiger_Request $request) {
-		$moduleName = $request->getModule();
-		$recordId = $request->get('record');
+        return $permissions;
+    }
 
-		$viewer = $this->getViewer($request);
+    public function process(Vtiger_Request $request)
+    {
+        $moduleName = $request->getModule();
+        $recordId = $request->get('record');
 
-		if (!empty($recordId)) {
-			$data = Portal_Module_Model::getRecord($recordId);
+        $viewer = $this->getViewer($request);
 
-			$viewer->assign('RECORD', $recordId);
-			$viewer->assign('BOOKMARK_NAME', $data['bookmarkName']);
-			$viewer->assign('BOOKMARK_URL', $data['bookmarkUrl']);
-		}
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->view('EditView.tpl', $moduleName);
-	}
+        if (!empty($recordId)) {
+            $data = Portal_Module_Model::getRecord($recordId);
+
+            $viewer->assign('RECORD', $recordId);
+            $viewer->assign('BOOKMARK_NAME', $data['bookmarkName']);
+            $viewer->assign('BOOKMARK_URL', $data['bookmarkUrl']);
+        }
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->view('EditView.tpl', $moduleName);
+    }
 }

@@ -8,16 +8,16 @@
  * All Rights Reserved.
  ************************************************************************************/
 $languageStrings = array(
-	'CronTasks'                    => 'Programmazione'                   , // TODO: Review
-	'Id'                           => 'Id'                          , // TODO: Review
-	'Cron Job'                     => 'Cron Job'                    , // TODO: Review
-	'Frequency'                    => 'Frequenza'                   , // TODO: Review
-	'Status'                       => 'Stato'                      , // TODO: Review
-	'Last Start'                   => 'L\'ultima scansione avviata'           , // TODO: Review
-	'Last End'                     => 'L\'ultima scansione finita'             , // TODO: Review
-	'Sequence'                     => 'Sequenza'                    , // TODO: Review
-	'LBL_COMPLETED'                => 'Completato'                   , // TODO: Review
-	'LBL_RUNNING'                  => 'In corso'                     , // TODO: Review
-	'LBL_ACTIVE'                   => 'Attivo'                      , // TODO: Review
-	'LBL_INACTIVE'                 => 'Non attivo'                   , // TODO: Review
+    'CronTasks'                    => 'Programmazione'                   , // TODO: Review
+    'Id'                           => 'Id'                          , // TODO: Review
+    'Cron Job'                     => 'Cron Job'                    , // TODO: Review
+    'Frequency'                    => 'Frequenza'                   , // TODO: Review
+    'Status'                       => 'Stato'                      , // TODO: Review
+    'Last Start'                   => 'L\'ultima scansione avviata'           , // TODO: Review
+    'Last End'                     => 'L\'ultima scansione finita'             , // TODO: Review
+    'Sequence'                     => 'Sequenza'                    , // TODO: Review
+    'LBL_COMPLETED'                => 'Completato'                   , // TODO: Review
+    'LBL_RUNNING'                  => 'In corso'                     , // TODO: Review
+    'LBL_ACTIVE'                   => 'Attivo'                      , // TODO: Review
+    'LBL_INACTIVE'                 => 'Non attivo'                   , // TODO: Review
 );

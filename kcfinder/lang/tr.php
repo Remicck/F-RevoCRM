@@ -237,5 +237,3 @@ $lang = array(
     "Select Thumbnails" => "Önizleme Resimlerini Seç",
     "Download files" => "Dosyaları İndir",
 );
-
-?>

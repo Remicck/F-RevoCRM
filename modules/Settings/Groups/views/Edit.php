@@ -8,65 +8,68 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-Class Settings_Groups_Edit_View extends Settings_Vtiger_Index_View {
+class Settings_Groups_Edit_View extends Settings_Vtiger_Index_View
+{
+    public function process(Vtiger_Request $request)
+    {
+        $viewer = $this->getViewer($request);
+        $moduleName = $request->getModule();
+        $qualifiedModuleName = $request->getModule(false);
+        $record = $request->get('record');
 
-	public function process(Vtiger_Request $request) {
-		$viewer = $this->getViewer ($request);
-		$moduleName = $request->getModule();
-		$qualifiedModuleName = $request->getModule(false);
-		$record = $request->get('record');
+        if (!empty($record)) {
+            $recordModel = Settings_Groups_Record_Model::getInstance($record);
+            $viewer->assign('MODE', 'edit');
+        } else {
+            $recordModel = new Settings_Groups_Record_Model();
+            $viewer->assign('MODE', '');
+        }
 
-		if(!empty($record)) {
-			$recordModel = Settings_Groups_Record_Model::getInstance($record);
-			$viewer->assign('MODE', 'edit');
-		} else {
-			$recordModel = new Settings_Groups_Record_Model();
-			$viewer->assign('MODE', '');
-		}
+        $viewer->assign('MEMBER_GROUPS', Settings_Groups_Member_Model::getAll());
+        $viewer->assign('RECORD_MODEL', $recordModel);
+        $viewer->assign('RECORD_ID', $record);
+        $viewer->assign('MODULE', $moduleName);
+        $viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
 
-		$viewer->assign('MEMBER_GROUPS', Settings_Groups_Member_Model::getAll());
-		$viewer->assign('RECORD_MODEL', $recordModel);
-		$viewer->assign('RECORD_ID', $record);
-		$viewer->assign('MODULE', $moduleName);
-		$viewer->assign('USER_MODEL', Users_Record_Model::getCurrentUserModel());
+        $viewer->view('EditView.tpl', $qualifiedModuleName);
+    }
 
-		$viewer->view('EditView.tpl', $qualifiedModuleName);
-	}
+    /**
+     * Function to get the list of Script models to be included
+     * @param Vtiger_Request $request
+     * @return <Array> - List of Vtiger_JsScript_Model instances
+     */
+    public function getHeaderScripts(Vtiger_Request $request)
+    {
+        $headerScriptInstances = parent::getHeaderScripts($request);
+        $moduleName = $request->getModule();
 
-	/**
-	 * Function to get the list of Script models to be included
-	 * @param Vtiger_Request $request
-	 * @return <Array> - List of Vtiger_JsScript_Model instances
-	 */
-	function getHeaderScripts(Vtiger_Request $request) {
-		$headerScriptInstances = parent::getHeaderScripts($request);
-		$moduleName = $request->getModule();
+        $jsFileNames = array(
+            "modules.Settings.$moduleName.resources.Edit"
+        );
 
-		$jsFileNames = array(
-			"modules.Settings.$moduleName.resources.Edit"
-		);
+        $jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
+        $headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
+        return $headerScriptInstances;
+    }
 
-		$jsScriptInstances = $this->checkAndConvertJsScripts($jsFileNames);
-		$headerScriptInstances = array_merge($headerScriptInstances, $jsScriptInstances);
-		return $headerScriptInstances;
-	}
-    
     /**
      * Setting module related Information to $viewer (for Vtiger7)
      * @param type $request
      * @param type $moduleModel
      */
-    public function setModuleInfo($request, $moduleModel){
+    public function setModuleInfo($request, $moduleModel)
+    {
         $record = $request->get('record');
-		if ($record) {
-			$viewer = $this->getViewer($request);
-			$listViewModel = Settings_Vtiger_ListView_Model::getInstance($request->getModule(false));
-			$linkParams = array('MODULE'=>$request->getModule(false), 'ACTION'=>$request->get('view'));
+        if ($record) {
+            $viewer = $this->getViewer($request);
+            $listViewModel = Settings_Vtiger_ListView_Model::getInstance($request->getModule(false));
+            $linkParams = array('MODULE'=>$request->getModule(false), 'ACTION'=>$request->get('view'));
 
-			if(!$this->listViewLinks){
-				$this->listViewLinks = $listViewModel->getListViewLinks($linkParams);
-			}
-			$viewer->assign('LISTVIEW_LINKS', $this->listViewLinks);
-		}
+            if (!$this->listViewLinks) {
+                $this->listViewLinks = $listViewModel->getListViewLinks($linkParams);
+            }
+            $viewer->assign('LISTVIEW_LINKS', $this->listViewLinks);
+        }
     }
 }

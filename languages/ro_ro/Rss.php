@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'Surse RSS Feed',
     'LBL_ADD_FEED_SOURCE' => 'Adaugă alimentare Sursa',
@@ -16,19 +16,16 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Setare ca implicit',
     'LBL_SENDER' => 'transmițător',
     'LBL_FEED_SOURCE' => 'Sursa de alimentare',
-    'LBL_ENTER_FEED_SOURCE' => 'Introduceți alimentare Sursa',  
+    'LBL_ENTER_FEED_SOURCE' => 'Introduceți alimentare Sursa',
     'SINGLE_Rss' => 'RSS Feed',
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'RSS salvat cu succes',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'RSS salvat cu succes',
     'JS_INVALID_RSS_URL' => 'Invalid Adresă URL RSS',
     'JS_RSS_MADE_AS_DEFAULT' => 'RSS Made ca implicit',
-    
+
 
   'JS_NO_RECORDS' => 'Nu Există Înregistrări',
 
 );
-
-
-?>

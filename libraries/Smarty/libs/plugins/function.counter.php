@@ -45,7 +45,7 @@ function smarty_function_counter($params, $template)
     if (isset($counter['assign'])) {
         $template->assign($counter['assign'], $counter['count']);
     }
-    
+
     if (isset($params['print'])) {
         $print = (bool)$params['print'];
     } else {
@@ -61,18 +61,16 @@ function smarty_function_counter($params, $template)
     if (isset($params['skip'])) {
         $counter['skip'] = $params['skip'];
     }
-    
+
     if (isset($params['direction'])) {
         $counter['direction'] = $params['direction'];
     }
 
-    if ($counter['direction'] == "down")
+    if ($counter['direction'] == "down") {
         $counter['count'] -= $counter['skip'];
-    else
+    } else {
         $counter['count'] += $counter['skip'];
-    
-    return $retval;
-    
-}
+    }
 
-?>
+    return $retval;
+}

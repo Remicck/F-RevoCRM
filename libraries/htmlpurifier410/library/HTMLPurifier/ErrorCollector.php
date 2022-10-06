@@ -6,15 +6,14 @@
  */
 class HTMLPurifier_ErrorCollector
 {
-
     /**
      * Identifiers for the returned error array. These are purposely numeric
      * so list() can be used.
      */
-    const LINENO   = 0;
-    const SEVERITY = 1;
-    const MESSAGE  = 2;
-    const CHILDREN = 3;
+    public const LINENO   = 0;
+    public const SEVERITY = 1;
+    public const MESSAGE  = 2;
+    public const CHILDREN = 3;
 
     /**
      * @type array
@@ -78,7 +77,7 @@ class HTMLPurifier_ErrorCollector
 
         $token = $this->context->get('CurrentToken', true);
         $line  = $token ? $token->line : $this->context->get('CurrentLine', true);
-        $col   = $token ? $token->col  : $this->context->get('CurrentCol', true);
+        $col   = $token ? $token->col : $this->context->get('CurrentCol', true);
         $attr  = $this->context->get('CurrentAttr', true);
 
         // perform special substitutions, also add custom parameters
@@ -200,7 +199,6 @@ class HTMLPurifier_ErrorCollector
         } else {
             return '<ul><li>' . implode('</li><li>', $ret) . '</li></ul>';
         }
-
     }
 
     private function _renderStruct(&$ret, $struct, $line = null, $col = null)

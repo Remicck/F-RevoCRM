@@ -2,8 +2,8 @@
 
 /* Farsi - by "Peyman Hooshmandi Raad" <phooshmand#gmail.com> */
 
-$ADODB_LANG_ARRAY = array (
-			'LANG'                      => 'fa',
+$ADODB_LANG_ARRAY = array(
+            'LANG'                      => 'fa',
             DB_ERROR                    => 'خطای ناشناخته',
             DB_ERROR_ALREADY_EXISTS     => 'وجود دارد',
             DB_ERROR_CANNOT_CREATE      => 'امکان create وجود ندارد',

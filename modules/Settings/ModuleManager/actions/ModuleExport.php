@@ -8,33 +8,35 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-Class Settings_ModuleManager_ModuleExport_Action extends Settings_Vtiger_IndexAjax_View {
-	
-	function __construct() {
-		parent::__construct();
-		$this->exposeMethod('exportModule');
-	}
-    
-    function process(Vtiger_Request $request) {
-		$mode = $request->getMode();
-		if(!empty($mode)) {
-			$this->invokeExposedMethod($mode, $request);
-			return;
-		}
-	}
-    
-    protected function exportModule(Vtiger_Request $request) {
-        $moduleName = $request->get('forModule');
-		
-		$moduleModel = Vtiger_Module_Model::getInstance($moduleName);
-		
-		if (!$moduleModel->isExportable()) {
-			echo 'Module not exportable!';
-			return;
-		}
-
-		$package = new Vtiger_PackageExport();
-		$package->export($moduleModel, '', sprintf("%s-%s.zip", $moduleModel->get('name'), $moduleModel->get('version')), true);
+class Settings_ModuleManager_ModuleExport_Action extends Settings_Vtiger_IndexAjax_View
+{
+    public function __construct()
+    {
+        parent::__construct();
+        $this->exposeMethod('exportModule');
     }
-	
+
+    public function process(Vtiger_Request $request)
+    {
+        $mode = $request->getMode();
+        if (!empty($mode)) {
+            $this->invokeExposedMethod($mode, $request);
+            return;
+        }
+    }
+
+    protected function exportModule(Vtiger_Request $request)
+    {
+        $moduleName = $request->get('forModule');
+
+        $moduleModel = Vtiger_Module_Model::getInstance($moduleName);
+
+        if (!$moduleModel->isExportable()) {
+            echo 'Module not exportable!';
+            return;
+        }
+
+        $package = new Vtiger_PackageExport();
+        $package->export($moduleModel, '', sprintf("%s-%s.zip", $moduleModel->get('name'), $moduleModel->get('version')), true);
+    }
 }

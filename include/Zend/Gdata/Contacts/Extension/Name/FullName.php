@@ -3,7 +3,7 @@
 /**
  * https://github.com/prasad83/Zend-Gdata-Contacts
  * @author prasad
- * 
+ *
  * LICENSE
  *
  * This source file is subject to the new BSD license that is bundled
@@ -19,8 +19,7 @@
  * @subpackage Contacts
  */
 
-class Zend_Gdata_Contacts_Extension_Name_FullName extends Zend_Gdata_Contacts_ExtensionElement {
-	
-	protected $_rootElement = 'fullName';
-	
+class Zend_Gdata_Contacts_Extension_Name_FullName extends Zend_Gdata_Contacts_ExtensionElement
+{
+    protected $_rootElement = 'fullName';
 }

@@ -13,13 +13,13 @@ require_once('vtlib/Vtiger/LanguageImport.php');
  * Language Manager class for vtiger Modules.
  * @package vtlib
  */
-class Vtiger_Language extends Vtiger_LanguageImport {
-
-	/**
-	 * Constructor
-	 */
-	function __construct() {
-		parent::__construct();
-	}
+class Vtiger_Language extends Vtiger_LanguageImport
+{
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
 }
-?>

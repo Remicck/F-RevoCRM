@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'   =>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'Sources de flux RSS',
     'LBL_ADD_FEED_SOURCE' => 'Ajouter la Source d alimentation',
@@ -16,7 +16,7 @@ $languageStrings = Array(
     'LBL_SET_AS_DEFAULT' => 'Définir par défaut',
     'LBL_SENDER' => 'émetteur',
     'LBL_FEED_SOURCE' => 'la source d alimentation',
-    'LBL_ENTER_FEED_SOURCE' => 'Saisissez la source d alimentation', 
+    'LBL_ENTER_FEED_SOURCE' => 'Saisissez la source d alimentation',
     'SINGLE_Rss' => 'Flux Rss',
 );
 
@@ -24,11 +24,8 @@ $jsLanguageStrings = array(
     'JS_RSS_SUCCESSFULLY_SAVED' => 'Rss Réussir sauvé',
     'JS_INVALID_RSS_URL' => 'Invalid URL du flux RSS',
     'JS_RSS_MADE_AS_DEFAULT' => 'Rss Fait comme défaut',
-    
+
 
   'JS_NO_RECORDS' => 'Pas D\'Enregistrements',
 
 );
-
-
-?>

@@ -12,28 +12,34 @@
   *      @link http://kcfinder.sunhater.com
   */
 
-class httpCache {
-    const DEFAULT_TYPE = "text/html";
-    const DEFAULT_EXPIRE = 604800; // in seconds
+class httpCache
+{
+    public const DEFAULT_TYPE = "text/html";
+    public const DEFAULT_EXPIRE = 604800; // in seconds
 
-  /** Cache a file. The $type parameter might define the MIME type of the file
-    * or path to magic file to autodetect the MIME type. If you skip $type
-    * parameter the method will try with the default magic file. Autodetection
-    * of MIME type requires Fileinfo PHP extension used in file::getMimeType()
-    * @param string $file
-    * @param string $type
-    * @param integer $expire
-    * @param array $headers */
+    /** Cache a file. The $type parameter might define the MIME type of the file
+      * or path to magic file to autodetect the MIME type. If you skip $type
+      * parameter the method will try with the default magic file. Autodetection
+      * of MIME type requires Fileinfo PHP extension used in file::getMimeType()
+      * @param string $file
+      * @param string $type
+      * @param integer $expire
+      * @param array $headers */
 
-    static function file($file, $type=null, $expire=null, array $headers=null) {
+    public static function file($file, $type=null, $expire=null, array $headers=null)
+    {
         $mtime = @filemtime($file);
-        if ($mtime !== false) self::checkMTime($mtime);
+        if ($mtime !== false) {
+            self::checkMTime($mtime);
+        }
 
         if ($type === null) {
             $magic = ((substr($type, 0, 1) == "/") || preg_match('/^[a-z]\:/i', $type))
                 ? $type : null;
             $type = file::getMimeType($file, $magic);
-            if (!$type) $type = null;
+            if (!$type) {
+                $type = null;
+            }
         }
 
         self::content(@file_get_contents($file), $mtime, $type, $expire, $headers, false);
@@ -47,10 +53,17 @@ class httpCache {
     * @param array $headers
     * @param bool $checkMTime */
 
-    static function content($content, $mtime, $type=null, $expire=null, array $headers=null, $checkMTime=true) {
-        if ($checkMTime) self::checkMTime($mtime);
-        if ($type === null) $type = self::DEFAULT_TYPE;
-        if ($expire === null) $expire = self::DEFAULT_EXPIRE;
+    public static function content($content, $mtime, $type=null, $expire=null, array $headers=null, $checkMTime=true)
+    {
+        if ($checkMTime) {
+            self::checkMTime($mtime);
+        }
+        if ($type === null) {
+            $type = self::DEFAULT_TYPE;
+        }
+        if ($expire === null) {
+            $expire = self::DEFAULT_EXPIRE;
+        }
         $size = strlen($content);
         $expires = gmdate("D, d M Y H:i:s", time() + $expire) . " GMT";
         header("Content-Type: $type");
@@ -58,7 +71,11 @@ class httpCache {
         header("Cache-Control: max-age=$expire");
         header("Pragma: !invalid");
         header("Content-Length: $size");
-        if ($headers !== null) foreach ($headers as $header) header($header);
+        if ($headers !== null) {
+            foreach ($headers as $header) {
+                header($header);
+            }
+        }
         echo $content;
     }
 
@@ -68,7 +85,8 @@ class httpCache {
     * the PHP to be configured as Apache module.
     * @param integer $mtime */
 
-    static function checkMTime($mtime) {
+    public static function checkMTime($mtime)
+    {
         header("Last-Modified: " . gmdate("D, d M Y H:i:s", $mtime) . " GMT");
 
         $headers = function_exists("getallheaders")
@@ -87,5 +105,3 @@ class httpCache {
         }
     }
 }
-
-?>

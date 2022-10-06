@@ -8,7 +8,7 @@
  * All Rights Reserved.
  ************************************************************************************/
 
-$languageStrings = Array(
+$languageStrings = array(
     'Rss'=>'Rss',
     'LBL_RSS_FEED_SOURCES' => 'RssフィードのURL',
     'LBL_ADD_FEED_SOURCE' => 'Rssフィードの追加',
@@ -21,11 +21,9 @@ $languageStrings = Array(
 );
 
 $jsLanguageStrings = array(
-	'JS_RSS_SUCCESSFULLY_SAVED' => 'Rssを保存しました',
+    'JS_RSS_SUCCESSFULLY_SAVED' => 'Rssを保存しました',
     'JS_INVALID_RSS_URL' => 'RssのURLが無効です',
     'JS_RSS_MADE_AS_DEFAULT' => 'デフォルトとして登録',
     'JS_NO_RECORDS' => 'レコードがありません',
 
 );
-
-?>

@@ -9,42 +9,46 @@
  ************************************************************************************/
 include_once dirname(__FILE__) . '/Login.php';
 
-class Mobile_WS_LoginAndFetchModules extends Mobile_WS_Login {
-	
-	function postProcess(Mobile_API_Response $response) {
-		$current_user = $this->getActiveUser();
-		
-		if ($current_user) {
-			$result = $response->getResult();
-			$result['modules'] = $this->getListing($current_user);
-			$response->setResult($result);
-		}
-	}
-		
-	function getListing($user) {
-		$modulewsids = Mobile_WS_Utils::getEntityModuleWSIds();
-		
-		// Disallow modules
-		unset($modulewsids['Users']);
-		
-		// Calendar & Events module will be merged
-		unset($modulewsids['Events']);
+class Mobile_WS_LoginAndFetchModules extends Mobile_WS_Login
+{
+    public function postProcess(Mobile_API_Response $response)
+    {
+        $current_user = $this->getActiveUser();
 
-		$listresult = vtws_listtypes(null,$user);
-		
-		$listing = array();
-		foreach($listresult['types'] as $index => $modulename) {
-			if(!isset($modulewsids[$modulename])) continue;
-			
-			$listing[] = array(
-				'id'   => $modulewsids[$modulename],
-				'name' => $modulename,
-				'isEntity' => $listresult['information'][$modulename]['isEntity'],
-				'label' => $listresult['information'][$modulename]['label'],
-				'singular' => $listresult['information'][$modulename]['singular'],
-			);
-		}
-		
-		return $listing;
-	}
+        if ($current_user) {
+            $result = $response->getResult();
+            $result['modules'] = $this->getListing($current_user);
+            $response->setResult($result);
+        }
+    }
+
+    public function getListing($user)
+    {
+        $modulewsids = Mobile_WS_Utils::getEntityModuleWSIds();
+
+        // Disallow modules
+        unset($modulewsids['Users']);
+
+        // Calendar & Events module will be merged
+        unset($modulewsids['Events']);
+
+        $listresult = vtws_listtypes(null, $user);
+
+        $listing = array();
+        foreach ($listresult['types'] as $index => $modulename) {
+            if (!isset($modulewsids[$modulename])) {
+                continue;
+            }
+
+            $listing[] = array(
+                'id'   => $modulewsids[$modulename],
+                'name' => $modulename,
+                'isEntity' => $listresult['information'][$modulename]['isEntity'],
+                'label' => $listresult['information'][$modulename]['label'],
+                'singular' => $listresult['information'][$modulename]['singular'],
+            );
+        }
+
+        return $listing;
+    }
 }

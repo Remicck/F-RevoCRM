@@ -43,7 +43,6 @@
  */
 class Zend_Crypt_Math_BigInteger
 {
-
     /**
      * Holds an instance of one of the three arbitrary precision wrappers.
      *
@@ -77,7 +76,7 @@ class Zend_Crypt_Math_BigInteger
      */
     public function __call($methodName, $args)
     {
-        if(!method_exists($this->_math, $methodName)) {
+        if (!method_exists($this->_math, $methodName)) {
             require_once 'Zend/Crypt/Math/BigInteger/Exception.php';
             throw new Zend_Crypt_Math_BigInteger_Exception('invalid method call: ' . get_class($this->_math) . '::' . $methodName . '() does not exist');
         }
@@ -99,7 +98,7 @@ class Zend_Crypt_Math_BigInteger
                 $extension = 'bcmath';
             }
         }
-        if($extension == 'gmp' && extension_loaded('gmp')) {
+        if ($extension == 'gmp' && extension_loaded('gmp')) {
             require_once 'Zend/Crypt/Math/BigInteger/Gmp.php';
             $this->_math = new Zend_Crypt_Math_BigInteger_Gmp();
         //} elseif($extension == 'bigint' && extension_loaded('big_int')) {
@@ -113,5 +112,4 @@ class Zend_Crypt_Math_BigInteger
             throw new Zend_Crypt_Math_BigInteger_Exception($extension . ' big integer precision math support not detected');
         }
     }
-
 }

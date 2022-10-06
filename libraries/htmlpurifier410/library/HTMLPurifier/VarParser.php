@@ -6,18 +6,17 @@
  */
 class HTMLPurifier_VarParser
 {
-
-    const STRING = 1;
-    const ISTRING = 2;
-    const TEXT = 3;
-    const ITEXT = 4;
-    const INT = 5;
-    const FLOAT = 6;
-    const BOOL = 7;
-    const LOOKUP = 8;
-    const ALIST = 9;
-    const HASH = 10;
-    const MIXED = 11;
+    public const STRING = 1;
+    public const ISTRING = 2;
+    public const TEXT = 3;
+    public const ITEXT = 4;
+    public const INT = 5;
+    public const FLOAT = 6;
+    public const BOOL = 7;
+    public const LOOKUP = 8;
+    public const ALIST = 9;
+    public const HASH = 10;
+    public const MIXED = 11;
 
     /**
      * Lookup table of allowed types. Mainly for backwards compatibility, but

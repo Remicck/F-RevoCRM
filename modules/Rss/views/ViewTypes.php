@@ -8,19 +8,21 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Rss_ViewTypes_View extends Vtiger_IndexAjax_View {
-
-    function __construct() {
+class Rss_ViewTypes_View extends Vtiger_IndexAjax_View
+{
+    public function __construct()
+    {
         parent::__construct();
         $this->exposeMethod('getRssWidget');
         $this->exposeMethod('getRssAddForm');
     }
-        
-	/**
+
+    /**
      * Function to display rss sidebar widget
-     * @param <Vtiger_Request> $request 
+     * @param <Vtiger_Request> $request
      */
-    public function getRssWidget(Vtiger_Request $request) {
+    public function getRssWidget(Vtiger_Request $request)
+    {
         $module = $request->get('module');
         $moduleModel = Vtiger_Module_Model::getInstance($module);
         $rssSources = $moduleModel->getRssSources();
@@ -29,17 +31,17 @@ class Rss_ViewTypes_View extends Vtiger_IndexAjax_View {
         $viewer->assign('RSS_SOURCES', $rssSources);
         echo $viewer->view('RssWidgetContents.tpl', $module, true);
     }
-    
+
     /**
-     * Function to get the rss add form 
+     * Function to get the rss add form
      * @param <Vtiger_Request> $request
      */
-    public function getRssAddForm(Vtiger_Request $request) { 
+    public function getRssAddForm(Vtiger_Request $request)
+    {
         $module = $request->getModule();
-		$moduleModel = Vtiger_Module_Model::getInstance($module);
-		$viewer = $this->getViewer($request);
-		$viewer->assign('MODULE',$module);
+        $moduleModel = Vtiger_Module_Model::getInstance($module);
+        $viewer = $this->getViewer($request);
+        $viewer->assign('MODULE', $module);
         $viewer->view('RssAddForm.tpl', $module);
     }
-   
 }

@@ -8,22 +8,24 @@
  * All Rights Reserved.
  *************************************************************************************/
 
-class Rss_GetHtml_Action extends Vtiger_Action_Controller {
+class Rss_GetHtml_Action extends Vtiger_Action_Controller
+{
+    public function requiresPermission(\Vtiger_Request $request)
+    {
+        $permissions = parent::requiresPermission($request);
+        $permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
+        return $permissions;
+    }
 
-	public function requiresPermission(\Vtiger_Request $request) {
-		$permissions = parent::requiresPermission($request);
-		$permissions[] = array('module_parameter' => 'module', 'action' => 'DetailView');
-		return $permissions;
-	} 
-	
-	public function process(Vtiger_Request $request) {
-		$module = $request->get('module');
+    public function process(Vtiger_Request $request)
+    {
+        $module = $request->get('module');
         $url = $request->get('url');
         $recordModel = Rss_Record_Model::getCleanInstance($module);
         $html = $recordModel->getHtmlFromUrl($url);
 
-		$response = new Vtiger_Response();
-		$response->setResult(array('html'=>$html));
-		$response->emit();
-	}
+        $response = new Vtiger_Response();
+        $response->setResult(array('html'=>$html));
+        $response->emit();
+    }
 }
