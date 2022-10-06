@@ -19,9 +19,6 @@ jobs:
     - name: Composer install
       if: steps.cache.outputs.cache-hit != 'true'
       run: composer install -n --prefer-dist
-    - name: Dry-run php-cs-fixer
-      run: |
-        ./vendor/bin/php-cs-fixer fix --dry-run --diff --diff-format=udiff --using-cache=no . || true
     - name: Execute php-cs-fixer
       run: |
         ./vendor/bin/php-cs-fixer fix --using-cache=no
