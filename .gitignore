@@ -36,3 +36,10 @@ config.inc.php
 docker-compose.override.yml
 .env
 /vendor
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/e2e/.auth/*
+!/e2e/.auth/.gitkeep
