@@ -41,7 +41,7 @@ export class FrTestModule extends FrBaseModule {
 
     // リストへ遷移
     await page.goto(
-      url(`index.php?module=${this.getModuleName()}&view=List`)
+      url(`index.php?module=${this.moduleName}&view=List`)
     );
 
     expect(page.locator(`text=${hash}`).first()).toBeVisible();

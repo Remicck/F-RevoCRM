@@ -3,14 +3,14 @@ import { FRDescribeType } from "./types/frBase";
 
 export class FrBaseModule {
   moduleName: string;
-  sessionName: string;
-  listTypes: {
+  private sessionName: string;
+  private listTypes: {
     isEntity: boolean;
     label: string;
     singular: string;
   }[];
-  moduleInfo: FRDescribeType;
-  baseUrl: string = "http://localhost/";
+  private moduleInfo: FRDescribeType;
+  private baseUrl: string = "http://localhost/";
 
   constructor(moduleName: string, sessionName: string) {
     this.moduleName = moduleName;
@@ -30,13 +30,6 @@ export class FrBaseModule {
     const sessionName = response.sessionName;
     return new this(moduleName, sessionName);
   };
-
-  /**
-   * モジュール名を取得する
-   */
-  getModuleName() {
-    return this.moduleName;
-  }
 
   /**********************************
    * TEST用
