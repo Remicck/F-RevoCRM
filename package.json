@@ -6,17 +6,21 @@
     "test": "test"
   },
   "scripts": {
-    "test:e2e": "npx playwright test",
-    "test:e2e:ui": "npx playwright test --ui"
+    "test:e2e": "dotenv -e .env -- playwright test",
+    "test:e2e:ui": "dotenv -e .env -- playwright test --ui"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.46.0",
-    "@types/node": "^22.2.0"
+    "@types/md5": "^2.3.5",
+    "@types/node": "^22.2.0",
+    "dotenv-cli": "^7.4.2"
   },
   "dependencies": {
-    "axios": "^1.7.7"
+    "@types/axios": "^0.9.36",
+    "axios": "^1.7.7",
+    "md5": "^2.3.0"
   }
 }

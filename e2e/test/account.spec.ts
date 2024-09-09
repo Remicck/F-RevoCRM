@@ -1,14 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { describe } from "node:test";
-import { generateRandomString, url, waitSeconds } from "../utils/util";
+import { generateRandomString, url } from "../utils/util";
 import { sidebarTest } from "../utils/test";
-import { FrTestModule } from "../model/testModule";
 
 describe("顧客企業モジュールのテスト", () => {
   test.beforeEach(async ({ page }) => {
-    const moduleModel = new FrTestModule("Accounts");
-    console.log(moduleModel.showModuleName());
-
     await page.goto(
       url("index.php?module=Accounts&view=List&viewname=4&app=MARKETING")
     );
@@ -72,7 +68,7 @@ describe("顧客企業モジュールのテスト", () => {
     await page.getByText("テスト企業").first().click();
     // index.php?module=Accounts&view=Detail&record=8&app=MARKETING に遷移するのを待つ
     await page.waitForURL(/record=\d+&app=MARKETING$/);
-    
+
     // Ajax関係の通信を適切にHandlingできなかったため、1秒間待つ処理をいれるが基本的にはアンチパターン
     await page.waitForTimeout(1000);
 
@@ -84,7 +80,11 @@ describe("顧客企業モジュールのテスト", () => {
      *         クリックしたいボタンをクリックすることができない。
      *         このようなケースの場合は、親子関係を利用してClassやID、その他のHTML属性を利用して取得する
      */
-    await page.locator('.detailViewButtoncontainer').getByText("編集").first().click();
+    await page
+      .locator(".detailViewButtoncontainer")
+      .getByText("編集")
+      .first()
+      .click();
 
     const hash = generateRandomString(8);
     const accountValues = {

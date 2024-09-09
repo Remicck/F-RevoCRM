@@ -8,11 +8,13 @@
  * All Rights Reserved.
  *************************************************************************************/
 	
-	function vtws_login($username,$pwd){
-		
+	function vtws_login($username,$accessKey){
+
+		$pwd = $accessKey;
+	
 		$user = new Users();
 		$userId = $user->retrieve_user_id($username);
-		
+
 		$token = vtws_getActiveToken($userId);
 		if($token == null){
 			throw new WebServiceException(WebServiceErrorCode::$INVALIDTOKEN,"Specified token is invalid or expired");
