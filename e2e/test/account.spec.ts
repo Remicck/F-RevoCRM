@@ -2,9 +2,13 @@ import { test, expect } from "@playwright/test";
 import { describe } from "node:test";
 import { generateRandomString, url, waitSeconds } from "../utils/util";
 import { sidebarTest } from "../utils/test";
+import { FrTestModule } from "../model/testModule";
 
 describe("顧客企業モジュールのテスト", () => {
   test.beforeEach(async ({ page }) => {
+    const moduleModel = new FrTestModule("Accounts");
+    console.log(moduleModel.showModuleName());
+
     await page.goto(
       url("index.php?module=Accounts&view=List&viewname=4&app=MARKETING")
     );
