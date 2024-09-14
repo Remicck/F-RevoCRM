@@ -1,5 +1,5 @@
 import { frgetDescribe, frgetListTypes, login } from "./fetcher";
-import { FRDescribeType } from "./types/frBase";
+import type { FRDescribeType } from "./types/frBase";
 
 export class FrBaseModule {
   moduleName: string;

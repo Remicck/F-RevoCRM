@@ -1,6 +1,5 @@
-import { test,  } from "@playwright/test";
-import { describe } from "node:test";
-import { FrTestModule } from "../model/testModule";
+import { test } from "@playwright/test";
+import { FrTest } from "../model/FrTest";
 
 test.beforeAll(async () => {});
 
@@ -9,9 +8,9 @@ test.describe.serial("F-RevoCRMの全体的なテスト", async () => {
 
   for (const module of modules) {
     // モジュールを動的に扱うクラスマップを作成
-    const moduleMap: Record<string, typeof FrTestModule> = {
-      Accounts: FrTestModule,
-      Contacts: FrTestModule,
+    const moduleMap: Record<string, typeof FrTest> = {
+      Accounts: FrTest,
+      Contacts: FrTest,
     };
 
     test(`モジュール: ${module}`, async ({ page }) => {
