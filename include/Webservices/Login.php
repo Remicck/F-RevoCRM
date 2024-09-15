@@ -9,9 +9,7 @@
  *************************************************************************************/
 	
 	function vtws_login($username,$accessKey){
-
-		$pwd = $accessKey;
-	
+		
 		$user = new Users();
 		$userId = $user->retrieve_user_id($username);
 
@@ -20,13 +18,13 @@
 			throw new WebServiceException(WebServiceErrorCode::$INVALIDTOKEN,"Specified token is invalid or expired");
 		}
 		
-		$accessKey = vtws_getUserAccessKey($userId);
-		if($accessKey == null){
+		$localAccessKey = vtws_getUserAccessKey($userId);
+		if($localAccessKey == null){
 			throw new WebServiceException(WebServiceErrorCode::$ACCESSKEYUNDEFINED,"Access key for the user is undefined");
 		}
 		
-		$accessCrypt = md5($token.$accessKey);
-		if(strcmp($accessCrypt,$pwd)!==0){
+		$accessCrypt = md5($token.$localAccessKey);
+		if(strcmp($accessCrypt, $accessKey)!==0){
 			throw new WebServiceException(WebServiceErrorCode::$INVALIDUSERPWD,"Invalid username or password");
 		}
 		$user = $user->retrieveCurrentUserInfoFromFile($userId);
@@ -34,7 +32,6 @@
 			return $user;
 		}
 		// Finer exception message could be handy to enumeration attacks - so normalize it. 
-		//throw new WebServiceException(WebServiceErrorCode::$AUTHREQUIRED,'Given user is inactive');
 		throw new WebServiceException(WebServiceErrorCode::$INVALIDUSERPWD,"Invalid username or password");
 	}
 	
