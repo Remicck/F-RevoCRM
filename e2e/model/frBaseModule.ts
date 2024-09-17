@@ -21,15 +21,20 @@ export class FrBaseModule {
    * 初期化処理
    * 継承先から使われることを想定して、ジェネリクス型で継承先のクラスを返す用に設定
    */
-  public static async init<T extends FrBaseModule>(this: new (moduleName: string, sessionName: string) => T, moduleName: string): Promise<T | null> {
-    // loginさせたものを渡す
-    const response = await login(process.env.E2E_USER_NAME || '', process.env.E2E_USER_ACCESSKEY || '');
-    if (!response) {
-      return null;
+  public static async init<T extends FrBaseModule>(
+    this: new (moduleName: string, sessionName: string) => T,
+    moduleName: string,
+    sessionName?: string
+  ): Promise<T | null> {
+    if (!sessionName) {
+      const response = await login(process.env.E2E_USER_NAME || '', process.env.E2E_USER_ACCESSKEY || '');
+      if (!response) {
+        return null;
+      }
+      sessionName = response.sessionName;
     }
-    const sessionName = response.sessionName;
     return new this(moduleName, sessionName);
-  };
+  }
 
   /**********************************
    * TEST用

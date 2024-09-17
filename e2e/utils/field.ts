@@ -8,7 +8,6 @@ import { FrBaseModule } from "../model/frBaseModule";
  * @returns boolean
  */
 export const dontTestFieldsName = (field: FRDescribeFieldsType) => {
-  console.log('field', field);
   const dontTestFields = [
     'tags',
     'last_action_date',
