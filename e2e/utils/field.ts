@@ -156,6 +156,8 @@ export const fillField = async (
         `#${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}_create`
       )
       .click();
+    await page.waitForLoadState("networkidle");
+    await page.waitForLoadState("domcontentloaded");
     // 値を登録する
     const relatedModule = await FrBaseModule.init(
       (fieldObj.type.refersTo && fieldObj.type.refersTo[0]) || ""
