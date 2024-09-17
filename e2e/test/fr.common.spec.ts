@@ -1,32 +1,27 @@
-import { test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { FrTest } from "../model/FrTest";
 
-test.beforeAll(async () => {});
+const modules = ["Accounts", "Contacts"];
+const moduleMap: Record<string, typeof FrTest> = {
+  Accounts: FrTest,
+  Contacts: FrTest,
+};
 
-test.describe.serial("F-RevoCRMの全体的なテスト", async () => {
-  const modules = ["Accounts", "Contacts"];
+for (const module of modules) {
+  test.describe.serial(`モジュール: ${module}`, async () => {
+    let testModuleModel: FrTest | null;
 
-  for (const module of modules) {
-    // モジュールを動的に扱うクラスマップを作成
-    const moduleMap: Record<string, typeof FrTest> = {
-      Accounts: FrTest,
-      Contacts: FrTest,
-    };
+    test.beforeAll(async () => {
+      const ModuleClass = moduleMap[module];
+      testModuleModel = await ModuleClass.init(module);
+    });
 
-    test(`モジュール: ${module}`, async ({ page }) => {
-      const ModuleClass = moduleMap[module]; // モジュール名に対応するクラスを取得
-      if (!ModuleClass) {
-        throw new Error(`モジュール ${module} が見つかりません`);
-      }
-
-      // 動的にインスタンスを生成
-      const testModuleModel = await ModuleClass.init(module);
+    test(`レコード新規作成`, async ({ page }) => {
       if (!testModuleModel) {
+        console.log('testModuleModel', testModuleModel);
         throw new Error("Module initialization failed");
       }
-
-      // インスタンスのメソッドを実行
-      await testModuleModel.testCreate(page);
+      await testModuleModel.testRecordCreate(page);
     });
-  }
-});
+  });
+}

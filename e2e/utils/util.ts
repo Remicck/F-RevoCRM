@@ -26,3 +26,35 @@ export function generateRandomString(length: number) {
   }
   return result;
 }
+
+/**
+ * 大文字・小文字英数をIntに変換する
+ */
+export function base62ToInt(input: string): number {
+  const base62Chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  const base = base62Chars.length;
+  const intMin = -2147483648;
+  const intMax = 2147483647;
+  let result = 0;
+  const isNegative = input[0] === '-';
+  const chars = isNegative ? input.slice(1) : input;
+
+  for (let i = 0; i < chars.length; i++) {
+    const char = chars[i];
+    const value = base62Chars.indexOf(char);
+    if (value === -1) {
+      throw new Error(`Invalid character in input: ${char}`);
+    }
+    result = result * base + value;
+  }
+
+  // 正負の符号を適用
+  result = isNegative ? -result : result;
+
+  // Intの範囲に無理やり収める
+  if (result < intMin || result > intMax) {
+    result = ((result % (intMax - intMin + 1)) + (intMax - intMin + 1)) % (intMax - intMin + 1) + intMin;
+  }
+
+  return result;
+}

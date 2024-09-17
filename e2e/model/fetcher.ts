@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FRDescribeFieldsType, FRDescribeType, FRResponse } from "./types/frBase";
+import { FRDescribeFieldsType, FRDescribeType, FRResponse, FRRetrieveItems } from "./types/frBase";
 import md5 from "md5";
 
 export const baseUrl = "http://localhost/webservice.php";
@@ -83,6 +83,17 @@ export const frgetDescribe = async (sessionName: string, moduleName: string) => 
   const response = await client.get<
     FRResponse<FRDescribeType>
   >(`?operation=describe&elementType=${moduleName}&sessionName=${sessionName}`);
+
+  if (response.data.success === false) {
+    return false;
+  }
+  return response.data.result;
+};
+
+export const frgetOneRecord = async (sessionName: string, moduleName: string) => {
+  const response = await client.get<
+    FRResponse<FRRetrieveItems[]>
+  >(`?operation=query&query=SELECT * FROM ${moduleName} LIMIT 1;&sessionName=${sessionName}`);
 
   if (response.data.success === false) {
     return false;

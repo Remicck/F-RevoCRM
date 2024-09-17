@@ -1,4 +1,4 @@
-import { frgetDescribe, frgetListTypes, login } from "./fetcher";
+import { frgetDescribe, frgetListTypes, frgetOneRecord, login } from "./fetcher";
 import type { FRDescribeType } from "./types/frBase";
 
 export class FrBaseModule {
@@ -10,7 +10,7 @@ export class FrBaseModule {
     singular: string;
   }[];
   private moduleInfo: FRDescribeType;
-  private baseUrl: string = "http://localhost/";
+  baseUrl: string = "http://localhost/";
 
   constructor(moduleName: string, sessionName: string) {
     this.moduleName = moduleName;
@@ -21,11 +21,11 @@ export class FrBaseModule {
    * 初期化処理
    * 継承先から使われることを想定して、ジェネリクス型で継承先のクラスを返す用に設定
    */
-  public static async init<T extends FrBaseModule>(this: new (moduleName: string, sessionName: string) => T, moduleName: string): Promise<T | false> {
+  public static async init<T extends FrBaseModule>(this: new (moduleName: string, sessionName: string) => T, moduleName: string): Promise<T | null> {
     // loginさせたものを渡す
     const response = await login(process.env.E2E_USER_NAME || '', process.env.E2E_USER_ACCESSKEY || '');
     if (!response) {
-      return false;
+      return null;
     }
     const sessionName = response.sessionName;
     return new this(moduleName, sessionName);
@@ -78,5 +78,17 @@ export class FrBaseModule {
     this.moduleInfo = response;
 
     return this.moduleInfo;
+  }
+
+  /**
+   * 特定のモジュールのレコードを1権取得する
+   */
+  async getOneRecordFromModuleName(moduleName: string) {
+    const response = await frgetOneRecord(this.sessionName, moduleName);
+    if(!response){
+      return false;
+    }
+    // 1件のみ返却する
+    return response[0];
   }
 }

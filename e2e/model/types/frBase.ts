@@ -50,3 +50,20 @@ export type FRDescribeFieldsType = {
     };
   };
 };
+
+export type FRRetrieveItems = {
+  [key: string]: string;
+} & {
+  ListItems?: {
+    [key: string]: string;
+  } & {
+    LineItems: {
+      [key: string]: string;
+    }[];
+    LineItems_FinalDetails: {
+      [key: string]: {
+        [key: string]: string;
+      };
+    }[];
+  };
+};
