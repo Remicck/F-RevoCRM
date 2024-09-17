@@ -2,6 +2,7 @@ import { format, subDays } from "date-fns";
 import { FRDescribeFieldsType } from "../model/types/frBase";
 import { base62ToInt } from "./util";
 import { FrBaseModule } from "../model/frBaseModule";
+import { Page } from "@playwright/test";
 
 /**
  * テストで利用しない項目を定義する
@@ -85,3 +86,30 @@ export const getFieldValue = async (field: FRDescribeFieldsType, hash?: string) 
       return `${field.label}_${hash}`;
     }
 };
+
+/**
+ * フィールドに値を登録する
+ */
+export const fillField = async (page: Page, fieldObj: FRDescribeFieldsType, value: string) => {
+  if (fieldObj.type.name === "text") {
+    await page.fill(
+      `textarea[name="${fieldObj.name}"]`,
+      `${value}`
+    );
+  } else if (fieldObj.type.name === "date") {
+    await page.fill(
+      `input[name="${fieldObj.name}"]`,
+      `${value}`
+    );
+    await page.click(`input[name="${fieldObj.name}"]`);
+  } else if (fieldObj.type.name === "picklist") {
+    await page.selectOption(`select[name=${fieldObj.name}]`, value);
+  } else if (fieldObj.type.name === "boolean") {
+    await page.check(`input[type="checkbox"][name="${fieldObj.name}"]`);
+  } else {
+    await page.fill(
+      `input[name="${fieldObj.name}"]`,
+      `${value}`
+    );
+  }
+}

@@ -30,5 +30,10 @@ for (const module of modules) {
       // ここではすでに初期化されているため、nullチェックは不要
       await testModuleModel!.testRecordCreate(page);
     });
+
+    test('レコード編集', async ({ page }) => {
+      // ここではすでに初期化されているため、nullチェックは不要
+      await testModuleModel!.testRecordEdit(page);
+    });
   });
 }

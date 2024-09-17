@@ -1,4 +1,9 @@
-import { frgetDescribe, frgetListTypes, frgetOneRecord, login } from "./fetcher";
+import {
+  frgetDescribe,
+  frgetListTypes,
+  frgetOneRecord,
+  login,
+} from "./fetcher";
 import type { FRDescribeType } from "./types/frBase";
 
 export class FrBaseModule {
@@ -27,7 +32,10 @@ export class FrBaseModule {
     sessionName?: string
   ): Promise<T | null> {
     if (!sessionName) {
-      const response = await login(process.env.E2E_USER_NAME || '', process.env.E2E_USER_ACCESSKEY || '');
+      const response = await login(
+        process.env.E2E_USER_NAME || "",
+        process.env.E2E_USER_ACCESSKEY || ""
+      );
       if (!response) {
         return null;
       }
@@ -42,7 +50,9 @@ export class FrBaseModule {
   getCreateUrl() {
     return `${this.baseUrl}index.php?module=${this.moduleName}&view=Edit&app=MARKETING`;
   }
-
+  getEditUrl(recordId: string) {
+    return `${this.baseUrl}index.php?module=${this.moduleName}&view=Edit&app=MARKETING&record=${recordId}`;
+  }
 
   /**********************************
    * API
@@ -52,7 +62,7 @@ export class FrBaseModule {
    * Module一覧を取得する
    */
   async fetchAllListTypes() {
-    if(this.listTypes?.[this.moduleName]){
+    if (this.listTypes?.[this.moduleName]) {
       return this.listTypes;
     }
 
@@ -60,7 +70,7 @@ export class FrBaseModule {
     if (!response) {
       return false;
     }
-   
+
     Object.keys(this.listTypes).forEach((key) => {
       this.listTypes[key] = this.listTypes[key];
     });
@@ -90,7 +100,7 @@ export class FrBaseModule {
    */
   async getOneRecordFromModuleName(moduleName: string) {
     const response = await frgetOneRecord(this.sessionName, moduleName);
-    if(!response){
+    if (!response) {
       return false;
     }
     // 1件のみ返却する
