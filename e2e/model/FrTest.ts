@@ -27,15 +27,18 @@ export class FrTest extends FrBaseModule {
           continue;
         }
 
-        const normalValue =  await getFieldValue(fieldObj, hash) || ''
+        const normalValue = (await getFieldValue(fieldObj, hash)) || "";
 
         await fillField(page, fieldObj, normalValue);
 
         // 値を保持しておく
-        if(fieldObj.type.name !== "boolean" && fieldObj.type.name !== "picklist"){
+        if (
+          fieldObj.type.name !== "boolean" &&
+          fieldObj.type.name !== "picklist"
+        ) {
           valuesArray.push(normalValue);
-        }else if(fieldObj.type.name === "picklist"){
-          if(fieldObj.type.picklistValues?.[0]?.label){
+        } else if (fieldObj.type.name === "picklist") {
+          if (fieldObj.type.picklistValues?.[0]?.label) {
             valuesArray.push(fieldObj.type.picklistValues?.[0]?.label);
           }
         }
@@ -59,12 +62,12 @@ export class FrTest extends FrBaseModule {
   }
 
   /**
-   * レコードが正常に作成されたことを確認するテスト
+   * レコードが正常に編集されたことを確認するテスト
    */
   async testRecordEdit(page: Page) {
     // ページ遷移
     const recordWsId = await this.getOneRecordFromModuleName(this.moduleName);
-    if(!recordWsId){
+    if (!recordWsId) {
       return false;
     }
     // recordWsIdは22x1のような形式なため、xで分割した後ろの数字だけを取得する
@@ -82,15 +85,18 @@ export class FrTest extends FrBaseModule {
           continue;
         }
 
-        const normalValue =  await getFieldValue(fieldObj, hash) || ''
+        const normalValue = (await getFieldValue(fieldObj, hash)) || "";
 
         await fillField(page, fieldObj, normalValue);
 
         // 値を保持しておく
-        if(fieldObj.type.name !== "boolean" && fieldObj.type.name !== "picklist"){
+        if (
+          fieldObj.type.name !== "boolean" &&
+          fieldObj.type.name !== "picklist"
+        ) {
           valuesArray.push(normalValue);
-        }else if(fieldObj.type.name === "picklist"){
-          if(fieldObj.type.picklistValues?.[0]?.label){
+        } else if (fieldObj.type.name === "picklist") {
+          if (fieldObj.type.picklistValues?.[0]?.label) {
             valuesArray.push(fieldObj.type.picklistValues?.[0]?.label);
           }
         }
@@ -111,5 +117,34 @@ export class FrTest extends FrBaseModule {
     valuesArray.forEach(async (value) => {
       expect(page.locator(`text=${value}`).first()).toBeVisible();
     });
+  }
+
+  /**
+   * レコードが正常に削除されたことを確認するテスト
+   */
+  async testRecordDelete(page: Page) {
+    // ページ遷移
+    const recordWsId = await this.getOneRecordFromModuleName(this.moduleName);
+    if (!recordWsId) {
+      return false;
+    }
+    // recordWsIdは22x1のような形式なため、xで分割した後ろの数字だけを取得する
+    const recordId = recordWsId.id.split("x")[1];
+    await page.goto(this.getDetailUrl(recordId));
+    await page.waitForLoadState("domcontentloaded");
+
+    // その他ボタンをクリック
+    await page.click("text=その他");
+    await page.click("text=削除");
+    await page.waitForLoadState("networkidle");
+    // .modal-contentの Yes ボタンをクリック
+    await page.click(".modal-content >> text=Yes");
+    await page.waitForTimeout(1000);
+    await page.waitForLoadState("domcontentloaded");
+
+    await page.goto(this.getDetailUrl(recordId));
+    await page.waitForLoadState("domcontentloaded");
+
+    expect(page.locator(`text=The record you are trying to view has been deleted.`).first()).toBeVisible();
   }
 }

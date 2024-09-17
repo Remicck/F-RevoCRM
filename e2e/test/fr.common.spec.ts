@@ -35,5 +35,10 @@ for (const module of modules) {
       // ここではすでに初期化されているため、nullチェックは不要
       await testModuleModel!.testRecordEdit(page);
     });
+
+    test('レコード削除', async ({ page }) => {
+      // ここではすでに初期化されているため、nullチェックは不要
+      await testModuleModel!.testRecordDelete(page);
+    });
   });
 }

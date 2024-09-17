@@ -47,6 +47,9 @@ export class FrBaseModule {
   /**********************************
    * TEST用
    *********************************/
+  getDetailUrl(recordId: string) {
+    return `${this.baseUrl}index.php?module=${this.moduleName}&view=Detail&app=MARKETING&record=${recordId}&mode=showDetailViewByMode&requestMode=full`;
+  }
   getCreateUrl() {
     return `${this.baseUrl}index.php?module=${this.moduleName}&view=Edit&app=MARKETING`;
   }

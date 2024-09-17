@@ -93,7 +93,7 @@ export const frgetDescribe = async (sessionName: string, moduleName: string) => 
 export const frgetOneRecord = async (sessionName: string, moduleName: string) => {
   const response = await client.get<
     FRResponse<FRRetrieveItems[]>
-  >(`?operation=query&query=SELECT * FROM ${moduleName} LIMIT 1;&sessionName=${sessionName}`);
+  >(`?operation=query&query=SELECT * FROM ${moduleName} ORDER BY modifiedtime desc LIMIT 1;&sessionName=${sessionName}`);
 
   if (response.data.success === false) {
     return false;
