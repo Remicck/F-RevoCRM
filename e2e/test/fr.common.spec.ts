@@ -24,6 +24,7 @@ const moduleMap: Record<string, typeof FrTest> = {
   SalesOrder:FrTest,
   ServiceContracts:FrTest,
   Services:FrTest,
+  Vendors:FrTest,
 };
 
 test.beforeAll(async () => {});

@@ -71,7 +71,7 @@ export class FrTest extends FrBaseModule {
     expect(page.locator(`text=${hash}`).first()).toBeVisible();
 
     valuesArray.forEach(async (value) => {
-      expect(page.locator(`.detailViewContainer >> text=${value}`).first()).toBeVisible();
+      expect(page.locator(`#detailView >> text=${value}`).first()).toBeVisible();
     });
   }
 
@@ -143,7 +143,7 @@ export class FrTest extends FrBaseModule {
     expect(page.locator(`text=${hash}`).first()).toBeVisible();
 
     valuesArray.forEach(async (value) => {
-      expect(page.locator(`.detailViewContainer >> text=${value}`).first()).toBeVisible();
+      expect(page.locator(`#detailView >> text=${value}`).first()).toBeVisible();
     });
   }
 

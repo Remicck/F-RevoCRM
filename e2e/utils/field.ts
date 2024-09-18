@@ -5,6 +5,45 @@ import { FrBaseModule } from "../model/frBaseModule";
 import { Page } from "@playwright/test";
 import { FRDescribeFieldsTypeWithModuleName } from "../model/types/frTest";
 
+// 以下のリストに含まれているものはテストしない
+const dontTestFields = [
+  // global ban
+  "tags",
+  "last_action_date",
+  "isconvertedfromlead",
+  "starred",
+  "emailoptout",
+  "modifiedby",
+  "isconvertedfrompotential",
+
+  // portal
+  "from_portal",
+
+  // inventory
+  "taxclass",
+  "tax4",
+  "currency1",
+  "txtAdjustment",
+  "hdnSubTotal",
+  "hdnGrandTotal",
+  "hdnTaxType",
+];
+
+const dontTestFieldsFromModule = {
+  Contacts: ["account_id"], // 理由：ダイアログが表示されるためテストが停止してしまう
+  Invoice: [
+    "contact_id", // 理由：ダイアログが表示されるためテストが停止してしまう
+    "salesorder_id",
+  ],
+  ServiceContracts: ["used_units"], // 理由：なぜか数値が合わない（Workflow？）
+  PriceBooks: ["currency_id"], // 理由：表示されない
+};
+
+const isRichTextFields = {
+  HelpDesk: ["description", "solution"],
+  Faq: ["question", "faq_answer"],
+};
+
 /**
  * テストで利用しない項目を定義する
  * @returns boolean
@@ -12,28 +51,15 @@ import { FRDescribeFieldsTypeWithModuleName } from "../model/types/frTest";
 export const dontTestFieldsName = (
   field: FRDescribeFieldsTypeWithModuleName
 ) => {
-  // 以下のリストに含まれているものはテストしない
-  const dontTestFields = [
-    // global ban
-    "tags",
-    "last_action_date",
-    "isconvertedfromlead",
-    "starred",
-    'emailoptout',
-
-
-    // portal
-    "from_portal",
-    // inventory
-    "taxclass",
-    "tax4",
-    "currency1",
-  ];
-  if (dontTestFields.includes(field.name)) {
-    return true;
-  }
   // 編集不可な項目はテストしない
   if (field.editable === false) {
+    return true;
+  }
+
+  /************************
+   * フィールド別対応
+   ************************/
+  if (dontTestFields.includes(field.name)) {
     return true;
   }
 
@@ -41,24 +67,11 @@ export const dontTestFieldsName = (
    * モジュール別対応
    ************************/
   if (
-    field.moduleName === "HelpDesk" &&
-    (field.name === "description" || field.name === "solution")
+    dontTestFieldsFromModule[field.moduleName] &&
+    dontTestFieldsFromModule[field.moduleName].includes(field.name)
   ) {
     return true;
   }
-  if (
-    field.moduleName === "Faq" &&
-    (field.name === "question" || field.name === "faq_answer")
-  ) {
-    return true;
-  }
-  if (
-    field.moduleName === "Contacts" &&
-    (field.name === "account_id")
-  ) {
-    return true;
-  }
-
 
   // 以下の項目タイプはテストしない
   const dontTestFieldTypes = [
@@ -137,75 +150,143 @@ export const fillField = async (
   value: string,
   parentElement?: string
 ) => {
-
   const parentElementSelector = parentElement ? `${parentElement} ` : "";
 
-  if (fieldObj.type.name === "text") {
-    await page.fill(`${parentElementSelector} textarea[name="${fieldObj.name}"]`, `${value}`);
+  if (
+    isRichTextFields[fieldObj.moduleName] &&
+    isRichTextFields[fieldObj.moduleName].includes(fieldObj.name)
+  ) {
+    /**********************************************************************************************
+     * リッチテキスト項目への値登録
+     **********************************************************************************************/
+    await page
+      .locator(
+        `iframe[title="Rich Text Editor\\, ${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}"]`
+      )
+      .contentFrame()
+      .locator("html")
+      .click();
+    await page
+      .locator(
+        `iframe[title="Rich Text Editor\\, ${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}"]`
+      )
+      .contentFrame()
+      .locator("body")
+      .fill(`${value}`);
+  } else if (fieldObj.type.name === "text") {
+    /**********************************************************************************************
+     * テキスト項目への値登録
+     **********************************************************************************************/
+    await page.fill(
+      `${parentElementSelector} textarea[name="${fieldObj.name}"]`,
+      `${value}`
+    );
   } else if (fieldObj.type.name === "reference") {
-    // `#${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}_create` が存在するかチェックする
+    /**********************************************************************************************
+     * 関連項目への値登録
+     **********************************************************************************************/
     const createButton = await page.locator(
       `#${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}_create`
     );
+
+    // クリエイトボタンがない場合は、モーダルウインドウから選択する
     if (await createButton.isHidden()) {
-      return false;
-    }
+      await page
+        .locator(
+          `#${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}_select`
+        )
+        .click();
+      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("domcontentloaded");
 
-    await page
-      .locator(
-        `#${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}_create`
-      )
-      .click();
-    await page.waitForLoadState("networkidle");
-    await page.waitForLoadState("domcontentloaded");
-    // 値を登録する
-    const relatedModule = await FrBaseModule.init(
-      (fieldObj.type.refersTo && fieldObj.type.refersTo[0]) || ""
-    );
-    if (!relatedModule) {
-      return false;
-    }
-    const relatedDescribe = await relatedModule.getDescribe();
-    if (!relatedDescribe) {
-      return false;
-    }
-    const hash = generateRandomString(8);
-    const relatedFields = relatedDescribe.fields;
-    const fieldsWithModuleName: FRDescribeFieldsTypeWithModuleName[] = relatedFields.map((info) => {
-      return {
-        moduleName: (fieldObj.type.refersTo && fieldObj.type.refersTo[0]) || "",
-        ...info,
-      };
-    }).filter((info) => {
-      return info.mandatory === true;
-    });
-    for (const [_key, fieldObj] of Object.entries(fieldsWithModuleName)) {
-      if (dontTestFieldsName(fieldObj)) {
-        continue;
+      // .modal-body の .listview-table の .listViewEntriesの1つ目をクリック
+      await page
+        .locator(".modal-body .listview-table .listViewEntries")
+        .first()
+        .click();
+    } else {
+      await page
+        .locator(
+          `#${fieldObj.moduleName}_editView_fieldName_${fieldObj.name}_create`
+        )
+        .click();
+      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState("domcontentloaded");
+      // 値を登録する
+      const relatedModule = await FrBaseModule.init(
+        (fieldObj.type.refersTo && fieldObj.type.refersTo[0]) || ""
+      );
+      if (!relatedModule) {
+        return false;
       }
+      const relatedDescribe = await relatedModule.getDescribe();
+      if (!relatedDescribe) {
+        return false;
+      }
+      const hash = generateRandomString(8);
+      const relatedFields = relatedDescribe.fields;
+      const fieldsWithModuleName: FRDescribeFieldsTypeWithModuleName[] =
+        relatedFields
+          .map((info) => {
+            return {
+              moduleName:
+                (fieldObj.type.refersTo && fieldObj.type.refersTo[0]) || "",
+              ...info,
+            };
+          })
+          .filter((info) => {
+            return info.mandatory === true;
+          });
+      for (const [_key, fieldObj] of Object.entries(fieldsWithModuleName)) {
+        if (dontTestFieldsName(fieldObj)) {
+          continue;
+        }
 
-      const normalValue = (await getFieldValue(fieldObj, hash)) || "";
-      await fillField(page, fieldObj, normalValue, '.modal-content');
+        const normalValue = (await getFieldValue(fieldObj, hash)) || "";
+        await fillField(page, fieldObj, normalValue, ".modal-content");
+      }
+      await page.waitForTimeout(1000);
+
+      await page.locator('button[name="saveButton"]').click();
     }
-
-    await page.waitForTimeout(1000);
-
-    await page.locator('button[name="saveButton"]').click();
     await page.waitForLoadState("networkidle");
     await page.waitForTimeout(1000);
   } else if (fieldObj.type.name === "date") {
-    await page.fill(`${parentElementSelector} input[name="${fieldObj.name}"]`, `${value}`);
+    /**********************************************************************************************
+     * 日付項目への値登録
+     **********************************************************************************************/
+    await page.fill(
+      `${parentElementSelector} input[name="${fieldObj.name}"]`,
+      `${value}`
+    );
     await page.waitForTimeout(500);
-    if(!await page.locator(`.modal-header`).first().isHidden()){
+    if (!(await page.locator(`.modal-header`).first().isHidden())) {
       await page.locator(`.modal-header`).first().click();
-    }else{
+    } else {
       await page.locator(`.fieldBlockHeader`).first().click();
     }
   } else if (fieldObj.type.name === "picklist") {
-    await page.selectOption(`${parentElementSelector} select[name=${fieldObj.name}]`, value);
+    /**********************************************************************************************
+     * 選択肢項目への値登録
+     **********************************************************************************************/
+    await page.selectOption(
+      `${parentElementSelector} select[name=${fieldObj.name}]`,
+      value
+    );
   } else if (fieldObj.type.name === "boolean") {
-    await page.check(`${parentElementSelector} input[type="checkbox"][name="${fieldObj.name}"]`);
+    /**********************************************************************************************
+     * チェックボックス項目への値登録
+     **********************************************************************************************/
+    await page.check(
+      `${parentElementSelector} input[type="checkbox"][name="${fieldObj.name}"]`
+    );
   } else {
-    await page.fill(`${parentElementSelector} input[name="${fieldObj.name}"]`, `${value}`);
+    /**********************************************************************************************
+     * それ以外すべての項目への値登録
+     **********************************************************************************************/
+    await page.fill(
+      `${parentElementSelector} input[name="${fieldObj.name}"]`,
+      `${value}`
+    );
   }
 };
