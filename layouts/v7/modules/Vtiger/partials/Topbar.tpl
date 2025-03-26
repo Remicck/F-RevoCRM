@@ -10,6 +10,23 @@
 {strip}
 	{include file="modules/Vtiger/Header.tpl"}
 
+{* React と ReactDOM の読み込み *}
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom": "https://esm.sh/react-dom@18.2.0"
+  }
+}
+</script>
+
+{* Web Components の読み込み *}
+<script type="module" src="/assets/react-web-components/dist/web-components.js"></script>
+
+{* コンポーネントの使用 *}
+<react-button text="送信" color="#007bff"></react-button>
+<react-button2 text="送信2"></react-button2>
+
 	{assign var=APP_IMAGE_MAP value=Vtiger_MenuStructure_Model::getAppIcons()}
 	<nav class="navbar navbar-inverse navbar-fixed-top app-fixed-navbar">
 		<div class="container-fluid global-nav">

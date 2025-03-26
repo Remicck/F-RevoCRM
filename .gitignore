@@ -36,3 +36,8 @@ config.inc.php
 docker-compose.override.yml
 .env
 /vendor
+
+# for react-web-components
+/assets/react-web-components/dist
+/assets/react-web-components/node_modules
+/assets/react-web-components/.vite
