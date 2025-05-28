@@ -1672,6 +1672,14 @@ $languageStrings = array(
 			'カスタマーポータルでは、お問い合わせ管理や、過去のFAQと回答をご確認いただけます。<br />'.                        
 			'ポータルへのアクセスは本メールに記載のURL、ID、パスワードを使いログインしてください。</div>',
 	'LBL_CUSTOMER_PORTAL_LOGIN_INFORMATION' => '顧客ポータルのログイン情報のお知らせ',
+	'Execute Curl' => 'Curl実行',
+	'LBL_URL' => 'URL',
+	'LBL_METHOD' => 'メソッド',
+	'LBL_HEADERS' => 'ヘッダー',
+	'LBL_ADD_HEADER' => 'ヘッダーを追加',
+	'LBL_BODY' => 'リクエストボディ',
+	'LBL_TIMEOUT' => 'タイムアウト（秒）',
+	'LBL_VERIFY_SSL' => 'SSL証明書を検証',
 );
 
 $jsLanguageStrings = array(

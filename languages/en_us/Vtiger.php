@@ -1672,6 +1672,14 @@ $languageStrings = array(
 			. 'In the customer portal, you can manage your inquiries and check past FAQs and answers.<br />'
 			. 'Please use the URL, ID, and password provided in this email to log in to the portal.',
 	'LBL_CUSTOMER_PORTAL_LOGIN_INFORMATION' => 'Customer Portal Login Information Notification',
+	'Execute Curl' => 'Execute Curl',
+	'LBL_URL' => 'URL',
+	'LBL_METHOD' => 'Method',
+	'LBL_HEADERS' => 'Headers',
+	'LBL_ADD_HEADER' => 'Add Header',
+	'LBL_BODY' => 'Request Body',
+	'LBL_TIMEOUT' => 'Timeout (seconds)',
+	'LBL_VERIFY_SSL' => 'Verify SSL Certificate',
 );
 
 $jsLanguageStrings = array(
