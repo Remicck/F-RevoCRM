@@ -36,3 +36,16 @@ config.inc.php
 docker-compose.override.yml
 .env
 /vendor
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+
+# Node modules
+node_modules/
+
+# Test artifacts
+/e2e/test-results/
+/e2e/playwright-report/

@@ -1,0 +1,16 @@
+{
+  "name": "frevocrm-e2e-tests",
+  "version": "1.0.0",
+  "description": "E2E tests for F-RevoCRM using Playwright",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}
