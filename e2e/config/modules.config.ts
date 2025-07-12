@@ -101,9 +101,9 @@ export const moduleConfigs: ModuleConfigs = {
   
   Leads: {
     moduleName: 'Leads',
-    moduleLabel: '見込み客',
-    createButtonText: '見込み客の追加',
-    listPageTitle: /見込み客/,
+    moduleLabel: 'リード',
+    createButtonText: 'リードの追加',
+    listPageTitle: /リード/,
     requiredFields: {
       lastname: {
         selector: 'input[name="lastname"]',
@@ -172,9 +172,9 @@ export const moduleConfigs: ModuleConfigs = {
   
   HelpDesk: {
     moduleName: 'HelpDesk',
-    moduleLabel: 'サポート依頼',
-    createButtonText: 'サポート依頼の追加',
-    listPageTitle: /サポート依頼/,
+    moduleLabel: 'チケット',
+    createButtonText: 'チケットの追加',
+    listPageTitle: /チケット/,
     requiredFields: {
       ticket_title: {
         selector: 'input[name="ticket_title"]',
@@ -185,6 +185,11 @@ export const moduleConfigs: ModuleConfigs = {
         selector: 'select[name="ticketstatus"]',
         inputType: 'select',
         testValue: () => 'Open'
+      },
+      ticketpriorities: {
+        selector: 'select[name="ticketpriorities"]',
+        inputType: 'select',
+        testValue: () => 'High'
       }
     },
     optionalFields: {
@@ -198,9 +203,9 @@ export const moduleConfigs: ModuleConfigs = {
   
   Products: {
     moduleName: 'Products',
-    moduleLabel: '商品',
-    createButtonText: '商品の追加',
-    listPageTitle: /商品/,
+    moduleLabel: '製品',
+    createButtonText: '製品の追加',
+    listPageTitle: /製品/,
     requiredFields: {
       productname: {
         selector: 'input[name="productname"]',
@@ -254,8 +259,8 @@ export const moduleConfigs: ModuleConfigs = {
         inputType: 'text',
         testValue: (timestamp) => `テストプロジェクト_${timestamp}`
       },
-      project_status: {
-        selector: 'select[name="project_status"]',
+      projectstatus: {
+        selector: 'select[name="projectstatus"]',
         inputType: 'select',
         testValue: () => 'prospecting'
       }
@@ -326,22 +331,22 @@ export const moduleConfigs: ModuleConfigs = {
   
   ProjectTask: {
     moduleName: 'ProjectTask',
-    moduleLabel: 'プロジェクトタスク',
+    moduleLabel: 'タスク',
     createButtonText: 'プロジェクトタスクの追加',
-    listPageTitle: /プロジェクトタスク/,
+    listPageTitle: /タスク/,
     requiredFields: {
       projecttaskname: {
         selector: 'input[name="projecttaskname"]',
         inputType: 'text',
         testValue: (timestamp) => `テストタスク_${timestamp}`
-      },
+      }
+    },
+    optionalFields: {
       projectid: {
         selector: 'select[name="projectid"]',
         inputType: 'select',
         testValue: null // プロジェクトが必要
-      }
-    },
-    optionalFields: {
+      },
       projecttaskpriority: {
         selector: 'select[name="projecttaskpriority"]',
         inputType: 'select',
@@ -406,9 +411,9 @@ export const moduleConfigs: ModuleConfigs = {
   
   Vendors: {
     moduleName: 'Vendors',
-    moduleLabel: '仕入先',
-    createButtonText: '仕入先の追加',
-    listPageTitle: /仕入先/,
+    moduleLabel: '発注先',
+    createButtonText: '発注先の追加',
+    listPageTitle: /発注先/,
     requiredFields: {
       vendorname: {
         selector: 'input[name="vendorname"]',
@@ -637,18 +642,18 @@ export const testModules: string[] = Object.keys(moduleConfigs);
 
 // 特定のモジュールのみテストする場合は、このリストを使用
 export const selectedModules: string[] = [
-  // 'Accounts',
-  // 'Contacts',
+  'Accounts',
+  'Contacts',
   'Leads',
-  // 'Potentials',
-  // 'HelpDesk',
-  // 'Products',
-  // 'Services',
-  // 'Project',
-  // 'Events',
-  // 'ProjectTask',
-  // 'ProjectMilestone',
-  // 'Vendors',
+  'Potentials',
+  'HelpDesk',
+  'Products',
+  'Services',
+  'Project',
+  // 'Events',        // 特殊なのでスキップ
+  // 'ProjectTask',   // 関連フィールドが必要なのでスキップ
+  // 'ProjectMilestone', // 関連フィールドが必要なのでスキップ
+  'Vendors',
   // 'PriceBooks',
   // 'PurchaseOrder',
   // 'SalesOrder',

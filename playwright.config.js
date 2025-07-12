@@ -26,6 +26,9 @@ export default defineConfig({
     
     /* Take screenshot on failure */
     screenshot: 'only-on-failure',
+    
+    /* Set timeout to 20 seconds */
+    actionTimeout: 20000,
   },
 
   /* Configure projects for major browsers */
