@@ -80,7 +80,19 @@ F-RevoCRMは、各CRM機能が個別のモジュールであるモジュール�
 ## 開発ノート
 
 ### テスト
-現在、F-RevoCRMには自動テストがありません。テストは手動で行われます。
+F-RevoCRMには、TypeScriptとPlaywrightを使用したEnd-to-End（E2E）テストシステムが実装されています。詳細は `doc/e2e-testing.md` を参照してください。
+
+**E2Eテストの実行**:
+```bash
+# テスト実行
+npm test
+
+# ヘッドモード
+npm run test:headed
+
+# デバッグモード
+npm run test:debug
+```
 
 ### コード品質
 リンティングツールは設定されていません。コードベースの既存のコードパターンに従ってください。
@@ -105,6 +117,7 @@ F-RevoCRMは、Claude Code使用のための包括的なドキュメントを維
 - `doc/frontend-ui.md`: フロントエンドJavaScript/UI開発ガイド（jQuery.class、Modal、Alert、共通UIコンポーネント）
 - `doc/layouts.md`: Smartyテンプレートとレイアウトシステムガイド
 - `doc/url-structure-mvc.md`: URLルーティングとMVCパターンドキュメント
+- `doc/e2e-testing.md`: End-to-EndテストシステムとPlaywright使用ガイド（TypeScript、モジュール設定、ヘルパー関数、テストパターン）
 - `doc/class/ModuleModel.md`: ModuleModelクラスドキュメントとAPIリファレンス
 - `doc/class/RecordModel.md`: RecordModelクラスドキュメントとAPIリファレンス
 - スキーマファイルは各更新ツールによって自動生成されます
@@ -133,6 +146,7 @@ php setup/tools/UpdateFields.php
 - フロントエンドJavaScript開発パターン（jQuery.class、Modal、Alert、UI共通コンポーネント）
 - Smartyテンプレートシステムとレイアウト構造
 - URLルーティングとMVCアーキテクチャ
+- End-to-Endテストシステム（TypeScript、Playwright、テスト設定、ヘルパー関数）
 - コアクラスドキュメント（ModuleModel、RecordModel）
 - APIリファレンスと使用パターン
 
@@ -154,6 +168,8 @@ php setup/tools/UpdateFields.php
 - フロントエンドJavaScript開発（jQuery.class継承、Modal/Alert表示、UI共通コンポーネント活用）
 - Smartyテンプレート作成とレイアウトシステムの理解
 - URLルーティングとMVCパターンの実装
+- E2Eテストの作成と設定（モジュールテスト、認証テスト、TypeScript型安全性）
+- Playwrightテストパターンとヘルパー関数の活用
 - コアクラス（ModuleModel、RecordModel）の適切な使用
 - MVCパターンとクラス階層の理解
 
@@ -161,5 +177,10 @@ php setup/tools/UpdateFields.php
 - データベース構造変更の場合: `setup/tools/UpdateDBSchema.php`
 - フィールド設定変更の場合: `setup/tools/UpdateFields.php`
 
-### playwright-mcp
-開発環境では username: admin : password: Admin1234/ でログイン可能である
+### E2Eテスト環境
+開発環境では以下の認証情報でログイン可能です：
+- ユーザー名: `admin`
+- パスワード: `Admin1234/`
+- ベースURL: `http://localhost`
+
+E2Eテストはこの認証情報を使用してCRMの機能を自動テストします。

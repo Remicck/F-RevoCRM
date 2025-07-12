@@ -637,10 +637,10 @@ export const testModules: string[] = Object.keys(moduleConfigs);
 
 // 特定のモジュールのみテストする場合は、このリストを使用
 export const selectedModules: string[] = [
-  'Accounts',
-  'Contacts',
-  // 'Leads',
-  'Potentials',
+  // 'Accounts',
+  // 'Contacts',
+  'Leads',
+  // 'Potentials',
   // 'HelpDesk',
   // 'Products',
   // 'Services',

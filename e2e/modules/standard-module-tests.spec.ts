@@ -9,13 +9,10 @@ import {
   performSearch,
   deleteRecord
 } from '../helpers/modules.js';
-import { moduleConfigs, type ModuleConfig, type FieldConfig } from '../config/modules.config.js';
-
-// デバッグ用：顧客企業のみテスト実行
-const debugModules: string[] = ['Accounts', 'Contacts', 'Potentials'];
+import { moduleConfigs, selectedModules, type ModuleConfig, type FieldConfig } from '../config/modules.config.js';
 
 // 各モジュールに対して標準テストを実行
-debugModules.forEach((moduleName: string) => {
+selectedModules.forEach((moduleName: string) => {
   const config: ModuleConfig | undefined = moduleConfigs[moduleName];
   if (!config) {
     throw new Error(`Module config not found for: ${moduleName}`);
