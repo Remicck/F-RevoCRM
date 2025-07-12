@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { login } from '../helpers/auth.js';
 import { 
   navigateToModule,
@@ -9,21 +9,24 @@ import {
   performSearch,
   deleteRecord
 } from '../helpers/modules.js';
-import { moduleConfigs } from '../config/modules.config.js';
+import { moduleConfigs, type ModuleConfig, type FieldConfig } from '../config/modules.config.js';
 
 // デバッグ用：顧客企業のみテスト実行
-const debugModules = ['Accounts', 'Contacts', 'Potentials'];
+const debugModules: string[] = ['Accounts', 'Contacts', 'Potentials'];
 
 // 各モジュールに対して標準テストを実行
-debugModules.forEach(moduleName => {
-  const config = moduleConfigs[moduleName];
+debugModules.forEach((moduleName: string) => {
+  const config: ModuleConfig | undefined = moduleConfigs[moduleName];
+  if (!config) {
+    throw new Error(`Module config not found for: ${moduleName}`);
+  }
   
   test.describe(`${config.moduleLabel}の標準機能テスト`, () => {
-    test.beforeEach(async ({ page }) => {
+    test.beforeEach(async ({ page }: { page: Page }) => {
       await login(page);
     });
 
-    test(`${config.moduleLabel}一覧表示`, async ({ page }) => {
+    test(`${config.moduleLabel}一覧表示`, async ({ page }: { page: Page }) => {
       // モジュールに移動
       await navigateToModule(page, config.moduleName);
       
@@ -31,7 +34,7 @@ debugModules.forEach(moduleName => {
       await expect(page.locator('h4.module-title')).toContainText(config.listPageTitle);
     });
 
-    test(`新しい${config.moduleLabel}を作成`, async ({ page }) => {
+    test(`新しい${config.moduleLabel}を作成`, async ({ page }: { page: Page }) => {
       // モジュールに移動
       await navigateToModule(page, config.moduleName);
       
@@ -39,13 +42,13 @@ debugModules.forEach(moduleName => {
       await clickCreateButton(page, config.createButtonText);
       
       // タイムスタンプを生成
-      const timestamp = Date.now();
+      const timestamp: number = Date.now();
       
       // 必須フィールドに入力
       for (const [, fieldConfig] of Object.entries(config.requiredFields)) {
-        const value = typeof fieldConfig.testValue === 'function' 
+        const value: string = typeof fieldConfig.testValue === 'function' 
           ? fieldConfig.testValue(timestamp) 
-          : fieldConfig.testValue;
+          : (fieldConfig.testValue || '');
         
         if (fieldConfig.inputType === 'select') {
           await page.selectOption(fieldConfig.selector, value);
@@ -57,18 +60,20 @@ debugModules.forEach(moduleName => {
       }
       
       // オプションフィールドに入力（存在する場合のみ）
-      for (const [, fieldConfig] of Object.entries(config.optionalFields || {})) {
-        const value = typeof fieldConfig.testValue === 'function' 
-          ? fieldConfig.testValue(timestamp) 
-          : fieldConfig.testValue;
-        
-        if (fieldConfig.inputType === 'select') {
-          const field = page.locator(fieldConfig.selector);
-          if (await field.isVisible()) {
-            await page.selectOption(fieldConfig.selector, value);
+      if (config.optionalFields) {
+        for (const [, fieldConfig] of Object.entries(config.optionalFields)) {
+          const value: string = typeof fieldConfig.testValue === 'function' 
+            ? fieldConfig.testValue(timestamp) 
+            : (fieldConfig.testValue || '');
+          
+          if (fieldConfig.inputType === 'select') {
+            const field = page.locator(fieldConfig.selector);
+            if (await field.isVisible()) {
+              await page.selectOption(fieldConfig.selector, value);
+            }
+          } else {
+            await fillFieldIfExists(page, fieldConfig.selector, value);
           }
-        } else {
-          await fillFieldIfExists(page, fieldConfig.selector, value);
         }
       }
       
@@ -77,26 +82,29 @@ debugModules.forEach(moduleName => {
       
       // 作成されたレコードの情報が表示されることを確認
       // 最初の必須フィールドの値で確認
-      const firstRequiredField = Object.values(config.requiredFields)[0];
-      const expectedText = typeof firstRequiredField.testValue === 'function'
+      const firstRequiredField: FieldConfig | undefined = Object.values(config.requiredFields)[0];
+      if (!firstRequiredField) {
+        throw new Error(`No required fields found for module: ${config.moduleName}`);
+      }
+      const expectedText: string = typeof firstRequiredField.testValue === 'function'
         ? firstRequiredField.testValue(timestamp)
-        : firstRequiredField.testValue;
+        : (firstRequiredField.testValue || '');
       
       await expect(page.locator('body')).toContainText(expectedText);
     });
 
-    test(`${config.moduleLabel}を編集`, async ({ page }) => {
+    test(`${config.moduleLabel}を編集`, async ({ page }: { page: Page }) => {
       // まず新しいレコードを作成
       await navigateToModule(page, config.moduleName);
       await clickCreateButton(page, config.createButtonText);
       
-      const timestamp = Date.now();
+      const timestamp: number = Date.now();
       
       // 必須フィールドに入力
       for (const [, fieldConfig] of Object.entries(config.requiredFields)) {
-        const value = typeof fieldConfig.testValue === 'function' 
+        const value: string = typeof fieldConfig.testValue === 'function' 
           ? fieldConfig.testValue(timestamp) 
-          : fieldConfig.testValue;
+          : (fieldConfig.testValue || '');
         
         if (fieldConfig.inputType === 'select') {
           await page.selectOption(fieldConfig.selector, value);
@@ -111,14 +119,20 @@ debugModules.forEach(moduleName => {
       await clickEditButton(page);
       
       // 最初の必須フィールドを更新
-      const firstFieldName = Object.keys(config.requiredFields)[0];
-      const firstField = config.requiredFields[firstFieldName];
+      const firstFieldName: string | undefined = Object.keys(config.requiredFields)[0];
+      if (!firstFieldName) {
+        throw new Error(`No required fields found for module: ${config.moduleName}`);
+      }
+      const firstField: FieldConfig | undefined = config.requiredFields[firstFieldName];
+      if (!firstField) {
+        throw new Error(`Field config not found for: ${firstFieldName}`);
+      }
       
       if (firstField.inputType !== 'select' && firstField.inputType !== 'date') {
-        const originalValue = typeof firstField.testValue === 'function'
+        const originalValue: string = typeof firstField.testValue === 'function'
           ? firstField.testValue(timestamp)
-          : firstField.testValue;
-        const updatedValue = `更新済み_${originalValue}`;
+          : (firstField.testValue || '');
+        const updatedValue: string = `更新済み_${originalValue}`;
         
         await page.fill(firstField.selector, updatedValue);
         await saveForm(page);
@@ -131,7 +145,7 @@ debugModules.forEach(moduleName => {
       }
     });
 
-    test(`${config.moduleLabel}検索`, async ({ page }) => {
+    test(`${config.moduleLabel}検索`, async ({ page }: { page: Page }) => {
       // モジュールに移動
       await navigateToModule(page, config.moduleName);
       
@@ -139,18 +153,18 @@ debugModules.forEach(moduleName => {
       await performSearch(page, 'テスト');
     });
 
-    test(`${config.moduleLabel}削除`, async ({ page }) => {
+    test(`${config.moduleLabel}削除`, async ({ page }: { page: Page }) => {
       // まず新しいレコードを作成
       await navigateToModule(page, config.moduleName);
       await clickCreateButton(page, config.createButtonText);
       
-      const timestamp = Date.now();
+      const timestamp: number = Date.now();
       
       // 必須フィールドに入力
       for (const [, fieldConfig] of Object.entries(config.requiredFields)) {
-        const value = typeof fieldConfig.testValue === 'function' 
+        const value: string = typeof fieldConfig.testValue === 'function' 
           ? fieldConfig.testValue(timestamp) 
-          : fieldConfig.testValue;
+          : (fieldConfig.testValue || '');
         
         if (fieldConfig.inputType === 'select') {
           await page.selectOption(fieldConfig.selector, value);
@@ -162,7 +176,7 @@ debugModules.forEach(moduleName => {
       await saveForm(page);
       
       // レコードを削除
-      const deleted = await deleteRecord(page);
+      const deleted: boolean = await deleteRecord(page);
       
       if (deleted) {
         // 一覧ページにリダイレクトされることを確認

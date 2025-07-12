@@ -1,12 +1,12 @@
-import { expect } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 /**
  * ログイン用のヘルパー関数
- * @param {import('@playwright/test').Page} page
- * @param {string} username - ユーザー名（デフォルト: 'admin'）
- * @param {string} password - パスワード（デフォルト: 'Admin1234/'）
+ * @param page - Playwrightのページオブジェクト
+ * @param username - ユーザー名（デフォルト: 'admin'）
+ * @param password - パスワード（デフォルト: 'Admin1234/'）
  */
-export async function login(page, username = 'admin', password = 'Admin1234/') {
+export async function login(page: Page, username: string = 'admin', password: string = 'Admin1234/'): Promise<void> {
   await page.goto('/');
   
   // ログインフォームが表示されるまで待機
@@ -28,9 +28,9 @@ export async function login(page, username = 'admin', password = 'Admin1234/') {
 
 /**
  * ログアウト用のヘルパー関数
- * @param {import('@playwright/test').Page} page
+ * @param page - Playwrightのページオブジェクト
  */
-export async function logout(page) {
+export async function logout(page: Page): Promise<void> {
   // ユーザーメニューをクリック
   await page.getByRole('button').filter({ hasText: 'システム管理者' }).click();
   
@@ -44,9 +44,9 @@ export async function logout(page) {
 
 /**
  * アカウント一覧ページに移動するヘルパー関数
- * @param {import('@playwright/test').Page} page
+ * @param page - Playwrightのページオブジェクト
  */
-export async function navigateToAccounts(page) {
+export async function navigateToAccounts(page: Page): Promise<void> {
   // 直接URLでアカウント一覧ページにアクセス
   await page.goto('/index.php?module=Accounts&view=List&app=SALES');
   

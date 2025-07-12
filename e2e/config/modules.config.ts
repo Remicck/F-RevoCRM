@@ -1,7 +1,42 @@
 // モジュール設定ファイル
 // 各モジュールのテスト設定を定義
 
-export const moduleConfigs = {
+/** フィールドの入力タイプ */
+export type FieldInputType = 'text' | 'textarea' | 'select' | 'date' | 'number' | 'checkbox';
+
+/** テスト値を生成する関数 */
+export type TestValueFunction = (timestamp?: number) => string;
+
+/** フィールド設定 */
+export interface FieldConfig {
+  /** CSSセレクター */
+  selector: string;
+  /** 入力タイプ */
+  inputType: FieldInputType;
+  /** テスト用の値（固定値または関数） */
+  testValue: string | TestValueFunction | null;
+}
+
+/** モジュール設定 */
+export interface ModuleConfig {
+  /** モジュール名 */
+  moduleName: string;
+  /** モジュールの表示名 */
+  moduleLabel: string;
+  /** 作成ボタンのテキスト */
+  createButtonText: string;
+  /** 一覧ページのタイトル */
+  listPageTitle: RegExp;
+  /** 必須フィールド */
+  requiredFields: Record<string, FieldConfig>;
+  /** オプションフィールド */
+  optionalFields?: Record<string, FieldConfig>;
+}
+
+/** モジュール設定のコレクション */
+export type ModuleConfigs = Record<string, ModuleConfig>;
+
+export const moduleConfigs: ModuleConfigs = {
   Accounts: {
     moduleName: 'Accounts',
     moduleLabel: '顧客企業',
@@ -122,7 +157,7 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setMonth(date.getMonth() + 1);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       }
     },
@@ -229,7 +264,7 @@ export const moduleConfigs = {
       startdate: {
         selector: 'input[name="startdate"]',
         inputType: 'date',
-        testValue: () => new Date().toISOString().split('T')[0]
+        testValue: () => new Date().toISOString().split('T')[0]!
       },
       targetenddate: {
         selector: 'input[name="targetenddate"]',
@@ -237,7 +272,7 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setMonth(date.getMonth() + 3);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       }
     }
@@ -257,7 +292,7 @@ export const moduleConfigs = {
       date_start: {
         selector: 'input[name="date_start"]',
         inputType: 'date',
-        testValue: () => new Date().toISOString().split('T')[0]
+        testValue: () => new Date().toISOString().split('T')[0]!
       },
       time_start: {
         selector: 'input[name="time_start"]',
@@ -267,7 +302,7 @@ export const moduleConfigs = {
       due_date: {
         selector: 'input[name="due_date"]',
         inputType: 'date',
-        testValue: () => new Date().toISOString().split('T')[0]
+        testValue: () => new Date().toISOString().split('T')[0]!
       },
       taskstatus: {
         selector: 'select[name="taskstatus"]',
@@ -303,7 +338,7 @@ export const moduleConfigs = {
       projectid: {
         selector: 'select[name="projectid"]',
         inputType: 'select',
-        testValue: () => null // プロジェクトが必要
+        testValue: null // プロジェクトが必要
       }
     },
     optionalFields: {
@@ -320,7 +355,7 @@ export const moduleConfigs = {
       startdate: {
         selector: 'input[name="startdate"]',
         inputType: 'date',
-        testValue: () => new Date().toISOString().split('T')[0]
+        testValue: () => new Date().toISOString().split('T')[0]!
       },
       enddate: {
         selector: 'input[name="enddate"]',
@@ -328,7 +363,7 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setDate(date.getDate() + 7);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       }
     }
@@ -348,7 +383,7 @@ export const moduleConfigs = {
       projectid: {
         selector: 'select[name="projectid"]',
         inputType: 'select',
-        testValue: () => null // プロジェクトが必要
+        testValue: null // プロジェクトが必要
       }
     },
     optionalFields: {
@@ -358,7 +393,7 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setMonth(date.getMonth() + 1);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       },
       projectmilestonetype: {
@@ -426,7 +461,7 @@ export const moduleConfigs = {
       active: {
         selector: 'input[name="active"]',
         inputType: 'checkbox',
-        testValue: () => true
+        testValue: () => 'true'
       },
       description: {
         selector: 'textarea[name="description"]',
@@ -450,7 +485,7 @@ export const moduleConfigs = {
       vendor_id: {
         selector: 'select[name="vendor_id"]',
         inputType: 'select',
-        testValue: () => null // 仕入先が必要
+        testValue: null // 仕入先が必要
       },
       postatus: {
         selector: 'select[name="postatus"]',
@@ -475,7 +510,7 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setDate(date.getDate() + 30);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       },
       carrier: {
@@ -500,7 +535,7 @@ export const moduleConfigs = {
       account_id: {
         selector: 'select[name="account_id"]',
         inputType: 'select',
-        testValue: () => null // 顧客企業が必要
+        testValue: null // 顧客企業が必要
       },
       sostatus: {
         selector: 'select[name="sostatus"]',
@@ -525,7 +560,7 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setDate(date.getDate() + 14);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       },
       customerno: {
@@ -555,7 +590,7 @@ export const moduleConfigs = {
       account_id: {
         selector: 'select[name="account_id"]',
         inputType: 'select',
-        testValue: () => null // 顧客企業が必要
+        testValue: null // 顧客企業が必要
       },
       quotestage: {
         selector: 'select[name="quotestage"]',
@@ -580,13 +615,13 @@ export const moduleConfigs = {
         testValue: () => {
           const date = new Date();
           date.setDate(date.getDate() + 30);
-          return date.toISOString().split('T')[0];
+          return date.toISOString().split('T')[0]!;
         }
       },
       contact_id: {
         selector: 'select[name="contact_id"]',
         inputType: 'select',
-        testValue: () => null // 顧客担当者
+        testValue: null // 顧客担当者
       },
       carrier: {
         selector: 'select[name="carrier"]',
@@ -598,24 +633,24 @@ export const moduleConfigs = {
 };
 
 // テストを実行するモジュールのリスト
-export const testModules = Object.keys(moduleConfigs);
+export const testModules: string[] = Object.keys(moduleConfigs);
 
 // 特定のモジュールのみテストする場合は、このリストを使用
-export const selectedModules = [
+export const selectedModules: string[] = [
   'Accounts',
   'Contacts',
-  'Leads',
+  // 'Leads',
   'Potentials',
-  'HelpDesk',
-  'Products',
-  'Services',
-  'Project',
-  'Events',
-  'ProjectTask',
-  'ProjectMilestone',
-  'Vendors',
-  'PriceBooks',
-  'PurchaseOrder',
-  'SalesOrder',
-  'Quotes'
+  // 'HelpDesk',
+  // 'Products',
+  // 'Services',
+  // 'Project',
+  // 'Events',
+  // 'ProjectTask',
+  // 'ProjectMilestone',
+  // 'Vendors',
+  // 'PriceBooks',
+  // 'PurchaseOrder',
+  // 'SalesOrder',
+  // 'Quotes'
 ];

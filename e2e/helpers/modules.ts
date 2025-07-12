@@ -1,33 +1,35 @@
+import { type Page } from '@playwright/test';
+
 // モジュール共通テストヘルパー関数
 
 /**
  * モジュールのリストページへ移動
- * @param {Page} page - Playwrightのページオブジェクト
- * @param {string} moduleName - モジュール名（例: 'Accounts', 'Contacts'）
+ * @param page - Playwrightのページオブジェクト
+ * @param moduleName - モジュール名（例: 'Accounts', 'Contacts'）
  */
-export async function navigateToModule(page, moduleName) {
+export async function navigateToModule(page: Page, moduleName: string): Promise<void> {
   await page.goto(`http://localhost/index.php?module=${moduleName}&view=List`);
   await page.waitForURL(new RegExp(`.*module=${moduleName}.*`));
 }
 
 /**
  * 新規作成ボタンをクリック
- * @param {Page} page - Playwrightのページオブジェクト
- * @param {string} buttonText - ボタンのテキスト（例: '顧客企業の追加'）
+ * @param page - Playwrightのページオブジェクト
+ * @param buttonText - ボタンのテキスト（例: '顧客企業の追加'）
  */
-export async function clickCreateButton(page, buttonText) {
+export async function clickCreateButton(page: Page, buttonText: string): Promise<void> {
   await page.click(`button:has-text("${buttonText}")`);
   await page.waitForTimeout(500); // フォームの表示を待つ
 }
 
 /**
  * フィールドにテキストを入力（フィールドが存在する場合のみ）
- * @param {Page} page - Playwrightのページオブジェクト
- * @param {string} selector - フィールドのセレクター
- * @param {string} value - 入力する値
- * @returns {boolean} - フィールドが存在して入力できたかどうか
+ * @param page - Playwrightのページオブジェクト
+ * @param selector - フィールドのセレクター
+ * @param value - 入力する値
+ * @returns フィールドが存在して入力できたかどうか
  */
-export async function fillFieldIfExists(page, selector, value) {
+export async function fillFieldIfExists(page: Page, selector: string, value: string): Promise<boolean> {
   const field = page.locator(selector);
   if (await field.isVisible()) {
     await field.fill(value);
@@ -38,28 +40,28 @@ export async function fillFieldIfExists(page, selector, value) {
 
 /**
  * フォームを保存して詳細ページに遷移
- * @param {Page} page - Playwrightのページオブジェクト
+ * @param page - Playwrightのページオブジェクト
  */
-export async function saveForm(page) {
+export async function saveForm(page: Page): Promise<void> {
   await page.click('button:has-text("保存")');
   await page.waitForURL(/.*view=Detail.*/);
 }
 
 /**
  * 編集ボタンをクリックして編集フォームを開く
- * @param {Page} page - Playwrightのページオブジェクト
+ * @param page - Playwrightのページオブジェクト
  */
-export async function clickEditButton(page) {
+export async function clickEditButton(page: Page): Promise<void> {
   await page.click('button:has-text("編集")');
   await page.waitForTimeout(500); // フォームの表示を待つ
 }
 
 /**
  * 検索を実行
- * @param {Page} page - Playwrightのページオブジェクト
- * @param {string} searchText - 検索テキスト
+ * @param page - Playwrightのページオブジェクト
+ * @param searchText - 検索テキスト
  */
-export async function performSearch(page, searchText) {
+export async function performSearch(page: Page, searchText: string): Promise<void> {
   const searchSelectors = [
     'input[name="search_text"]',
     'input[placeholder*="検索"]',
@@ -80,9 +82,10 @@ export async function performSearch(page, searchText) {
 
 /**
  * レコードを削除
- * @param {Page} page - Playwrightのページオブジェクト
+ * @param page - Playwrightのページオブジェクト
+ * @returns 削除が実行されたかどうか
  */
-export async function deleteRecord(page) {
+export async function deleteRecord(page: Page): Promise<boolean> {
   // その他メニューをクリック
   await page.click('button:has-text("その他")');
   await page.waitForTimeout(500);

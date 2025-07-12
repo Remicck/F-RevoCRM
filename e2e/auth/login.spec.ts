@@ -1,8 +1,8 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { login, logout } from '../helpers/auth.js';
 
 test.describe('ログイン機能テスト', () => {
-  test('正常なログイン', async ({ page }) => {
+  test('正常なログイン', async ({ page }: { page: Page }) => {
     await login(page);
     
     // ダッシュボードが表示されることを確認
@@ -10,7 +10,7 @@ test.describe('ログイン機能テスト', () => {
     await expect(page.locator('nav.navbar.app-fixed-navbar')).toBeVisible();
   });
 
-  test('間違ったパスワードでのログイン失敗', async ({ page }) => {
+  test('間違ったパスワードでのログイン失敗', async ({ page }: { page: Page }) => {
     await page.goto('/');
     
     await page.getByRole('textbox', { name: 'ユーザー名' }).fill('admin');
@@ -22,7 +22,7 @@ test.describe('ログイン機能テスト', () => {
     await expect(page.locator('#validationMessage')).toContainText('無効なユーザー名またはパスワード');
   });
 
-  test('空のフィールドでのログイン失敗', async ({ page }) => {
+  test('空のフィールドでのログイン失敗', async ({ page }: { page: Page }) => {
     await page.goto('/');
     
     await page.getByRole('button', { name: 'ログイン' }).click();
@@ -32,7 +32,7 @@ test.describe('ログイン機能テスト', () => {
     await expect(page.locator('#validationMessage')).toContainText('ユーザー名とパスワードを入力してください');
   });
 
-  test('ログアウト機能', async ({ page }) => {
+  test('ログアウト機能', async ({ page }: { page: Page }) => {
     // まずログイン
     await login(page);
     
