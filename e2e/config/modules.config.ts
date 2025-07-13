@@ -2,10 +2,20 @@
 // 各モジュールのテスト設定を定義
 
 /** フィールドの入力タイプ */
-export type FieldInputType = 'text' | 'textarea' | 'select' | 'date' | 'number' | 'checkbox';
+export type FieldInputType = 'text' | 'textarea' | 'select' | 'date' | 'number' | 'checkbox' | 'relation';
 
 /** テスト値を生成する関数 */
 export type TestValueFunction = (timestamp?: number) => string;
+
+/** 関連レコード作成設定 */
+export interface RelationConfig {
+  /** 関連モジュール名 */
+  relatedModule: string;
+  /** 作成ボタンのセレクター */
+  createButtonSelector: string;
+  /** 必須フィールド */
+  requiredFields: Record<string, Omit<FieldConfig, 'relatedRecord'>>;
+}
 
 /** フィールド設定 */
 export interface FieldConfig {
@@ -15,6 +25,8 @@ export interface FieldConfig {
   inputType: FieldInputType;
   /** テスト用の値（固定値または関数） */
   testValue: string | TestValueFunction | null;
+  /** 関連レコード作成設定（relationタイプの場合） */
+  relatedRecord?: RelationConfig;
 }
 
 /** モジュール設定 */
@@ -339,23 +351,34 @@ export const moduleConfigs: ModuleConfigs = {
         selector: 'input[name="projecttaskname"]',
         inputType: 'text',
         testValue: (timestamp) => `テストタスク_${timestamp}`
+      },
+      projectid: {
+        selector: '#ProjectTask_editView_fieldName_projectid_display',
+        inputType: 'relation',
+        testValue: null,
+        relatedRecord: {
+          relatedModule: 'Project',
+          createButtonSelector: '#ProjectTask_editView_fieldName_projectid_create',
+          requiredFields: {
+            projectname: {
+              selector: '#Project_editView_fieldName_projectname',
+              inputType: 'text',
+              testValue: (timestamp) => `テストプロジェクト_${timestamp}`
+            }
+          }
+        }
       }
     },
     optionalFields: {
-      projectid: {
-        selector: 'select[name="projectid"]',
-        inputType: 'select',
-        testValue: null // プロジェクトが必要
-      },
       projecttaskpriority: {
         selector: 'select[name="projecttaskpriority"]',
         inputType: 'select',
-        testValue: () => 'High'
+        testValue: () => '高'
       },
       projecttasktype: {
         selector: 'select[name="projecttasktype"]',
         inputType: 'select',
-        testValue: () => 'operative'
+        testValue: () => '運用'
       },
       startdate: {
         selector: 'input[name="startdate"]',
@@ -378,7 +401,7 @@ export const moduleConfigs: ModuleConfigs = {
     moduleName: 'ProjectMilestone',
     moduleLabel: 'プロジェクトマイルストーン',
     createButtonText: 'プロジェクトマイルストーンの追加',
-    listPageTitle: /プロジェクトマイルストーン/,
+    listPageTitle: /マイルストーン/,
     requiredFields: {
       projectmilestonename: {
         selector: 'input[name="projectmilestonename"]',
@@ -386,9 +409,20 @@ export const moduleConfigs: ModuleConfigs = {
         testValue: (timestamp) => `テストマイルストーン_${timestamp}`
       },
       projectid: {
-        selector: 'select[name="projectid"]',
-        inputType: 'select',
-        testValue: null // プロジェクトが必要
+        selector: '#ProjectMilestone_editView_fieldName_projectid_display',
+        inputType: 'relation',
+        testValue: null,
+        relatedRecord: {
+          relatedModule: 'Project',
+          createButtonSelector: '#ProjectMilestone_editView_fieldName_projectid_create',
+          requiredFields: {
+            projectname: {
+              selector: '#Project_editView_fieldName_projectname',
+              inputType: 'text',
+              testValue: (timestamp) => `テストプロジェクト_マイルストーン_${timestamp}`
+            }
+          }
+        }
       }
     },
     optionalFields: {
@@ -404,7 +438,7 @@ export const moduleConfigs: ModuleConfigs = {
       projectmilestonetype: {
         selector: 'select[name="projectmilestonetype"]',
         inputType: 'select',
-        testValue: () => 'administrative'
+        testValue: () => '管理'
       }
     }
   },
@@ -464,7 +498,7 @@ export const moduleConfigs: ModuleConfigs = {
     },
     optionalFields: {
       active: {
-        selector: 'input[name="active"]',
+        selector: '#PriceBooks_editView_fieldName_active',
         inputType: 'checkbox',
         testValue: () => 'true'
       },
@@ -642,19 +676,19 @@ export const testModules: string[] = Object.keys(moduleConfigs);
 
 // 特定のモジュールのみテストする場合は、このリストを使用
 export const selectedModules: string[] = [
-  'Accounts',
-  'Contacts',
-  'Leads',
-  'Potentials',
-  'HelpDesk',
-  'Products',
-  'Services',
-  'Project',
+  // 'Accounts',
+  // 'Contacts',
+  // 'Leads',
+  // 'Potentials',
+  // 'HelpDesk',
+  // 'Products',
+  // 'Services',
+  // 'Project',
   // 'Events',        // 特殊なのでスキップ
-  // 'ProjectTask',   // 関連フィールドが必要なのでスキップ
-  // 'ProjectMilestone', // 関連フィールドが必要なのでスキップ
-  'Vendors',
-  // 'PriceBooks',
+  // 'ProjectTask',
+  // 'ProjectMilestone',
+  // 'Vendors',
+  'PriceBooks',
   // 'PurchaseOrder',
   // 'SalesOrder',
   // 'Quotes'

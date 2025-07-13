@@ -43,16 +43,45 @@ selectedModules.forEach((moduleName: string) => {
       
       // 必須フィールドに入力
       for (const [, fieldConfig] of Object.entries(config.requiredFields)) {
-        const value: string = typeof fieldConfig.testValue === 'function' 
-          ? fieldConfig.testValue(timestamp) 
-          : (fieldConfig.testValue || '');
-        
-        if (fieldConfig.inputType === 'select') {
-          await page.selectOption(fieldConfig.selector, value);
-        } else if (fieldConfig.inputType === 'textarea') {
-          await page.fill(fieldConfig.selector, value);
+        if (fieldConfig.inputType === 'relation' && fieldConfig.relatedRecord) {
+          // 関連レコードの作成
+          await page.click(fieldConfig.relatedRecord.createButtonSelector);
+          await page.waitForTimeout(1000); // モーダルの表示を待つ
+          
+          // 関連レコードの必須フィールドに入力
+          for (const [, relatedFieldConfig] of Object.entries(fieldConfig.relatedRecord.requiredFields)) {
+            const relatedValue: string = typeof relatedFieldConfig.testValue === 'function' 
+              ? relatedFieldConfig.testValue(timestamp) 
+              : (relatedFieldConfig.testValue || '');
+            
+            if (relatedFieldConfig.inputType === 'select') {
+              await page.selectOption(relatedFieldConfig.selector, relatedValue);
+            } else {
+              await page.fill(relatedFieldConfig.selector, relatedValue);
+            }
+          }
+          
+          // 関連レコードを保存
+          await page.click('button[name="saveButton"]');
+          await page.waitForTimeout(2000); // 保存とモーダルのクローズを待つ
         } else {
-          await page.fill(fieldConfig.selector, value);
+          const value: string = typeof fieldConfig.testValue === 'function' 
+            ? fieldConfig.testValue(timestamp) 
+            : (fieldConfig.testValue || '');
+          
+          if (fieldConfig.inputType === 'select') {
+            await page.selectOption(fieldConfig.selector, value);
+          } else if (fieldConfig.inputType === 'textarea') {
+            await page.fill(fieldConfig.selector, value);
+          } else if (fieldConfig.inputType === 'checkbox') {
+            if (value === 'true' || value === '1') {
+              await page.check(fieldConfig.selector);
+            } else {
+              await page.uncheck(fieldConfig.selector);
+            }
+          } else {
+            await page.fill(fieldConfig.selector, value);
+          }
         }
       }
       
@@ -66,7 +95,24 @@ selectedModules.forEach((moduleName: string) => {
           if (fieldConfig.inputType === 'select') {
             const field = page.locator(fieldConfig.selector);
             if (await field.isVisible()) {
-              await page.selectOption(fieldConfig.selector, value);
+              try {
+                await page.selectOption(fieldConfig.selector, value);
+              } catch (error) {
+                // Select2コンポーネントの場合は、リンクをクリックして選択
+                const select2Link = page.locator(`button:has-text("${value}")`);
+                if (await select2Link.isVisible()) {
+                  await select2Link.click();
+                }
+              }
+            }
+          } else if (fieldConfig.inputType === 'checkbox') {
+            const field = page.locator(fieldConfig.selector);
+            if (await field.isVisible()) {
+              if (value === 'true' || value === '1') {
+                await field.check();
+              } else {
+                await field.uncheck();
+              }
             }
           } else {
             await fillFieldIfExists(page, fieldConfig.selector, value);
@@ -99,14 +145,43 @@ selectedModules.forEach((moduleName: string) => {
       
       // 必須フィールドに入力
       for (const [, fieldConfig] of Object.entries(config.requiredFields)) {
-        const value: string = typeof fieldConfig.testValue === 'function' 
-          ? fieldConfig.testValue(timestamp) 
-          : (fieldConfig.testValue || '');
-        
-        if (fieldConfig.inputType === 'select') {
-          await page.selectOption(fieldConfig.selector, value);
+        if (fieldConfig.inputType === 'relation' && fieldConfig.relatedRecord) {
+          // 関連レコードの作成
+          await page.click(fieldConfig.relatedRecord.createButtonSelector);
+          await page.waitForTimeout(1000); // モーダルの表示を待つ
+          
+          // 関連レコードの必須フィールドに入力
+          for (const [, relatedFieldConfig] of Object.entries(fieldConfig.relatedRecord.requiredFields)) {
+            const relatedValue: string = typeof relatedFieldConfig.testValue === 'function' 
+              ? relatedFieldConfig.testValue(timestamp) 
+              : (relatedFieldConfig.testValue || '');
+            
+            if (relatedFieldConfig.inputType === 'select') {
+              await page.selectOption(relatedFieldConfig.selector, relatedValue);
+            } else {
+              await page.fill(relatedFieldConfig.selector, relatedValue);
+            }
+          }
+          
+          // 関連レコードを保存
+          await page.click('button[name="saveButton"]');
+          await page.waitForTimeout(2000); // 保存とモーダルのクローズを待つ
         } else {
-          await page.fill(fieldConfig.selector, value);
+          const value: string = typeof fieldConfig.testValue === 'function' 
+            ? fieldConfig.testValue(timestamp) 
+            : (fieldConfig.testValue || '');
+          
+          if (fieldConfig.inputType === 'select') {
+            await page.selectOption(fieldConfig.selector, value);
+          } else if (fieldConfig.inputType === 'checkbox') {
+            if (value === 'true' || value === '1') {
+              await page.check(fieldConfig.selector);
+            } else {
+              await page.uncheck(fieldConfig.selector);
+            }
+          } else {
+            await page.fill(fieldConfig.selector, value);
+          }
         }
       }
       
@@ -159,14 +234,43 @@ selectedModules.forEach((moduleName: string) => {
       
       // 必須フィールドに入力
       for (const [, fieldConfig] of Object.entries(config.requiredFields)) {
-        const value: string = typeof fieldConfig.testValue === 'function' 
-          ? fieldConfig.testValue(timestamp) 
-          : (fieldConfig.testValue || '');
-        
-        if (fieldConfig.inputType === 'select') {
-          await page.selectOption(fieldConfig.selector, value);
+        if (fieldConfig.inputType === 'relation' && fieldConfig.relatedRecord) {
+          // 関連レコードの作成
+          await page.click(fieldConfig.relatedRecord.createButtonSelector);
+          await page.waitForTimeout(1000); // モーダルの表示を待つ
+          
+          // 関連レコードの必須フィールドに入力
+          for (const [, relatedFieldConfig] of Object.entries(fieldConfig.relatedRecord.requiredFields)) {
+            const relatedValue: string = typeof relatedFieldConfig.testValue === 'function' 
+              ? relatedFieldConfig.testValue(timestamp) 
+              : (relatedFieldConfig.testValue || '');
+            
+            if (relatedFieldConfig.inputType === 'select') {
+              await page.selectOption(relatedFieldConfig.selector, relatedValue);
+            } else {
+              await page.fill(relatedFieldConfig.selector, relatedValue);
+            }
+          }
+          
+          // 関連レコードを保存
+          await page.click('button[name="saveButton"]');
+          await page.waitForTimeout(2000); // 保存とモーダルのクローズを待つ
         } else {
-          await page.fill(fieldConfig.selector, value);
+          const value: string = typeof fieldConfig.testValue === 'function' 
+            ? fieldConfig.testValue(timestamp) 
+            : (fieldConfig.testValue || '');
+          
+          if (fieldConfig.inputType === 'select') {
+            await page.selectOption(fieldConfig.selector, value);
+          } else if (fieldConfig.inputType === 'checkbox') {
+            if (value === 'true' || value === '1') {
+              await page.check(fieldConfig.selector);
+            } else {
+              await page.uncheck(fieldConfig.selector);
+            }
+          } else {
+            await page.fill(fieldConfig.selector, value);
+          }
         }
       }
       

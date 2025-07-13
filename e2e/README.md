@@ -40,8 +40,25 @@ npm run test:ui
 
 ### 特定のテストファイルの実行
 ```bash
-npx playwright test e2e/auth/login.spec.js
-npx playwright test e2e/modules/contacts.spec.js
+npx playwright test e2e/auth/login.spec.ts
+npx playwright test e2e/modules/contacts.spec.ts
+```
+
+### Inventory系テストの実行
+```bash
+# すべてのInventory系テスト
+npm run test:inventory
+
+# Inventory系テスト（ヘッドモード）
+npm run test:inventory:headed
+
+# 個別モジュールのテスト
+npm run test:purchase-order
+npm run test:sales-order
+npm run test:quotes
+
+# 従来のモジュールテスト
+npm run test:modules
 ```
 
 ### 特定のブラウザでの実行
@@ -63,14 +80,25 @@ npm run report
 ```
 e2e/
 ├── auth/              # 認証関連のテスト
-│   └── login.spec.js
-├── modules/           # 各モジュールのテスト
-│   ├── contacts.spec.js
-│   └── accounts.spec.js
-├── helpers/           # ヘルパー関数
-│   └── auth.js
-├── fixtures/          # テストデータ
-│   └── test-data.js
+│   └── login.spec.ts
+├── modules/           # 標準モジュールのテスト
+│   ├── contacts.spec.ts
+│   ├── accounts.spec.ts
+│   └── standard-module-tests.spec.ts
+├── inventory/         # Inventory系特殊モジュールのテスト
+│   ├── purchase-order.spec.ts
+│   ├── sales-order.spec.ts
+│   ├── quotes.spec.ts
+│   └── helpers/
+│       ├── line-items.ts    # 明細行操作
+│       ├── calculations.ts  # 金額計算
+│       └── common.ts        # 共通ユーティリティ
+├── helpers/           # 共通ヘルパー関数
+│   ├── auth.ts
+│   ├── modules.ts
+│   └── inventory.ts   # Inventory系共通
+├── config/            # 設定
+│   └── modules.config.ts
 └── README.md
 ```
 
@@ -80,8 +108,30 @@ e2e/
 - コンタクト: `テスト太郎_{timestamp}`
 - アカウント: `テスト株式会社_{timestamp}`
 - Eメール: `test.{timestamp}@example.com`
+- 発注: `PurchaseOrder_{timestamp}`
+- 受注: `SalesOrder_{timestamp}`
+- 見積: `Quote_{timestamp}`
 
 これにより、テスト実行毎に一意のデータが作成され、テスト間での干渉を防ぎます。
+
+## Inventory系モジュールについて
+
+PurchaseOrder（発注）、SalesOrder（受注）、Quotes（見積）は、以下の特殊な機能を持つため、標準モジュールとは別の専用テストスイートを作成しています：
+
+### 主な特徴
+- **複雑な明細行管理**: 製品・サービスの動的追加、数量・単価の計算
+- **高度な税計算**: 消費税、軽減税率、地域別税率の対応
+- **割引・送料計算**: 複数の割引タイプ、送料、調整額の計算
+- **住所管理**: 請求先・出荷先の独立管理とコピー機能
+- **ワークフロー**: ステータス管理と承認プロセス
+
+### テスト内容
+- 基本的なCRUD操作
+- 明細行の追加・削除・編集
+- 金額計算の正確性確認
+- 税率・割引率の複雑な組み合わせテスト
+- 住所コピー機能のテスト
+- レスポンシブデザインとパフォーマンステスト
 
 ## 環境設定
 
