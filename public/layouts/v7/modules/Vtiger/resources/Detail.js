@@ -305,14 +305,15 @@ Vtiger.Class("Vtiger_Detail_Js",{
 							return false;
 						}
 
-						// ckEditorの値をセット
+						// リッチテキストエディタの値をセット
 						var ckeditor_columns = ['description', 'solution'];
 						ckeditor_columns.forEach(function (ckeditor_column) {
-							// 対象モジュールがHelpDesk && 対象カラムが存在する && 対象カラムのCKEDITORが存在する
-							if ($(form.module).val() === 'HelpDesk' && $(form).find('textarea[name="'+ckeditor_column+'"]') && CKEDITOR.instances[$(form.module).val()+'_editView_fieldName_'+ckeditor_column]) {
-								// CKEDITORの値をtextareaにセット
-								var ckeditorText = CKEDITOR.instances[$(form.module).val()+'_editView_fieldName_'+ckeditor_column].getData();
-								$(form).find('textarea[name="'+ckeditor_column+'"]').val(ckeditorText);
+							var textarea = $(form).find('textarea[name="'+ckeditor_column+'"]');
+							if ($(form.module).val() === 'HelpDesk' && textarea.length) {
+								var rteElement = textarea.data('richTextEditor');
+								if (rteElement) {
+									textarea.val(rteElement.getAttribute('value') || '');
+								}
 							}
 						});
 

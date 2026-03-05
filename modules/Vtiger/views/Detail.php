@@ -290,8 +290,6 @@ class Vtiger_Detail_View extends Vtiger_Index_View {
 			'modules.Vtiger.resources.RelatedList',
 			"modules.$moduleName.resources.RelatedList",
 			'libraries.jquery.jquery_windowmsg',
-			"libraries.jquery.ckeditor.ckeditor",
-			"libraries.jquery.ckeditor.adapters.jquery",
 			"modules.Emails.resources.MassEdit",
 			"modules.Vtiger.resources.CkEditor",
 			"~/libraries/jquery/twitter-text-js/twitter-text.js",

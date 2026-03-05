@@ -5,92 +5,116 @@
  * The Initial Developer of the Original Code is vtiger.
  * Portions created by vtiger are Copyright (C) vtiger.
  * All Rights Reserved.
+ *
+ * Modified: CKEditor replaced with <rich-text-editor> Web Component (Tiptap)
  *************************************************************************************/
 jQuery.Class("Vtiger_CkEditor_Js",{},{
-	
-	/*
-	 *Function to set the textArea element 
-	 */
+
 	setElement : function(element){
 		this.element = element;
 		return this;
 	},
-	
-	/*
-	 *Function to get the textArea element
-	 */
+
 	getElement : function(){
 		return this.element;
 	},
-	
-	/*
-	 * Function to return Element's id atrribute value
-	 */
-	getElementId :function(){
+
+	getElementId : function(){
 		var element = this.getElement();
 		return element.attr('id');
 	},
-	/*
-	 * Function to get the instance of ckeditor
-	 */
-	
-	getCkEditorInstanceFromName :function(){
-		var elementName = this.getElementId();
-		return CKEDITOR.instances[elementName];
-	},
-    
-    /***
-     * Function to get the plain text
-     */
-    getPlainText : function() {
-        var ckEditorInstnace = this.getCkEditorInstanceFromName();
-        return ckEditorInstnace.document.getBody().getText();
-    },
-	/*
-	 * Function to load CkEditor
-	 * @params : element: element on which CkEditor has to be loaded, config: custom configurations for ckeditor
-	 */
-	loadCkEditor : function(element,customConfig){
-		
-		this.setElement(element);
-		var instance = this.getCkEditorInstanceFromName();
-		var elementName = this.getElementId();
-		var config = {}
-        
-		if(typeof customConfig != 'undefined'){
-			var config = jQuery.extend(config,customConfig);
-		}
-		if(instance)
-		{
-			CKEDITOR.remove(instance);
-		}
-		
-		
-    
-		CKEDITOR.replace( elementName,config);
-	},
-	
-	/*
-	 * Function to load contents in ckeditor textarea
-	 * @params : textArea Element,contents ;
-	 */
-	loadContentsInCkeditor : function(contents){
-		var CkEditor = this.getCkEditorInstanceFromName();
-		CkEditor.setData(contents);
+
+	getCkEditorInstanceFromName : function(){
+		var element = this.getElement();
+		return element.data('richTextEditor');
 	},
 
-    /**
-     * Function to remove ckeditor instance
-     */
-    removeCkEditor : function() {
-        if(this.getElement()) {
-            var instance = this.getCkEditorInstanceFromName();
-            //first check if textarea element already exists in CKEditor, then destroy it
-            if(instance) {
-                instance.updateElement();
-                instance.destroy();
-            }
-        }
-    }
+	getPlainText : function() {
+		var rteElement = this.getCkEditorInstanceFromName();
+		if (rteElement) {
+			var tempDiv = document.createElement('div');
+			tempDiv.innerHTML = rteElement.getAttribute('value') || '';
+			return tempDiv.textContent || tempDiv.innerText || '';
+		}
+		return '';
+	},
+
+	/*
+	 * Function to load rich-text-editor web component.
+	 * Handles two cases:
+	 *   1. TPL直埋め込み: data-target属性を持つ<rich-text-editor>が既にDOM上にある場合、同期だけセットアップ
+	 *   2. 動的生成: textareaを隠してWeb Componentを動的に作成
+	 */
+	loadCkEditor : function(element, customConfig){
+		this.setElement(element);
+		var self = this;
+
+		var elementId = this.getElementId();
+		var existingRte = element.data('richTextEditor');
+
+		// Case 1: Already rendered by TPL (find by data-target attribute)
+		if (!existingRte) {
+			var preRendered = document.querySelector('rich-text-editor[data-target="' + elementId + '"]');
+			if (preRendered) {
+				element.data('richTextEditor', preRendered);
+				// Sync changes back to hidden textarea
+				preRendered.addEventListener('change', function(e) {
+					if (e.detail && e.detail.target) {
+						element.val(e.detail.target.value);
+					}
+				});
+				return;
+			}
+		}
+
+		// Case 2: Dynamic creation (for templates, workflows, etc.)
+		if (existingRte) {
+			existingRte.remove();
+		}
+
+		var elementName = element.attr('name') || elementId;
+		var initialValue = element.val() || '';
+
+		var rteElement = document.createElement('rich-text-editor');
+		rteElement.setAttribute('value', initialValue);
+		rteElement.setAttribute('name', elementName);
+
+		rteElement.addEventListener('change', function(e) {
+			if (e.detail && e.detail.target) {
+				element.val(e.detail.target.value);
+			}
+		});
+
+		element.hide();
+		element.after(rteElement);
+		element.data('richTextEditor', rteElement);
+	},
+
+	loadContentsInCkeditor : function(contents){
+		var rteElement = this.getCkEditorInstanceFromName();
+		if (rteElement) {
+			rteElement.setAttribute('value', contents);
+		}
+	},
+
+	removeCkEditor : function() {
+		if (this.getElement()) {
+			var rteElement = this.getCkEditorInstanceFromName();
+			if (rteElement) {
+				var currentValue = rteElement.getAttribute('value') || '';
+				this.getElement().val(currentValue);
+				rteElement.remove();
+				this.getElement().removeData('richTextEditor');
+				this.getElement().show();
+			}
+		}
+	},
+
+	getData : function() {
+		var rteElement = this.getCkEditorInstanceFromName();
+		if (rteElement) {
+			return rteElement.getAttribute('value') || '';
+		}
+		return this.getElement() ? this.getElement().val() : '';
+	}
 });
-    
