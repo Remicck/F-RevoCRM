@@ -180,8 +180,10 @@ jQuery.Class("Emails_MassEdit_Js",{},{
 					form = jQuery(form);
 					app.helper.hideModal();
 					app.helper.showProgress();
-					if (CKEDITOR.instances['description']) {
-						form.find('#description').val(CKEDITOR.instances['description'].getData());
+					var descTextarea = form.find('#description');
+					var rteElement = descTextarea.data('richTextEditor');
+					if (rteElement) {
+						descTextarea.val(rteElement.getAttribute('value') || '');
 					}
 
 					var data = new FormData(form[0]);

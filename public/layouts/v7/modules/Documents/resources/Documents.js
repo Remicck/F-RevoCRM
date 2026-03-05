@@ -384,8 +384,10 @@ Vtiger.Class('Documents_Index_Js', {
 		var self = this;
 		var noteContentElement = form.find('#Documents_editView_fieldName_notecontent_popup');
 		if(noteContentElement.length) {
-			var noteContent = CKEDITOR.instances.Documents_editView_fieldName_notecontent_popup.getData()
-			noteContentElement.val(noteContent);
+			var rteElement = noteContentElement.data('richTextEditor');
+			if (rteElement) {
+				noteContentElement.val(rteElement.getAttribute('value') || '');
+			}
 		}
 		var formData = form.serialize();
 		app.helper.showProgress();
