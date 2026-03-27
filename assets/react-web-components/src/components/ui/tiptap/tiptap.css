@@ -15,6 +15,8 @@
   border-bottom: none;
   border-radius: 6px 6px 0 0;
   background: var(--background, #fff);
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* ===== Toolbar buttons - Bootstrapの上書きを全て打ち消す ===== */
@@ -166,8 +168,16 @@
 }
 
 /* ===== Editor content area ===== */
+.tiptap-editor-content {
+  max-width: 100%;
+  overflow: hidden;
+}
+
 .tiptap-editor-content .ProseMirror {
   min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
   padding: 8px;
   border: 1px solid var(--border, #e2e2e2);
   border-radius: 0 0 6px 6px;
@@ -176,6 +186,8 @@
   font-size: 14px;
   line-height: 1.6;
   outline: none;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .tiptap-editor-content .ProseMirror:focus {
