@@ -11,6 +11,7 @@ import { MultiPicklistField } from './MultiPicklistField';
 import { ProductTaxField } from './ProductTaxField';
 import { cn } from '../lib/utils';
 import { useOptionalTranslation } from '../hooks/useTranslation';
+import Tiptap from './ui/tiptap/tiptap';
 
 /**
  * FieldValueをHTMLInput要素に渡せる型に変換
@@ -189,11 +190,29 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
           </div>
         );
 
-      // テキストエリア系 - Textarea
+      // テキストエリア系 - Textarea / Tiptap（isCkEditor対象）
       // pt-[7px]でラベル（leading-[30px]）の1行目と縦位置を揃える
       case UI_TYPES.TEXTAREA:
       case UI_TYPES.TEXTAREA_LONG:
       case UI_TYPES.TEXTAREA_20:
+        if (field.isCkEditor) {
+          const handleTiptapChange = (e: { target: { name: string; value: string } }) => {
+            onChange(e.target.name, e.target.value);
+          };
+          return (
+            <div className={cn('flex items-start gap-2', className)}>
+              {renderLabel()}
+              <div className="flex-1 min-w-0">
+                <Tiptap
+                  name={field.name}
+                  value={String(value ?? '')}
+                  onChange={handleTiptapChange}
+                />
+                {renderError()}
+              </div>
+            </div>
+          );
+        }
         return (
           <div className={cn('flex items-start gap-2', className)}>
             {renderLabel()}

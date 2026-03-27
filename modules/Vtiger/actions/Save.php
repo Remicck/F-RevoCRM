@@ -168,7 +168,7 @@ class Vtiger_Save_Action extends Vtiger_Action_Controller {
 			if($fieldDataType == 'time' && $fieldValue !== null){
 				$fieldValue = Vtiger_Time_UIType::getTimeValueWithSeconds($fieldValue);
 			}
-            $ckeditorFields = array('commentcontent', 'notecontent');
+            $ckeditorFields = array('commentcontent', 'notecontent', 'description', 'solution', 'question', 'faq_answer', 'signature');
             if((in_array($fieldName, $ckeditorFields)) && $fieldValue !== null){
                 $purifiedContent = vtlib_purify(decode_html($fieldValue));
                 // Purify malicious html event attributes

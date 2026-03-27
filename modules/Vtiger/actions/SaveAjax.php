@@ -153,7 +153,7 @@ class Vtiger_SaveAjax_Action extends Vtiger_Save_Action {
 	}
     
     public function purifyCkeditorField($fieldName, $fieldValue) {
-        $ckeditorFields = array('commentcontent', 'notecontent', 'signature');
+        $ckeditorFields = array('commentcontent', 'notecontent', 'signature', 'description', 'solution', 'question', 'faq_answer');
         if((in_array($fieldName, $ckeditorFields)) && $fieldValue !== null){
             $purifiedContent = vtlib_purify(decode_html($fieldValue));
             // Purify malicious html event attributes
