@@ -35,7 +35,8 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
   error,
   className,
   onRecordTypeChange,
-  formData
+  formData,
+  isQuickCreate
 }) => {
   // 翻訳フック（TranslationProvider外でも安全に使用可能）
   const { t } = useOptionalTranslation();
@@ -207,6 +208,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
                   name={field.name}
                   value={String(value ?? '')}
                   onChange={handleTiptapChange}
+                  isQuickCreate={isQuickCreate}
                 />
                 {renderError()}
               </div>
