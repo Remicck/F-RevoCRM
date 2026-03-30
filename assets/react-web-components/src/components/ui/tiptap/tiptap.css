@@ -174,9 +174,9 @@
 }
 
 .tiptap-editor-content .ProseMirror {
-  height: 107px;
+  min-height: 100px;
+  max-height: 250px;
   overflow-y: auto;
-  overflow-x: hidden;
   padding: 8px;
   border: 1px solid var(--border, #e2e2e2);
   border-radius: 0 0 6px 6px;
@@ -350,6 +350,14 @@
 .tiptap-editor-content .ProseMirror span[data-color] {
   border-radius: 2px;
   padding: 0 2px;
+}
+
+/* ===== QuickCreate内エディタ: 高さ固定 ===== */
+/* React QuickCreate (.quickcreate-form) と Smarty Documents QuickCreate (.createDocumentContent) で個別に定義 */
+.quickcreate-form .tiptap-editor-content .ProseMirror,
+.createDocumentContent .tiptap-editor-content .ProseMirror {
+  min-height: 120px;
+  max-height: 120px;
 }
 
 /* ===== Source editor (HTML編集モード) ===== */
