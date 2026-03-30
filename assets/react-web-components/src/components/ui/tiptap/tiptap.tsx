@@ -1036,7 +1036,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
         {/* ===== Main Toolbar ===== */}
         <div className="tiptap-toolbar">
           {/* Block type */}
-          <DropdownMenu>
+          <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
               <button
                 type="button"
@@ -1080,7 +1080,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </DropdownMenu>
 
           {/* Font size */}
-          <DropdownMenu onOpenChange={handleFontSizeOpenChange}>
+          <DropdownMenu modal={false} onOpenChange={handleFontSizeOpenChange}>
             <DropdownMenuTrigger asChild>
               <button
                 ref={fontSizeTriggerRef}
@@ -1380,7 +1380,7 @@ const ColorPicker = ({
   onSelect,
   onClear,
 }: ColorPickerProps) => (
-  <DropdownMenu>
+  <DropdownMenu modal={false}>
     <DropdownMenuTrigger asChild>
       <button
         type="button"
