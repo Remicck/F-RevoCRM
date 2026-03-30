@@ -84,6 +84,7 @@ export const QuickCreateForm: React.FC<QuickCreateFormProps> = ({
                   error={errors[field.name]}
                   className="w-full"
                   formData={formData}
+                  isQuickCreate={true}
                 />
               </div>
             ))}

@@ -520,6 +520,7 @@ export const CalendarForm: React.FC<CalendarFormProps> = ({
               disabled={isDisabled}
               error={validationErrors[subject.name]}
               formData={formData}
+              isQuickCreate={true}
             />
           </div>
         )}
@@ -588,6 +589,7 @@ export const CalendarForm: React.FC<CalendarFormProps> = ({
                       disabled={isDisabled}
                       error={validationErrors[field.name]}
                       formData={formData}
+                      isQuickCreate={true}
                     />
                   </div>
                 ))}
