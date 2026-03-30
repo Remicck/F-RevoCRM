@@ -771,6 +771,7 @@ interface TiptapProps {
   name?: string;
   className?: string;
   colors?: string[];
+  isQuickCreate?: boolean;
 }
 
 const TiptapInitialValue = "<p></p>";
@@ -783,10 +784,12 @@ interface BlockTypeOption {
 }
 
 const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
-  ({ value = "", onChange, name = "", className = "", colors }, ref) => {
+  ({ value = "", onChange, name = "", className = "", colors, isQuickCreate }, ref) => {
     const [content, setContent] = useState(value || TiptapInitialValue);
     const [sourceMode, setSourceMode] = useState(false);
     const [sourceHtml, setSourceHtml] = useState("");
+    const [fontSizeDropdownMaxHeight, setFontSizeDropdownMaxHeight] = useState<number | undefined>(undefined);
+    const fontSizeTriggerRef = useRef<HTMLButtonElement>(null);
     const textPalette = colors && colors.length > 0 ? colors : TEXT_COLORS;
     const highlightPalette = HIGHLIGHT_COLORS;
 
@@ -1001,6 +1004,28 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       [onChange, name]
     );
 
+    const FONT_SIZE_DROPDOWN_MIN_HEIGHT = 100; // 少なくとも2〜3項目を表示するための最低高
+
+    const handleFontSizeOpenChange = (open: boolean) => {
+      if (!isQuickCreate) return;
+      if (!open) {
+        setFontSizeDropdownMaxHeight(undefined);
+        return;
+      }
+      const trigger = fontSizeTriggerRef.current;
+      if (!trigger) return;
+
+      const triggerRect = trigger.getBoundingClientRect();
+      const scrollContainer = trigger.closest<HTMLElement>('.overflow-y-auto, .overflow-auto');
+      const containerBottom = scrollContainer
+        ? scrollContainer.getBoundingClientRect().bottom
+        : window.innerHeight;
+
+      const MARGIN = 8;
+      const availableHeight = containerBottom - triggerRect.bottom - MARGIN;
+      setFontSizeDropdownMaxHeight(Math.max(availableHeight, FONT_SIZE_DROPDOWN_MIN_HEIGHT));
+    };
+
     const currentTextColor =
       (editor?.getAttributes("textStyle")?.color as string) || "#000000";
     const currentHighlight =
@@ -1055,9 +1080,10 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </DropdownMenu>
 
           {/* Font size */}
-          <DropdownMenu>
+          <DropdownMenu onOpenChange={handleFontSizeOpenChange}>
             <DropdownMenuTrigger asChild>
               <button
+                ref={fontSizeTriggerRef}
                 type="button"
                 className="tiptap-block-select"
                 style={{ minWidth: "64px" }}
@@ -1070,7 +1096,14 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
                 <ChevronDown size={10} />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent
+              side="bottom"
+              style={
+                isQuickCreate && fontSizeDropdownMaxHeight !== undefined
+                  ? { maxHeight: `${fontSizeDropdownMaxHeight}px` }
+                  : undefined
+              }
+            >
               {FONT_SIZES.map((fs) => {
                 const cur =
                   (editor?.getAttributes("textStyle")?.fontSize as string) ||
