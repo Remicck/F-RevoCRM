@@ -480,3 +480,38 @@
   height: 3px;
   border-radius: 1px;
 }
+
+/* ===== Mobile toolbar: 横スクロール ===== */
+.tiptap-toolbar--mobile {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  background: #ffffff;
+}
+
+.tiptap-toolbar--mobile::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== Mobile toolbar: スクロール誘導グラデーション ===== */
+.tiptap-toolbar-fade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tiptap-toolbar-fade--left {
+  left: 0;
+  background: linear-gradient(to left, transparent, #e8e8e8);
+  border-radius: 6px 0 0 0;
+}
+
+.tiptap-toolbar-fade--right {
+  right: 0;
+  background: linear-gradient(to right, transparent, #e8e8e8);
+  border-radius: 0 6px 0 0;
+}

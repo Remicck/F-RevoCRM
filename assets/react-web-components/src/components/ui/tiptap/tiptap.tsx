@@ -790,6 +790,13 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
     const [sourceHtml, setSourceHtml] = useState("");
     const [fontSizeDropdownMaxHeight, setFontSizeDropdownMaxHeight] = useState<number | undefined>(undefined);
     const fontSizeTriggerRef = useRef<HTMLButtonElement>(null);
+    const [isMobile, setIsMobile] = useState(
+      () => typeof window !== 'undefined' && window.innerWidth < 768
+    );
+    const toolbarRef = useRef<HTMLDivElement>(null);
+    const toolbarWrapperRef = useRef<HTMLDivElement>(null);
+    const [showLeftGradient, setShowLeftGradient] = useState(false);
+    const [showRightGradient, setShowRightGradient] = useState(true);
     const textPalette = colors && colors.length > 0 ? colors : TEXT_COLORS;
     const highlightPalette = HIGHLIGHT_COLORS;
 
@@ -895,6 +902,20 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editor]);
 
+    // isMobile: resize リスナー（150ms デバウンス）
+    useEffect(() => {
+      let timer: ReturnType<typeof setTimeout>;
+      const handleResize = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => setIsMobile(window.innerWidth < 768), 150);
+      };
+      window.addEventListener('resize', handleResize);
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
+
     const blockTypeOptions: BlockTypeOption[] = [
       {
         label: "段落",
@@ -968,6 +989,17 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       }
     }, [editor]);
 
+    const handleToolbarScroll = useCallback(() => {
+      const el = toolbarRef.current;
+      if (!el) return;
+      setShowLeftGradient(el.scrollLeft > 0);
+      setShowRightGradient(el.scrollLeft + el.clientWidth < el.scrollWidth - 1);
+    }, []);
+
+    useEffect(() => {
+      handleToolbarScroll();
+    }, [handleToolbarScroll]);
+
     const toggleSourceMode = useCallback(() => {
       if (!editor) return;
       if (!sourceMode) {
@@ -1034,7 +1066,12 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
     return (
       <div>
         {/* ===== Main Toolbar ===== */}
-        <div className="tiptap-toolbar">
+        <div ref={toolbarWrapperRef} style={{ position: 'relative' }}>
+          <div
+            ref={toolbarRef}
+            onScroll={isMobile ? handleToolbarScroll : undefined}
+            className={`tiptap-toolbar${isMobile ? ' tiptap-toolbar--mobile' : ''}`}
+          >
           {/* Block type */}
           <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
@@ -1059,7 +1096,17 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
                 })()}
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent
+              side="bottom"
+              align="start"
+              avoidCollisions={false}
+              collisionPadding={8}
+              style={isMobile ? {
+                width: `${toolbarWrapperRef.current?.offsetWidth ?? 0}px`,
+                maxHeight: '60vh',
+                overflowY: 'auto',
+              } : undefined}
+            >
               {blockTypeOptions.map((opt) => (
                 <DropdownMenuItem
                   key={opt.value}
@@ -1080,7 +1127,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </DropdownMenu>
 
           {/* Font size */}
-          <DropdownMenu modal={false} onOpenChange={handleFontSizeOpenChange}>
+          <DropdownMenu modal={false} onOpenChange={!isMobile ? handleFontSizeOpenChange : undefined}>
             <DropdownMenuTrigger asChild>
               <button
                 ref={fontSizeTriggerRef}
@@ -1098,38 +1145,75 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
             </DropdownMenuTrigger>
             <DropdownMenuContent
               side="bottom"
-              style={
-                isQuickCreate && fontSizeDropdownMaxHeight !== undefined
+              align="start"
+              avoidCollisions={false}
+              collisionPadding={8}
+              style={isMobile ? {
+                width: `${toolbarWrapperRef.current?.offsetWidth ?? 0}px`,
+                maxHeight: '60vh',
+                overflowY: 'auto',
+              } : (isQuickCreate && fontSizeDropdownMaxHeight !== undefined
                   ? { maxHeight: `${fontSizeDropdownMaxHeight}px` }
-                  : undefined
-              }
+                  : undefined)}
             >
-              {FONT_SIZES.map((fs) => {
-                const cur =
-                  (editor?.getAttributes("textStyle")?.fontSize as string) ||
-                  "14px";
-                return (
-                  <DropdownMenuItem
-                    key={fs.value}
-                    onMouseDown={(e) => e.preventDefault()}
-                    onClick={() =>
-                      fs.value === "14px"
-                        ? editor?.chain().focus().unsetFontSize().run()
-                        : editor?.chain().focus().setFontSize(fs.value).run()
-                    }
-                    style={{
-                      backgroundColor:
-                        cur === fs.value
-                          ? "var(--muted, #f0f0f0)"
-                          : undefined,
-                    }}
-                  >
-                    <span style={{ fontSize: fs.value, lineHeight: 1.2 }}>
-                      {fs.label}
-                    </span>
-                  </DropdownMenuItem>
-                );
-              })}
+              {isMobile ? (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 4, padding: 6 }}>
+                  {FONT_SIZES.map((fs) => {
+                    const cur =
+                      (editor?.getAttributes("textStyle")?.fontSize as string) ||
+                      "14px";
+                    return (
+                      <DropdownMenuItem
+                        key={fs.value}
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() =>
+                          fs.value === "14px"
+                            ? editor?.chain().focus().unsetFontSize().run()
+                            : editor?.chain().focus().setFontSize(fs.value).run()
+                        }
+                        style={{
+                          backgroundColor:
+                            cur === fs.value
+                              ? "var(--muted, #f0f0f0)"
+                              : undefined,
+                          justifyContent: 'center',
+                          minHeight: '44px',
+                          padding: '4px 2px',
+                        }}
+                      >
+                        <span style={{ fontSize: '11px' }}>{fs.label}</span>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </div>
+              ) : (
+                FONT_SIZES.map((fs) => {
+                  const cur =
+                    (editor?.getAttributes("textStyle")?.fontSize as string) ||
+                    "14px";
+                  return (
+                    <DropdownMenuItem
+                      key={fs.value}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onClick={() =>
+                        fs.value === "14px"
+                          ? editor?.chain().focus().unsetFontSize().run()
+                          : editor?.chain().focus().setFontSize(fs.value).run()
+                      }
+                      style={{
+                        backgroundColor:
+                          cur === fs.value
+                            ? "var(--muted, #f0f0f0)"
+                            : undefined,
+                      }}
+                    >
+                      <span style={{ fontSize: fs.value, lineHeight: 1.2 }}>
+                        {fs.label}
+                      </span>
+                    </DropdownMenuItem>
+                  );
+                })
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
 
@@ -1330,6 +1414,13 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           >
             <Code size={14} />
           </button>
+          </div>
+          {isMobile && showLeftGradient && (
+            <div className="tiptap-toolbar-fade tiptap-toolbar-fade--left" />
+          )}
+          {isMobile && showRightGradient && (
+            <div className="tiptap-toolbar-fade tiptap-toolbar-fade--right" />
+          )}
         </div>
 
         {/* ===== Editor / Source ===== */}

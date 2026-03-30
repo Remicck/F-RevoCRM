@@ -91,10 +91,11 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
   // ラベル要素の共通レンダリング（横並びレイアウト用・旧版スタイル：ラベル右寄せ）
   // ラベル部分と必須マークを分離して、ラベル終端を揃える
   const renderLabel = () => (
-    <>
+    // md:contents: PC幅ではdivが"消えて"子spanが親のflexコンテナに直接並ぶ（既存レイアウト維持）
+    <div className="flex items-start md:contents">
       <span
         className={cn(
-          'text-md text-gray-700 flex-shrink-0 w-[110px] text-right leading-[30px]',
+          'text-md text-gray-700 text-left md:w-[110px] md:text-right md:flex-shrink-0 leading-[30px]',
           disabled && 'text-gray-400'
         )}
       >
@@ -105,7 +106,7 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       <span className="w-3 leading-[30px] text-red-500 text-center flex-shrink-0" aria-hidden="true">
         {field.mandatory ? '*' : ''}
       </span>
-    </>
+    </div>
   );
 
   // エラーメッセージの共通レンダリング（アクセシビリティ対応）
@@ -177,9 +178,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       case UI_TYPES.STRING_LONG:
       case UI_TYPES.STRING_106:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="text"
@@ -201,9 +202,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
             onChange(e.target.name, e.target.value);
           };
           return (
-            <div className={cn('flex items-start gap-2', className)}>
+            <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
               {renderLabel()}
-              <div className="flex-1 min-w-0">
+              <div className="w-full md:flex-1 md:min-w-0">
                 <Tiptap
                   name={field.name}
                   value={String(value ?? '')}
@@ -216,9 +217,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
           );
         }
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Textarea
                 {...inputProps}
                 onChange={handleInputChange}
@@ -233,9 +234,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // 数値系 - Input type="number"
       case UI_TYPES.NUMBER:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="number"
@@ -250,9 +251,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // 小数 - Input type="number" with decimal
       case UI_TYPES.DECIMAL:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="number"
@@ -269,9 +270,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
         // CheckboxSwitchは"1"/"0"文字列を期待する
         const boolValue = value === true || value === '1' || value === 1 ? '1' : '0';
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0 h-[30px] flex items-center">
+            <div className="w-full md:flex-1 md:min-w-0 h-[30px] flex items-center">
               <CheckboxSwitch
                 name={field.name}
                 value={boolValue}
@@ -287,9 +288,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // Email - Input type="email"
       case UI_TYPES.EMAIL:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="email"
@@ -304,9 +305,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // 電話番号 - Input type="tel"
       case UI_TYPES.PHONE:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="tel"
@@ -321,9 +322,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // URL - Input type="url"
       case UI_TYPES.URL:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="url"
@@ -339,9 +340,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       case UI_TYPES.DATE:
       case UI_TYPES.DATE_23:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="date"
@@ -356,9 +357,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // step="60" で分単位選択（秒非表示）、handleDateTimeChangeで秒を除去
       case UI_TYPES.DATETIME_CALENDAR:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="datetime-local"
@@ -374,9 +375,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // step="60" で分単位選択（秒非表示）、handleDateTimeChangeで秒を除去
       case UI_TYPES.TIME:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="time"
@@ -443,9 +444,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // 通貨 - Input type="number" with currency formatting
       case UI_TYPES.CURRENCY:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <div className="relative">
                 <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">¥</span>
                 <Input
@@ -465,9 +466,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // パーセンテージ - Input type="number" with % suffix
       case UI_TYPES.PERCENTAGE:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <div className="relative">
                 <Input
                   {...inputProps}
@@ -492,9 +493,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // firstnameは名前入力フィールドなのでテキスト入力が適切
       case UI_TYPES.SALUTATION:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="text"
@@ -509,9 +510,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // パスワード - Input type="password"
       case UI_TYPES.PASSWORD:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="password"
@@ -537,10 +538,10 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
         };
         // ProductTaxField用のカスタムラベル（taxlabelを使用）
         const renderTaxLabel = () => (
-          <>
+          <div className="flex items-start md:contents">
             <span
               className={cn(
-                'text-md text-gray-700 flex-shrink-0 w-[110px] text-right leading-[30px]',
+                'text-md text-gray-700 text-left md:w-[110px] md:text-right md:flex-shrink-0 leading-[30px]',
                 (disabled || field.readonly) && 'text-gray-400'
               )}
             >
@@ -550,12 +551,12 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
             <span className="w-3 leading-[30px] text-red-500 text-center flex-shrink-0" aria-hidden="true">
               {field.mandatory ? '*' : ''}
             </span>
-          </>
+          </div>
         );
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderTaxLabel()}
-            <div className="flex-1 min-w-0 h-[30px] flex items-center">
+            <div className="w-full md:flex-1 md:min-w-0 h-[30px] flex items-center">
               <ProductTaxField
                 name={taxDetails.taxname}
                 label={taxDetails.taxlabel}
@@ -608,9 +609,9 @@ export const FieldRenderer: React.FC<FieldRendererProps> = ({
       // 未対応のUIType - 文字列入力として扱う
       default:
         return (
-          <div className={cn('flex items-start gap-2', className)}>
+          <div className={cn('flex flex-col md:flex-row items-start gap-1 md:gap-2', className)}>
             {renderLabel()}
-            <div className="flex-1 min-w-0">
+            <div className="w-full md:flex-1 md:min-w-0">
               <Input
                 {...inputProps}
                 type="text"
