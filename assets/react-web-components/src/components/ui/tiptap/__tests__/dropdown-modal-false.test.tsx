@@ -40,4 +40,15 @@ describe('Tiptap DropdownMenu modal={false}', () => {
     expect(document.body.style.overflow).not.toBe('hidden');
     expect(document.body.style.paddingRight).toBe('');
   });
+
+  it('背景色ドロップダウンを開いても body に overflow:hidden が付与されない', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    const bgColorBtn = screen.getByTitle('背景色');
+    await user.click(bgColorBtn);
+
+    expect(document.body.style.overflow).not.toBe('hidden');
+    expect(document.body.style.paddingRight).toBe('');
+  });
 });
