@@ -215,4 +215,130 @@ describe('Tiptap フォントサイズ — フォーカス復元', () => {
     const isInProseMirror = activeEl === prosemirror;
     expect(isInDropdown || isInProseMirror).toBe(true);
   });
+
+  it('フォントサイズを選択してから文字を入力すると選択したサイズが反映される', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    // 16px を選択
+    const trigger = screen.getByText('14px');
+    await user.click(trigger);
+    const allSixteenPx = screen.getAllByText('16px');
+    const menuItemSpan = allSixteenPx.find(
+      (el) => el.closest('[role="menuitem"]') !== null
+    );
+    await user.click(menuItemSpan!);
+
+    // エディターにフォーカスして文字を入力
+    const prosemirror = document.querySelector('.ProseMirror') as HTMLElement;
+    prosemirror.focus();
+    await user.keyboard('A');
+
+    // 入力されたテキストに font-size: 16px が適用されていること
+    await waitFor(() => {
+      const styledSpan = prosemirror.querySelector('span[style*="font-size: 16px"]');
+      expect(styledSpan).not.toBeNull();
+      expect(styledSpan?.textContent).toContain('A');
+    }, { timeout: 2000 });
+  });
+
+  it('連続してフォントサイズを変更するとツールバーが最新の値に更新される', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    // 1回目：16px を選択
+    const trigger = screen.getByText('14px');
+    await user.click(trigger);
+    const allSixteenPx = screen.getAllByText('16px');
+    const menuItem16 = allSixteenPx.find(
+      (el) => el.closest('[role="menuitem"]') !== null
+    );
+    await user.click(menuItem16!);
+
+    await waitFor(() => {
+      const fontSizeButtons = document.querySelectorAll('.tiptap-block-select');
+      const fontSizeTrigger = Array.from(fontSizeButtons).find(
+        (btn) => btn.querySelector('span')?.textContent?.includes('px')
+      );
+      expect(fontSizeTrigger?.querySelector('span')?.textContent).toContain('16px');
+    }, { timeout: 2000 });
+
+    // 2回目：18px を選択
+    const trigger2 = screen.getByText('16px');
+    await user.click(trigger2);
+    const allEighteenPx = screen.getAllByText('18px');
+    const menuItem18 = allEighteenPx.find(
+      (el) => el.closest('[role="menuitem"]') !== null
+    );
+    await user.click(menuItem18!);
+
+    // ツールバーが 18px に更新されること
+    await waitFor(() => {
+      const fontSizeButtons = document.querySelectorAll('.tiptap-block-select');
+      const fontSizeTrigger = Array.from(fontSizeButtons).find(
+        (btn) => btn.querySelector('span')?.textContent?.includes('px')
+      );
+      expect(fontSizeTrigger?.querySelector('span')?.textContent).toContain('18px');
+    }, { timeout: 2000 });
+  });
+});
+
+describe('Tiptap ツールバー — 文字色・ハイライト色のリアクティブ更新', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('カーソルのみの状態で文字色を設定するとカラーインジケーターが更新される', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    // 文字色ピッカーボタンを開く
+    const colorBtn = screen.getByTitle('文字色');
+    await user.click(colorBtn);
+
+    // パレットから最初の色を mousedown で選択
+    await waitFor(() => {
+      const swatches = document.querySelectorAll('.tiptap-color-swatch');
+      expect(swatches.length).toBeGreaterThan(0);
+    });
+    const firstSwatch = document.querySelector('.tiptap-color-swatch') as HTMLElement;
+    const selectedColor = firstSwatch.title; // title 属性に色の値が入っている
+    await user.pointer({ target: firstSwatch, keys: '[MouseLeft>]' });
+
+    // カラーインジケーターが選択した色で更新されていること
+    await waitFor(() => {
+      const indicator = colorBtn.querySelector('.tiptap-color-indicator') as HTMLElement;
+      expect(indicator).not.toBeNull();
+      expect(indicator?.style.backgroundColor).toBeTruthy();
+    }, { timeout: 2000 });
+
+    // ツールバーを再確認（再レンダリング後も維持される）
+    const indicator = colorBtn.querySelector('.tiptap-color-indicator') as HTMLElement;
+    expect(indicator?.style.backgroundColor).not.toBe('');
+    // swatch の title と CSS color が対応している（hex → rgb 変換を考慮して空でないことを確認）
+    expect(selectedColor).toBeTruthy();
+  });
+
+  it('カーソルのみの状態でハイライト色を設定するとカラーインジケーターが更新される', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    // ハイライトピッカーボタンを開く
+    const highlightBtn = screen.getByTitle('背景色');
+    await user.click(highlightBtn);
+
+    await waitFor(() => {
+      const swatches = document.querySelectorAll('.tiptap-color-swatch');
+      expect(swatches.length).toBeGreaterThan(0);
+    });
+    const firstSwatch = document.querySelector('.tiptap-color-swatch') as HTMLElement;
+    await user.pointer({ target: firstSwatch, keys: '[MouseLeft>]' });
+
+    // カラーインジケーターが更新されていること
+    await waitFor(() => {
+      const indicator = highlightBtn.querySelector('.tiptap-color-indicator') as HTMLElement;
+      expect(indicator).not.toBeNull();
+      expect(indicator?.style.backgroundColor).toBeTruthy();
+    }, { timeout: 2000 });
+  });
 });

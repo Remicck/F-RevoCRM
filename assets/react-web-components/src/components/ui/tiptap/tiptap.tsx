@@ -192,15 +192,33 @@ const FontSizeExtension = Extension.create({
     return {
       setFontSize:
         (size: string) =>
-        ({ chain }) =>
-          chain().setMark("textStyle", { fontSize: size }).run(),
+        ({ chain, state }) => {
+          if (state.selection.empty) {
+            // テキスト未選択時: ゼロ幅スペース（ZWS）をフォントサイズ付きで挿入し
+            // ブラウザがカーソルをそのスパン内に描画してカーソル高さを追従させる
+            return chain()
+              .setMark("textStyle", { fontSize: size })
+              .insertContent("\u200B")
+              .run();
+          }
+          return chain().setMark("textStyle", { fontSize: size }).run();
+        },
       unsetFontSize:
         () =>
-        ({ chain }) =>
-          chain()
+        ({ chain, state }) => {
+          if (state.selection.empty) {
+            // テキスト未選択時: ZWS を挿入してカーソル高さをデフォルトに追従させる
+            return chain()
+              .setMark("textStyle", { fontSize: null })
+              .removeEmptyTextStyle()
+              .insertContent("\u200B")
+              .run();
+          }
+          return chain()
             .setMark("textStyle", { fontSize: null })
             .removeEmptyTextStyle()
-            .run(),
+            .run();
+        },
     };
   },
 });
@@ -218,6 +236,21 @@ const FONT_SIZES = [
   { label: "36px", value: "36px" },
   { label: "48px", value: "48px" },
 ];
+
+/**
+ * SelectAll拡張
+ * Ctrl+A（Windows/Linux）または Cmd+A（macOS）で全選択する。
+ * ProseMirror は Mod-a を selectAll に明示的にマッピングしていないため、
+ * この拡張で明示的にマッピングする。
+ */
+const SelectAllExtension = Extension.create({
+  name: "selectAll",
+  addKeyboardShortcuts() {
+    return {
+      "Mod-a": () => this.editor.commands.selectAll(),
+    };
+  },
+});
 
 /**
  * CellStyle拡張: セルの背景色・罫線色コマンド
@@ -812,6 +845,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
         SpanHighlight.configure({ multicolor: true }),
         IndentExtension,
         CellStyleExtension,
+        SelectAllExtension,
         ResizableImage.configure({ inline: true, allowBase64: true }),
         StyledTable.configure({ resizable: false }),
         TableRow,
@@ -870,9 +904,12 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
         },
       },
       onUpdate: ({ editor: e }: { editor: Editor }) => {
-        const html = e.getHTML();
-        const text = e.getText().trim();
-        setContent(html);
+        // ZWS（ゼロ幅スペース）を除去してから onChange に渡す
+        // ZWS はカーソルサイズ追従のためにフォントサイズ変更時に挿入されるが、
+        // 保存コンテンツには含めない
+        const html = e.getHTML().replace(/\u200B/g, "");
+        const text = e.getText().trim().replace(/\u200B/g, "");
+        setContent(e.getHTML()); // DOM は ZWS 付きのまま保持（カーソル描画のため）
         if (onChange) {
           onChange({
             target: { name, value: text === "" ? "" : html },
@@ -881,17 +918,41 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       },
     });
 
+    // ブロックタイプの型定義
+    type BlockType = "paragraph" | "h1" | "h2" | "h3";
+
     // ツールバーをトランザクション発生時にリアクティブに更新するための状態
     // カーソルのみ（テキスト未選択）状態でのフォントサイズ・スタイル変更をツールバーに反映する
+    // また、太字・斜体などの isActive 状態もセレクターに含め、ボタンのアクティブ表示を即座に更新する
     const editorToolbarState = useEditorState({
       editor,
       selector: (ctx) => {
         const e = ctx.editor;
-        if (!e) return { fontSize: "14px", textColor: "#000000", highlight: "" };
+        if (!e) return {
+          fontSize: "14px", textColor: "#000000", highlight: "",
+          isBold: false, isItalic: false, isUnderline: false, isStrike: false,
+          isBulletList: false, isOrderedList: false, isBlockquote: false,
+          blockType: "paragraph" as BlockType,
+        };
         return {
+          // 既存フィールド: フォントサイズ・文字色・ハイライト
           fontSize: (e.getAttributes("textStyle")?.fontSize as string) || "14px",
           textColor: (e.getAttributes("textStyle")?.color as string) || "#000000",
           highlight: (e.getAttributes("highlight")?.color as string) || "",
+          // 追加フィールド: 各書式ボタンのアクティブ状態
+          isBold:        e.isActive("bold"),
+          isItalic:      e.isActive("italic"),
+          isUnderline:   e.isActive("underline"),
+          isStrike:      e.isActive("strike"),
+          isBulletList:  e.isActive("bulletList"),
+          isOrderedList: e.isActive("orderedList"),
+          isBlockquote:  e.isActive("blockquote"),
+          blockType: (
+            e.isActive("heading", { level: 1 }) ? "h1"
+            : e.isActive("heading", { level: 2 }) ? "h2"
+            : e.isActive("heading", { level: 3 }) ? "h3"
+            : "paragraph"
+          ) as BlockType,
         };
       },
     });
@@ -961,13 +1022,6 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           editor?.chain().focus().toggleHeading({ level: 3 }).run(),
       },
     ];
-
-    const getCurrentBlockType = () => {
-      if (editor?.isActive("heading", { level: 1 })) return "h1";
-      if (editor?.isActive("heading", { level: 2 })) return "h2";
-      if (editor?.isActive("heading", { level: 3 })) return "h3";
-      return "paragraph";
-    };
 
     const handleImageUpload = useCallback(() => {
       const input = document.createElement("input");
@@ -1074,10 +1128,8 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       setFontSizeDropdownMaxHeight(Math.max(availableHeight, FONT_SIZE_DROPDOWN_MIN_HEIGHT));
     };
 
-    const currentTextColor =
-      (editor?.getAttributes("textStyle")?.color as string) || "#000000";
-    const currentHighlight =
-      (editor?.getAttributes("highlight")?.color as string) || "";
+    const currentTextColor = editorToolbarState?.textColor ?? "#000000";
+    const currentHighlight = editorToolbarState?.highlight ?? "";
 
     return (
       <div>
@@ -1098,7 +1150,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
               >
                 {(() => {
                   const opt = blockTypeOptions.find(
-                    (o) => o.value === getCurrentBlockType()
+                    (o) => o.value === (editorToolbarState?.blockType ?? "paragraph")
                   );
                   if (!opt) return null;
                   const Icon = opt.icon;
@@ -1130,7 +1182,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
                   onClick={opt.onClick}
                   style={{
                     backgroundColor:
-                      getCurrentBlockType() === opt.value
+                      (editorToolbarState?.blockType ?? "paragraph") === opt.value
                         ? "var(--muted, #f0f0f0)"
                         : undefined,
                   }}
@@ -1245,7 +1297,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           {/* Text formatting */}
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("bold") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isBold ? "active" : ""}`}
             title="太字"
             onMouseDown={(e) =>
               handleAction(e, () =>
@@ -1257,7 +1309,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </button>
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("italic") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isItalic ? "active" : ""}`}
             title="斜体"
             onMouseDown={(e) =>
               handleAction(e, () =>
@@ -1269,7 +1321,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </button>
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("underline") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isUnderline ? "active" : ""}`}
             title="下線"
             onMouseDown={(e) =>
               handleAction(e, () =>
@@ -1281,7 +1333,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </button>
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("strike") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isStrike ? "active" : ""}`}
             title="取り消し線"
             onMouseDown={(e) =>
               handleAction(e, () =>
@@ -1321,7 +1373,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           {/* Lists & indent */}
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("bulletList") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isBulletList ? "active" : ""}`}
             title="箇条書きリスト"
             onMouseDown={(e) =>
               handleAction(e, () =>
@@ -1333,7 +1385,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           </button>
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("orderedList") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isOrderedList ? "active" : ""}`}
             title="番号付きリスト"
             onMouseDown={(e) =>
               handleAction(e, () =>
@@ -1365,7 +1417,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
           {/* Blockquote */}
           <button
             type="button"
-            className={`tiptap-btn ${editor?.isActive("blockquote") ? "active" : ""}`}
+            className={`tiptap-btn ${editorToolbarState?.isBlockquote ? "active" : ""}`}
             title="引用"
             onMouseDown={(e) =>
               handleAction(e, () =>
