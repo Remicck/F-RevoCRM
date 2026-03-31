@@ -151,16 +151,6 @@ Vtiger_Edit_Js("Documents_Edit_Js", {
 		}
 	},
     
-    quickCreatePreSave : function(form) {
-        var textAreaElement = form.find('textarea[name="notecontent"]');
-        if(textAreaElement.length){
-            var rteElement = textAreaElement.data('richTextEditor');
-            if (rteElement) {
-                textAreaElement.val(rteElement.getAttribute('value') || '');
-            }
-        }
-    },
-    
     /**
      * Function to save the quickcreate module
      * @param accepts form element as parameter

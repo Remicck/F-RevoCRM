@@ -382,13 +382,6 @@ Vtiger.Class('Documents_Index_Js', {
 
 	_createDocument : function(form) {
 		var self = this;
-		var noteContentElement = form.find('#Documents_editView_fieldName_notecontent_popup');
-		if(noteContentElement.length) {
-			var rteElement = noteContentElement.data('richTextEditor');
-			if (rteElement) {
-				noteContentElement.val(rteElement.getAttribute('value') || '');
-			}
-		}
 		var formData = form.serialize();
 		app.helper.showProgress();
 		app.request.post({'data':formData}).then(function(e,res) {
