@@ -1059,6 +1059,35 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       }
     }, [editor]);
 
+    // リストトグル時に storedMarks（文字色・ハイライト・フォントサイズ）を保持する
+    // toggleBulletList / toggleOrderedList はブロックレベルのトランザクションを発行し
+    // ProseMirror の storedMarks をクリアするため、トグル前に値を取得して再適用する。
+    // フォントサイズ再適用には setFontSize の代わりに setMark を直接使用する
+    // （setFontSize は selection.empty 時に ZWS を挿入する副作用があるため）
+    const handleBulletListToggle = useCallback(() => {
+      if (!editor) return;
+      const preColor     = editor.getAttributes("textStyle")?.color as string | undefined;
+      const preFontSize  = editor.getAttributes("textStyle")?.fontSize as string | undefined;
+      const preHighlight = editor.getAttributes("highlight")?.color as string | undefined;
+      const chain = editor.chain().focus().toggleBulletList();
+      if (preColor)     chain.setColor(preColor);
+      if (preFontSize)  chain.setMark("textStyle", { fontSize: preFontSize });
+      if (preHighlight) chain.setHighlight({ color: preHighlight });
+      chain.run();
+    }, [editor]);
+
+    const handleOrderedListToggle = useCallback(() => {
+      if (!editor) return;
+      const preColor     = editor.getAttributes("textStyle")?.color as string | undefined;
+      const preFontSize  = editor.getAttributes("textStyle")?.fontSize as string | undefined;
+      const preHighlight = editor.getAttributes("highlight")?.color as string | undefined;
+      const chain = editor.chain().focus().toggleOrderedList();
+      if (preColor)     chain.setColor(preColor);
+      if (preFontSize)  chain.setMark("textStyle", { fontSize: preFontSize });
+      if (preHighlight) chain.setHighlight({ color: preHighlight });
+      chain.run();
+    }, [editor]);
+
     const handleToolbarScroll = useCallback(() => {
       const el = toolbarRef.current;
       if (!el) return;
@@ -1375,11 +1404,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
             type="button"
             className={`tiptap-btn ${editorToolbarState?.isBulletList ? "active" : ""}`}
             title="箇条書きリスト"
-            onMouseDown={(e) =>
-              handleAction(e, () =>
-                editor?.chain().focus().toggleBulletList().run()
-              )
-            }
+            onMouseDown={(e) => handleAction(e, handleBulletListToggle)}
           >
             <List size={14} />
           </button>
@@ -1387,11 +1412,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
             type="button"
             className={`tiptap-btn ${editorToolbarState?.isOrderedList ? "active" : ""}`}
             title="番号付きリスト"
-            onMouseDown={(e) =>
-              handleAction(e, () =>
-                editor?.chain().focus().toggleOrderedList().run()
-              )
-            }
+            onMouseDown={(e) => handleAction(e, handleOrderedListToggle)}
           >
             <ListOrdered size={14} />
           </button>
