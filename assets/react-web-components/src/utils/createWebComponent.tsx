@@ -28,6 +28,13 @@ export function createWebComponent(
     }
 
     connectedCallback() {
+      // ホスト要素を block に設定し、親コンテナの幅を正しく継承させる
+      this.style.display = 'block';
+      this.style.width = '100%';
+      this.style.maxWidth = '100%';
+      this.style.overflow = 'hidden';
+      this.style.boxSizing = 'border-box';
+
       // Reactのマウントポイントを作成
       this.container = document.createElement("div");
       this.container.className = "web-components-wrapper";
