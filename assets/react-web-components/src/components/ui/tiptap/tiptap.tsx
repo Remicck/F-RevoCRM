@@ -14,6 +14,7 @@ import { TableCell } from "@tiptap/extension-table-cell";
 import { TableHeader } from "@tiptap/extension-table-header";
 import {
   useEditor,
+  useEditorState,
   EditorContent,
   NodeViewWrapper,
   ReactNodeViewRenderer,
@@ -880,6 +881,21 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
       },
     });
 
+    // ツールバーをトランザクション発生時にリアクティブに更新するための状態
+    // カーソルのみ（テキスト未選択）状態でのフォントサイズ・スタイル変更をツールバーに反映する
+    const editorToolbarState = useEditorState({
+      editor,
+      selector: (ctx) => {
+        const e = ctx.editor;
+        if (!e) return { fontSize: "14px", textColor: "#000000", highlight: "" };
+        return {
+          fontSize: (e.getAttributes("textStyle")?.fontSize as string) || "14px",
+          textColor: (e.getAttributes("textStyle")?.color as string) || "#000000",
+          highlight: (e.getAttributes("highlight")?.color as string) || "",
+        };
+      },
+    });
+
     const handleAction = useCallback(
       (e: React.MouseEvent, action: () => void) => {
         e.preventDefault();
@@ -1137,8 +1153,7 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
                 onMouseDown={(e) => e.preventDefault()}
               >
                 <span>
-                  {(editor?.getAttributes("textStyle")?.fontSize as string) ||
-                    "14px"}
+                  {editorToolbarState?.fontSize ?? "14px"}
                 </span>
                 <ChevronDown size={10} />
               </button>
@@ -1155,6 +1170,14 @@ const Tiptap = React.forwardRef<HTMLDivElement, TiptapProps>(
               } : (isQuickCreate && fontSizeDropdownMaxHeight !== undefined
                   ? { maxHeight: `${fontSizeDropdownMaxHeight}px` }
                   : undefined)}
+              onCloseAutoFocus={(e) => {
+                // Radix UI のアクセシビリティ仕様によりフォーカスがトリガーに戻るため、
+                // 意図的にエディターへフォーカスを戻す
+                e.preventDefault();
+                if (editor && !editor.isDestroyed) {
+                  editor.view.dom.focus();
+                }
+              }}
             >
               {isMobile ? (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 4, padding: 6 }}>

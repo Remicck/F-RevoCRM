@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Tiptap from '../tiptap';
 
@@ -14,8 +14,18 @@ const mockGetBoundingClientRect = (values: Partial<DOMRect>) => {
 };
 
 describe('Tiptap フォントサイズドロップダウン (isQuickCreate)', () => {
+  // プロトタイプを直接上書きするモックのバックアップ
+  const originalGetBoundingClientRect = HTMLElement.prototype.getBoundingClientRect;
+  const originalClosest = HTMLElement.prototype.closest;
+
   beforeEach(() => {
     vi.restoreAllMocks();
+  });
+
+  afterEach(() => {
+    // vi.restoreAllMocks() では復元されない直接プロトタイプ上書きを手動で復元
+    HTMLElement.prototype.getBoundingClientRect = originalGetBoundingClientRect;
+    HTMLElement.prototype.closest = originalClosest;
   });
 
   it('isQuickCreate=false のとき maxHeight が設定されない', async () => {
@@ -107,5 +117,102 @@ describe('Tiptap フォントサイズドロップダウン (isQuickCreate)', ()
     expect(() => {
       render(<Tiptap value="" name="test" isQuickCreate={true} />);
     }).not.toThrow();
+  });
+});
+
+describe('Tiptap フォントサイズ — フォーカス復元', () => {
+  beforeEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('カーソルのみの状態でフォントサイズを選択するとエディターにフォーカスが戻る', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    // フォントサイズドロップダウンを開く
+    const trigger = screen.getByText('14px');
+    await user.click(trigger);
+
+    // 16px を選択（メニューアイテム内の span）
+    const allSixteenPx = screen.getAllByText('16px');
+    const menuItemSpan = allSixteenPx.find(
+      (el) => el.closest('[role="menuitem"]') !== null
+    );
+    expect(menuItemSpan).toBeTruthy();
+    await user.click(menuItemSpan!);
+
+    // ドロップダウンが閉じた後、ProseMirror にフォーカスが当たっていること
+    const prosemirror = document.querySelector('.ProseMirror');
+    expect(prosemirror).toBeTruthy();
+    expect(document.activeElement).toBe(prosemirror);
+  });
+
+  it('カーソルのみの状態でフォントサイズを選択するとツールバーが更新される', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    // デフォルトは 14px 表示
+    const trigger = screen.getByText('14px');
+    await user.click(trigger);
+
+    // 16px を選択（DropdownMenuItem 要素自体をクリック）
+    const allSixteenPx = screen.getAllByText('16px');
+    const menuItemSpan = allSixteenPx.find(
+      (el) => el.closest('[role="menuitem"]') !== null
+    );
+    expect(menuItemSpan).toBeTruthy();
+    const menuItem = menuItemSpan!.closest('[role="menuitem"]') as HTMLElement;
+    await user.click(menuItem);
+
+    // ツールバートリガーが 16px に更新されていること
+    // (useEditorState によりトランザクション発生時に React が再レンダリングされる)
+    await waitFor(
+      () => {
+        // ドロップダウンのトリガーボタンを再取得してフォントサイズ表示を確認
+        const fontSizeButtons = document.querySelectorAll('.tiptap-block-select');
+        // フォントサイズのトリガーは 'px' を含むテキストを持つボタン
+        const fontSizeTrigger = Array.from(fontSizeButtons).find(
+          (btn) => btn.querySelector('span')?.textContent?.includes('px')
+            && !btn.querySelector('span')?.textContent?.includes('段落')
+            && !btn.querySelector('span')?.textContent?.includes('見出し')
+        );
+        expect(fontSizeTrigger?.querySelector('span')?.textContent).toContain('16px');
+      },
+      { timeout: 2000 }
+    );
+  });
+
+  it('Escape でドロップダウンを閉じた場合もエディターにフォーカスが戻る', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    const trigger = screen.getByText('14px');
+    await user.click(trigger);
+    await user.keyboard('{Escape}');
+
+    const prosemirror = document.querySelector('.ProseMirror');
+    expect(document.activeElement).toBe(prosemirror);
+  });
+
+  it('Tab キーでドロップダウン外に移動した場合、フォーカスが意図しない要素に移らない', async () => {
+    const user = userEvent.setup();
+    render(<Tiptap value="" name="test" />);
+
+    const trigger = screen.getByText('14px');
+    await user.click(trigger);
+    await user.keyboard('{Tab}');
+
+    // Radix UI は DropdownMenuContent 内で Tab キーのデフォルト動作をキャンセルする
+    // そのため JSDOM 環境では Tab キーでドロップダウンが閉じず、フォーカスは
+    // DropdownMenuContent 内（または DropdownMenuContent 自体）に留まる。
+    // これは Tab キーが DropdownMenu の外側に漏れていないことを示す正しい動作である。
+    const prosemirror = document.querySelector('.ProseMirror');
+    const dropdownContent = document.querySelector('[data-slot="dropdown-menu-content"]');
+    const activeEl = document.activeElement;
+    // フォーカスが ProseMirror、または DropdownMenu 内にあることを確認
+    // (Tab キーにより意図しない外部ボタンや body にフォーカスが移っていない)
+    const isInDropdown = dropdownContent?.contains(activeEl) || activeEl === dropdownContent;
+    const isInProseMirror = activeEl === prosemirror;
+    expect(isInDropdown || isInProseMirror).toBe(true);
   });
 });
