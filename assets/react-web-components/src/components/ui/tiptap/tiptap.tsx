@@ -194,9 +194,17 @@ const FontSizeExtension = Extension.create({
         (size: string) =>
         ({ chain, state }) => {
           if (state.selection.empty) {
-            // テキスト未選択時: ゼロ幅スペース（ZWS）をフォントサイズ付きで挿入し
-            // ブラウザがカーソルをそのスパン内に描画してカーソル高さを追従させる
-            return chain()
+            const { from } = state.selection;
+            // カーソル直前のZWSを削除してからフォントサイズ付きZWSを挿入する
+            // これにより、連続でフォントサイズを変更してもZWSが蓄積しない
+            const c = chain();
+            if (
+              from > 0 &&
+              state.doc.textBetween(from - 1, from) === "\u200B"
+            ) {
+              c.deleteRange({ from: from - 1, to: from });
+            }
+            return c
               .setMark("textStyle", { fontSize: size })
               .insertContent("\u200B")
               .run();
@@ -207,8 +215,16 @@ const FontSizeExtension = Extension.create({
         () =>
         ({ chain, state }) => {
           if (state.selection.empty) {
-            // テキスト未選択時: ZWS を挿入してカーソル高さをデフォルトに追従させる
-            return chain()
+            const { from } = state.selection;
+            // カーソル直前のZWSを削除してから新しいZWSを挿入する
+            const c = chain();
+            if (
+              from > 0 &&
+              state.doc.textBetween(from - 1, from) === "\u200B"
+            ) {
+              c.deleteRange({ from: from - 1, to: from });
+            }
+            return c
               .setMark("textStyle", { fontSize: null })
               .removeEmptyTextStyle()
               .insertContent("\u200B")
