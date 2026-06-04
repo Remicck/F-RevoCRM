@@ -290,12 +290,10 @@ class CRMEntity {
 
 		$entityFields = Vtiger_Functions::getEntityModuleInfo($module);
         $entityFieldNames  = explode(',', $entityFields['fieldname']);
-        switch ($module) {
-            case 'HelpDesk': $entityFieldNames = array('ticket_title');
-                break;
-            case 'Documents': $entityFieldNames = array('notes_title');
-                break;
-		}
+        // #1574: vtiger_entityname.fieldname holds column names, but $this->column_fields is
+        // keyed by field name. Translate so the saved label honors the entityname setting for
+        // ANY field (including custom cf fields), instead of hardcoding a single field per module.
+        $entityFieldNames = Vtiger_Functions::translateEntityColumnsToFieldNames($module, $entityFieldNames);
 		
 		$record_label = '';
 		foreach($entityFieldNames as $entityFieldName) {

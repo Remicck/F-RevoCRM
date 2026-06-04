@@ -229,6 +229,76 @@ class Vtiger_Functions {
 			self::$moduleEntityCache[$name] : NULL;
 	}
 
+	protected static $entityFieldColumnTableCache = array();
+
+	/**
+	 * #1574: Map each field column name of a module to the table it physically lives in.
+	 * Used to LEFT JOIN custom-field (cf) tables when computing record labels so that
+	 * the module's representative fields are not restricted to the base table.
+	 */
+	static function getEntityFieldColumnTableMap($mixed) {
+		$name = is_numeric($mixed) ? self::getModuleName($mixed) : $mixed;
+		if (!$name) return array();
+
+		if (!isset(self::$entityFieldColumnTableCache[$name])) {
+			global $adb;
+			$map = array();
+			$tabid = self::getModuleId($name);
+			if ($tabid) {
+				$result = $adb->pquery('SELECT columnname, tablename FROM vtiger_field WHERE tabid=?', array($tabid));
+				while ($row = $adb->fetch_array($result)) {
+					$map[$row['columnname']] = $row['tablename'];
+				}
+			}
+			self::$entityFieldColumnTableCache[$name] = $map;
+		}
+
+		return self::$entityFieldColumnTableCache[$name];
+	}
+
+	protected static $entityColumnToFieldNameCache = array();
+
+	/**
+	 * #1574: Map each column name of a module to its field name.
+	 * vtiger_entityname.fieldname stores column names, but the name fields / $fieldData /
+	 * $column_fields used to build a record's label are keyed by FIELD name. This lets callers
+	 * translate the representative columns so the label honors the entityname setting for any
+	 * field (including custom cf fields), instead of hardcoding the field(s) per module.
+	 */
+	static function getEntityColumnToFieldNameMap($mixed) {
+		$name = is_numeric($mixed) ? self::getModuleName($mixed) : $mixed;
+		if (!$name) return array();
+
+		if (!isset(self::$entityColumnToFieldNameCache[$name])) {
+			global $adb;
+			$map = array();
+			$tabid = self::getModuleId($name);
+			if ($tabid) {
+				$result = $adb->pquery('SELECT columnname, fieldname FROM vtiger_field WHERE tabid=?', array($tabid));
+				while ($row = $adb->fetch_array($result)) {
+					$map[$row['columnname']] = $row['fieldname'];
+				}
+			}
+			self::$entityColumnToFieldNameCache[$name] = $map;
+		}
+
+		return self::$entityColumnToFieldNameCache[$name];
+	}
+
+	/**
+	 * #1574: Translate a list of representative COLUMN names (as stored in
+	 * vtiger_entityname.fieldname) into FIELD names, so a record label can be built from
+	 * field-name-keyed data for any field. Accepts a comma string or an array; returns an array.
+	 */
+	static function translateEntityColumnsToFieldNames($mixed, $columnNames) {
+		if (!is_array($columnNames)) $columnNames = explode(',', $columnNames);
+		$map = self::getEntityColumnToFieldNameMap($mixed);
+		foreach ($columnNames as $idx => $columnName) {
+			if (isset($map[$columnName])) $columnNames[$idx] = $map[$columnName];
+		}
+		return $columnNames;
+	}
+
 	static function getEntityModuleSQLColumnString($mixed) {
 		$data = array();
 		$info = self::getEntityModuleInfo($mixed);
@@ -396,8 +466,31 @@ class Vtiger_Functions {
 				$columnString = php7_count($columns) < 2? $columns[0] :
 					sprintf("concat(%s)", implode(",' ',", $columns));
 
-				$sql = sprintf('SELECT '. implode(',',$columns).', %s AS id FROM %s WHERE %s IN (%s)',
-						 $idcolumn, $table, $idcolumn, generateQuestionMarks($ids));
+				// #1574: The representative fields (fieldname) may include custom fields that
+				// physically live in a different table (e.g. the module's "cf" table) than the
+				// base table. Resolve each column to its real table and LEFT JOIN any non-base
+				// table so the label query does not fail with "Unknown column" on those fields.
+				$columnTableMap = self::getEntityFieldColumnTableMap($module);
+
+				$selectColumns = array();
+				$joinTables = array();
+				foreach ($columns as $columnName) {
+					$columnTable = isset($columnTableMap[$columnName]) ? $columnTableMap[$columnName] : $table;
+					$selectColumns[] = $columnTable . '.' . $columnName;
+					if ($columnTable != $table) {
+						$joinTables[$columnTable] = true;
+					}
+				}
+
+				$fromClause = $table;
+				foreach (array_keys($joinTables) as $joinTable) {
+					$fromClause .= sprintf(' LEFT JOIN %s ON %s.%s = %s.%s',
+							$joinTable, $joinTable, $idcolumn, $table, $idcolumn);
+				}
+
+				$sql = sprintf('SELECT %s, %s.%s AS id FROM %s WHERE %s.%s IN (%s)',
+						 implode(',', $selectColumns), $table, $idcolumn, $fromClause,
+						 $table, $idcolumn, generateQuestionMarks($ids));
 
 				$result = $adb->pquery($sql, $ids);
 

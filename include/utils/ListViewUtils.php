@@ -640,16 +640,32 @@ function getEntityId($module, $entityName) {
 	$fieldsname = $adb->query_result($result, 0, 'fieldname');
 	$tablename = $adb->query_result($result, 0, 'tablename');
 	$entityidfield = $adb->query_result($result, 0, 'entityidfield');
-	if (!(strpos($fieldsname, ',') === false)) {
-		$fieldlists = explode(',', $fieldsname);
-		$fieldsname = "trim(concat(";
-		$fieldsname = $fieldsname . implode(",' ',", $fieldlists);
-		$fieldsname = $fieldsname . "))";
+
+	// #1574: representative fields may live in custom-field (cf) tables; resolve each column
+	// to its table, qualify it, and LEFT JOIN any non-base tables.
+	$columnTableMap = Vtiger_Functions::getEntityFieldColumnTableMap($module);
+	$fieldlists = explode(',', $fieldsname);
+	$joinClause = '';
+	$joinTables = array();
+	$qualified = array();
+	foreach ($fieldlists as $c) {
+		$c = trim($c);
+		$ct = isset($columnTableMap[$c]) ? $columnTableMap[$c] : $tablename;
+		$qualified[] = $ct . '.' . $c;
+		if ($ct != $tablename) $joinTables[$ct] = true;
+	}
+	foreach (array_keys($joinTables) as $jt) {
+		$joinClause .= " LEFT JOIN $jt ON $jt.$entityidfield = $tablename.$entityidfield";
+	}
+	if (php7_count($qualified) > 1) {
+		$fieldsname = "trim(concat(" . implode(",' ',", $qualified) . "))";
 		$entityName = trim($entityName);
+	} else {
+		$fieldsname = $qualified[0];
 	}
 
 	if ($entityName != '') {
-		$sql = "select $entityidfield from $tablename INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = $tablename.$entityidfield " .
+		$sql = "select $tablename.$entityidfield from $tablename INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = $tablename.$entityidfield " . $joinClause .
 				" WHERE vtiger_crmentity.deleted = 0 and $fieldsname=?";
 		$result = $adb->pquery($sql, array($entityName));
 		if ($adb->num_rows($result) == 0) {

@@ -538,12 +538,12 @@ class Vtiger_Module_Model extends Vtiger_Module {
 				}
 			}
 
-			//added to handle entity names for these two modules
-			//@Note: need to move these to database
-			switch($moduleName) {
-				case 'HelpDesk': $this->nameFields = array('ticket_title'); $fieldNames = 'ticket_title'; break;
-				case 'Documents': $this->nameFields = array('notes_title'); $fieldNames = 'notes_title';  break;
-			}
+			// #1574: vtiger_entityname.fieldname stores column names, but name fields are used as
+			// field names (Record->get()/getField()). Translate so the representative items honor
+			// the entityname setting for any field (incl. custom cf fields), not a per-module hardcode.
+			$this->nameFields = Vtiger_Functions::translateEntityColumnsToFieldNames($moduleName, $this->nameFields);
+			$fieldNames = implode(',', $this->nameFields);
+
 			$entiyObj = new stdClass();
 			$entiyObj->basetable = $adb->query_result($result, 0, 'tablename');
 			$entiyObj->basetableid =  $adb->query_result($result, 0, 'entityidfield');
@@ -819,12 +819,12 @@ class Vtiger_Module_Model extends Vtiger_Module {
 
 				$fieldNames = $db->query_result($result, $index, 'fieldname');
 				$modulename = $db->query_result($result, $index, 'modulename');
-				//added to handle entity names for these two modules
-				//@Note: need to move these to database
-				switch($modulename) {
-					case 'HelpDesk': $fieldNames = 'ticket_title'; break;
-					case 'Documents': $fieldNames = 'notes_title';  break;
-				}
+
+				// #1574: vtiger_entityname.fieldname stores column names, but name fields are used
+				// as field names. Translate so the representative items honor the entityname setting
+				// for any field (incl. custom cf fields), instead of hardcoding a field per module.
+				$fieldNames = implode(',', Vtiger_Functions::translateEntityColumnsToFieldNames($modulename, $fieldNames));
+
 				$entiyObj = new stdClass();
 				$entiyObj->basetable = $db->query_result($result, $index, 'tablename');
 				$entiyObj->basetableid =  $db->query_result($result, $index, 'entityidfield');

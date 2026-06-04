@@ -433,10 +433,10 @@ class Import_Data_Action extends Vtiger_Action_Controller {
 				$recordId = $entityIdComponents[1];
 				if (!empty($recordId)) {
 					$entityfields = getEntityFieldNames($this->module);
-					switch ($this->module) {
-						case 'HelpDesk'	: $entityfields['fieldname'] = array('ticket_title');	break;
-						case 'Documents': $entityfields['fieldname'] = array('notes_title');	break;
-					}
+					// #1574: vtiger_entityname stores column names, but $fieldData is keyed by field
+					// name. Translate so the import label honors the entityname setting for any field
+					// (including custom cf fields), instead of hardcoding a single field per module.
+					$entityfields['fieldname'] = Vtiger_Functions::translateEntityColumnsToFieldNames($this->module, $entityfields['fieldname']);
 					$label = '';
 					if (is_array($entityfields['fieldname'])) {
 						foreach ($entityfields['fieldname'] as $field) {
@@ -868,10 +868,10 @@ class Import_Data_Action extends Vtiger_Action_Controller {
 		$entityIdComponents = vtws_getIdComponents($entityIdInfo['id']);
 		$recordId = $entityIdComponents[1];
 		$entityfields = getEntityFieldNames($moduleName);
-		switch ($moduleName) {
-			case 'HelpDesk'	: $entityfields['fieldname'] = array('ticket_title');	break;
-			case 'Documents': $entityfields['fieldname'] = array('notes_title');	break;
-		}
+		// #1574: vtiger_entityname stores column names, but $fieldData is keyed by field name.
+		// Translate so the import label honors the entityname setting for any field (including
+		// custom cf fields), instead of hardcoding a single field per module.
+		$entityfields['fieldname'] = Vtiger_Functions::translateEntityColumnsToFieldNames($moduleName, $entityfields['fieldname']);
 		$label = '';
 		if (is_array($entityfields['fieldname'])) {
 			foreach ($entityfields['fieldname'] as $field) {
@@ -1351,7 +1351,21 @@ class Import_Data_Action extends Vtiger_Action_Controller {
 			$tablename = $adb->query_result($result, 0, 'tablename');
 			$entityidfield = $adb->query_result($result, 0, 'entityidfield');
 
-			$sql = "select * from $tablename INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = $tablename.$entityidfield WHERE vtiger_crmentity.deleted = 0";
+			// #1574: reference columns may live in custom-field (cf) tables; LEFT JOIN them so
+			// "select *" exposes those columns for the reference-matching cache below.
+			$columnTableMap = Vtiger_Functions::getEntityFieldColumnTableMap($module);
+			$joinClause = '';
+			$joinTables = array();
+			foreach ($columns as $column) {
+				if (isset($columnTableMap[$column]) && $columnTableMap[$column] != $tablename) {
+					$joinTables[$columnTableMap[$column]] = true;
+				}
+			}
+			foreach (array_keys($joinTables) as $jt) {
+				$joinClause .= " LEFT JOIN $jt ON $jt.$entityidfield = $tablename.$entityidfield";
+			}
+
+			$sql = "select * from $tablename INNER JOIN vtiger_crmentity ON vtiger_crmentity.crmid = $tablename.$entityidfield" . $joinClause . " WHERE vtiger_crmentity.deleted = 0";
 			$result = $adb->pquery($sql,array());
 
 			$noOfRows = $adb->num_rows($result);

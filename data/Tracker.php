@@ -82,22 +82,44 @@ $log->info("in  track view method ".$current_module);
 		 $query = "select fieldname,tablename,entityidfield from vtiger_entityname where modulename = ?";
 		 $result = $adb->pquery($query, array($current_module));
 		 $fieldsname = $adb->query_result($result,0,'fieldname');
-		 $tablename = $adb->query_result($result,0,'tablename'); 
-		 $entityidfield = $adb->query_result($result,0,'entityidfield'); 
-		 if(!(strpos($fieldsname,',') === false))
+		 $tablename = $adb->query_result($result,0,'tablename');
+		 $entityidfield = $adb->query_result($result,0,'entityidfield');
+
+		 // #1574: representative fields may live in custom-field (cf) tables; resolve each
+		 // column to its table, qualify it, and LEFT JOIN any non-base tables.
+		 $columnTableMap = Vtiger_Functions::getEntityFieldColumnTableMap($current_module);
+		 $fieldlists = explode(',', $fieldsname);
+		 $joinTables = array();
+		 $qualified = array();
+		 foreach ($fieldlists as $c)
+		 {
+			 $c = trim($c);
+			 $ct = isset($columnTableMap[$c]) ? $columnTableMap[$c] : $tablename;
+			 $qualified[] = $ct.'.'.$c;
+			 if ($ct != $tablename) $joinTables[$ct] = true;
+		 }
+		 if (php7_count($qualified) > 1)
 		 {
 			 // concatenate multiple fields with an whitespace between them
-			 $fieldlists = explode(',',$fieldsname);
 			 $fl = array();
-			 foreach($fieldlists as $w => $c)
+			 foreach ($qualified as $q)
 			 {
 				 if (php7_count($fl))
 				 	$fl[] = "' '";
-				 $fl[] = $c;
+				 $fl[] = $q;
 			 }
 			 $fieldsname = $adb->sql_concat($fl);
-		 }	
-		 $query1 = "select $fieldsname as entityname from $tablename where $entityidfield = ?"; 
+		 }
+		 else
+		 {
+			 $fieldsname = $qualified[0];
+		 }
+		 $fromClause = $tablename;
+		 foreach (array_keys($joinTables) as $jt)
+		 {
+			 $fromClause .= " LEFT JOIN $jt ON $jt.$entityidfield = $tablename.$entityidfield";
+		 }
+		 $query1 = "select $fieldsname as entityname from $fromClause where $tablename.$entityidfield = ?";
 		 $result = $adb->pquery($query1, array($item_id));
 		 $item_summary = $adb->query_result($result,0,'entityname');
 		 if(strlen($item_summary) > 30)
