@@ -6,9 +6,11 @@ on:
   pull_request:
     paths:
       - 'assets/react-web-components/**'
+      - '.github/workflows/web-components-ci.yml'
   push:
     paths:
       - 'assets/react-web-components/**'
+      - '.github/workflows/web-components-ci.yml'
 
 permissions:
   contents: read # 最小限の読み取り権限のみ
