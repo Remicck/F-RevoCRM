@@ -24,13 +24,13 @@ jobs:
         working-directory: assets/react-web-components
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           # push 時に整形コミットを push できるよう、detached HEAD ではなくブランチを取得
           ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 24 # 推奨 Node.js (最新 LTS)
           cache: npm
