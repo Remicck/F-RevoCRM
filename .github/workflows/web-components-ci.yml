@@ -1,0 +1,43 @@
+# assets/react-web-components (React + TypeScript + Vite) の lint / format / test を
+# 自動実行する CI。web-components 配下の変更時のみ動作する。
+name: web-components CI
+
+on:
+  pull_request:
+    paths:
+      - 'assets/react-web-components/**'
+  push:
+    paths:
+      - 'assets/react-web-components/**'
+
+permissions:
+  contents: read # 最小限の読み取り権限のみ
+
+jobs:
+  lint-format-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: assets/react-web-components
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24 # 推奨 Node.js (最新 LTS)
+          cache: npm
+          cache-dependency-path: assets/react-web-components/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format:check
+
+      - name: Test
+        run: npm run test
