@@ -1,8 +1,9 @@
 name: PHPUnit
 
 # PR 時と手動実行で、PHP 側のテスト (tests/) を回す。
-# tests/Unit は DB を使わないため compose は立てず、runner 上で直接実行する。
-# (DB を使う tests/Integration を追加する際は、DB を用意するステップが別途必要)
+#  - phpunit     : tests/Unit。DB を使わないため compose は立てず、runner 上で直接実行する。
+#  - integration : tests/Integration。E2E と同じ dump を投入した DB コンテナを立てて実行する
+#                  (tests/ci/run-integration.sh)。
 on:
   pull_request:
     branches: [main]
@@ -82,38 +83,7 @@ jobs:
 
       - name: PHPUnit 結果をジョブサマリに出力
         if: ${{ !cancelled() }}
-        run: |
-          php -r '
-            $path = "tests/.phpunit.cache/junit.xml";
-            $summary = getenv("GITHUB_STEP_SUMMARY");
-            if (!is_file($path)) {
-                file_put_contents($summary, "⚠️ junit.xml が見つかりませんでした（テスト実行前に失敗した可能性）\n", FILE_APPEND);
-                exit(0);
-            }
-            $xml = simplexml_load_file($path);
-            $root = $xml->testsuite[0] ?? null;
-            if ($root === null) {
-                file_put_contents($summary, "⚠️ junit.xml を解析できませんでした\n", FILE_APPEND);
-                exit(0);
-            }
-            $tests      = (int)$root["tests"];
-            $assertions = (int)$root["assertions"];
-            $failures   = (int)$root["failures"];
-            $errors     = (int)$root["errors"];
-            $skipped    = (int)$root["skipped"];
-            $sec        = round((float)$root["time"], 2);
-            $passed     = $tests - $failures - $errors - $skipped;
-            $icon       = ($failures + $errors) > 0 ? "❌" : "✅";
-            $md = implode("\n", [
-                "## {$icon} PHPUnit",
-                "",
-                "| ✅ passed | ❌ failed | 💥 errors | ⏭️ skipped | 🔍 assertions | ⏱️ duration |",
-                "|---:|---:|---:|---:|---:|---:|",
-                "| {$passed} | {$failures} | {$errors} | {$skipped} | {$assertions} | {$sec}s |",
-                "",
-            ]);
-            file_put_contents($summary, $md . "\n", FILE_APPEND);
-          '
+        run: php tests/ci/junit-summary.php tests/.phpunit.cache/junit.xml "PHPUnit (Unit)"
 
       - name: Upload JUnit XML
         if: ${{ !cancelled() }}
@@ -122,3 +92,55 @@ jobs:
           name: phpunit-junit
           path: tests/.phpunit.cache/junit.xml
           retention-days: 7
+
+  integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Unit と同じ PHP で、runner 上から DB コンテナへ接続して実行する
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mysqli, imap, mbstring, intl, zip, gd
+          coverage: none
+
+      - name: composer のキャッシュディレクトリを取得
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache composer downloads
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-php83-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-php83-
+
+      - name: composer install
+        run: composer install --no-interaction --no-progress --optimize-autoloader
+
+      # DB コンテナ起動 → dump 投入 → config.inc.php 生成 → migration → PHPUnit まで一括で行う。
+      # DB に接続できない場合は skip ではなく失敗する (FREVOCRM_REQUIRE_TEST_DB)。
+      - name: PHPUnit (Integration) 実行
+        run: ./tests/ci/run-integration.sh --log-junit tests/.phpunit.cache/junit-integration.xml
+
+      - name: PHPUnit 結果をジョブサマリに出力
+        if: ${{ !cancelled() }}
+        run: php tests/ci/junit-summary.php tests/.phpunit.cache/junit-integration.xml "PHPUnit (Integration)"
+
+      - name: Upload JUnit XML
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpunit-junit-integration
+          path: tests/.phpunit.cache/junit-integration.xml
+          retention-days: 7
+
+      - name: DB ログ (失敗時)
+        if: ${{ failure() }}
+        run: docker compose -f compose.yaml -f compose.ci.yaml -f compose.integration.yaml logs --no-color --tail=200 db

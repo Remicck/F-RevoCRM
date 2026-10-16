@@ -1,0 +1,22 @@
+# PHPUnit の結合テスト (tests/Integration) 専用の compose override。
+#
+# 役割: E2E と同じ「完了済みインストール状態」の dump を、テスト用DB (frevocrm_test) へ投入する。
+#   tests/bootstrap.php は接続先DB名が _test で終わらないと中止するため、
+#   E2E (frevocrm) とは DB 名だけを変える。dump 自体は E2E と共通 (compose.ci.yaml が投入)。
+#
+# 使い方 (tests/ci/run-integration.sh が呼ぶ):
+#   docker compose -f compose.yaml -f compose.ci.yaml -f compose.integration.yaml up -d db
+#
+# 注意(ローカルで使う場合):
+#   dump は「データディレクトリが空の初回起動時のみ」投入される。開発用の db-store ボリュームを
+#   使い回すと投入されないうえ開発DBと混ざるため、ボリュームを分けている。
+#   まっさらにし直すには `docker compose -f ... down -v` すること。
+services:
+  db:
+    environment:
+      MYSQL_DATABASE: "frevocrm_test"
+    volumes:
+      - db-integration-store:/var/lib/mysql
+
+volumes:
+  db-integration-store:
