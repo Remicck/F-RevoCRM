@@ -14,10 +14,10 @@ namespace Tests\Integration\ModTracker;
 
 use ModTracker_Record_Model;
 use PearDatabase;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use Vtiger_Paging_Model;
-
-require_once dirname(__DIR__, 2) . '/Support/ModTrackerTestStubs.php';
 
 /**
  * 更新履歴の取得順とページング — ModTracker_Record_Model::getUpdates()
@@ -31,7 +31,13 @@ require_once dirname(__DIR__, 2) . '/Support/ModTrackerTestStubs.php';
  * 初回のページ件数が異なっても続きが連続することがこのテストの前提になる。
  *
  * 検証用に投入したレコード（CRM_ID の履歴）だけを操作し、既存データには触らない。
+ *
+ * Vtiger_Record_Model などをスタブ（tests/Support/ModTrackerTestStubs.php）で差し替えるため、
+ * 独立したプロセスで動かす。同じプロセスで読み込むと、本体のクラスを使う他の結合テスト
+ * （DocumentsTestCase を継承したものなど）までスタブを掴んで落ちる。
  */
+#[RunTestsInSeparateProcesses]
+#[PreserveGlobalState(false)]
 final class RecentActivitiesOrderTest extends TestCase
 {
     /** 履歴をぶら下げる対象レコード。既存データと衝突しない ID 帯を使う */
@@ -83,6 +89,9 @@ final class RecentActivitiesOrderTest extends TestCase
 
     protected function setUp(): void
     {
+        // 分離した子プロセス側で読み込む。親プロセスで読むと他の結合テストにスタブが漏れる。
+        require_once dirname(__DIR__, 2) . '/Support/ModTrackerTestStubs.php';
+
         $this->skipUnlessDatabaseIsAvailable();
 
         $this->cleanUp();
