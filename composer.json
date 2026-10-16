@@ -46,9 +46,12 @@
     },
     "scripts": {
         "test": "phpunit",
-        "test:integration": "phpunit --testsuite Integration",
+        "test:integration": "phpunit --testsuite Integration --do-not-fail-on-warning",
         "cs-check": "php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff",
         "cs-fix": "php-cs-fixer fix --config=.php-cs-fixer.dist.php",
         "phpstan": "@php -d auto_prepend_file=phpstan-shim.php vendor/bin/phpstan analyse"
+    },
+    "scripts-descriptions": {
+        "test:integration": "結合テスト (tests/Integration) を実行する。vtiger 本体が出す PHP の警告は表示するが失敗にはしない (tests/README.md)"
     }
 }

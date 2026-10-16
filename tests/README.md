@@ -16,6 +16,7 @@ PHPUnit は `require-dev` に入っている。`composer.json` の `config.platf
 ```bash
 composer test                                          # Unit（既定。DB 不要）
 composer test:integration                              # Integration（テスト用 DB が要る）
+./tests/ci/run-integration.sh                          # Integration を DB コンテナごと用意して実行（推奨）
 ./vendor/bin/phpunit                                   # Unit（phpunit.xml の defaultTestSuite）
 ./vendor/bin/phpunit --testsuite Unit                  # Unit のみ
 ./vendor/bin/phpunit tests/Unit/Inventory              # ディレクトリ指定
@@ -31,10 +32,14 @@ Unit と Integration を同じプロセスで走らせることはできない�
 本体のクラス・関数が衝突するため（本体側は再宣言のガードを持たない）。
 Integration は `composer test:integration` で別に実行する。
 
-main 向けの Pull Request では GitHub Actions（`.github/workflows/phpunit.yml`）が同じテストを実行する。
-`tests/Unit` は DB を使わないため、CI では DB を立てずに `config.template.php` から生成した
-`config.inc.php`（接続情報はダミー）で実行している。DB を使う `tests/Integration` を追加する場合は、
-CI 側にも DB を用意するステップが必要になる。
+main 向けの Pull Request では GitHub Actions（`.github/workflows/phpunit.yml`）が両方を実行する。
+
+| ジョブ | 対象 | DB |
+|---|---|---|
+| `phpunit` | `tests/Unit` | 立てない。`config.template.php` から生成した `config.inc.php`（接続情報はダミー）で実行 |
+| `integration` | `tests/Integration` | `tests/ci/run-integration.sh` が E2E と同じ dump を投入した DB コンテナを立てる |
+
+テストの方針（どこから書くか・網羅性をどう担保するか）は [`STRATEGY.md`](STRATEGY.md) を参照。
 
 ## ディレクトリ構成
 
@@ -95,16 +100,35 @@ final class FooTest extends DocumentsTestCase
 （Unit のスタブで代用すると Integration 側と衝突する）。そのため Integration に置いている。
 
 テスト用 DB につながらない場合、`DocumentsTestCase` を継承したテストは理由付きで skip する。
-DB を用意していない CI でも `composer test:integration` が赤くならないようにするため。
+ただし環境変数 `FREVOCRM_REQUIRE_TEST_DB=1` のときは、`tests/bootstrap.php` が
+DB に接続できない・初期データが無い状態を起動時に失敗として扱う。CI（`run-integration.sh`）は
+これを付けて実行し、DB の用意に失敗したのに全件 skip で緑になるのを防いでいる。
 
-vtiger のコア側（`LanguageHandler` / `VTEntityDelta` / log4php など）が出す
-PHP 警告・非推奨の通知が大量に出るが、これは移植前からある既存の状態で、
-テストの成否には影響しない。
+vtiger のコア側（`LanguageHandler` / `VTEntityDelta` / `VTEntityCache` など）が出す
+PHP 警告・非推奨の通知が大量に出る。本番では `config.inc.php` の `error_reporting` で抑止されている
+既存の状態で、結合テストは本体の保存経路をそのまま通るため避けられない。
+そのため `composer test:integration` は `--do-not-fail-on-warning` 付きで実行し、
+警告は一覧に表示するが失敗にはしない（Unit は `phpunit.xml` の `failOnWarning` のまま）。
 
 命名は `<対象>Test.php`、namespace は配置に合わせる（例: `tests/Unit/Inventory/` → `namespace Tests\Unit\Inventory;`）。
 `composer.json` の `autoload-dev` で `Tests\` → `tests/` を PSR-4 マップしている。
 
 ## テスト用 DB
+
+### Docker で用意する（推奨）
+
+```bash
+./tests/ci/run-integration.sh                  # DB 起動 → dump 投入 → migration → 結合テスト
+./tests/ci/run-integration.sh --filter BusinessDayTest   # PHPUnit の引数はそのまま渡る
+```
+
+E2E（`e2e/ci/run-e2e.sh`）と同じ dump（`e2e/fixtures/e2e_dump.sql`）を、`compose.integration.yaml` で
+テスト用 DB `frevocrm_test` に投入する。ボリュームは開発用と分けてあり、開発 DB には触れない。
+PHP は実行ホストのものを使うため、先に `composer install` を済ませておく。
+ホストの 3306 番を使うので、開発用の db コンテナが動いている場合は止めてから実行する。
+dump を入れ直したいときは `docker compose -f compose.yaml -f compose.ci.yaml -f compose.integration.yaml down -v`。
+
+### 手動で用意する
 
 `tests/bootstrap.php` は `config.inc.php` を読み込んだ上で接続先 DB を **テスト用 DB に強制**する。
 
@@ -161,6 +185,15 @@ final class BarTest extends TestCase
     }
 }
 ```
+
+### 結合テストで本体のクラスをスタブに差し替える場合
+
+PHPUnit は実行前に全テストファイルを読み込むため、ファイルの先頭で `tests/Support/` のスタブを
+`require_once` すると、同じプロセスで動く他の結合テストまでスタブを掴んで落ちる
+（例: `ModTrackerTestStubs.php` の `Vtiger_Record_Model` を `DocumentsTestCase` 系が掴む）。
+本体のクラスと同名のスタブを使う結合テストは、`#[RunTestsInSeparateProcesses]` と
+`#[PreserveGlobalState(false)]` を付け、スタブの読み込みを `setUp()` に置く
+（`tests/Integration/ModTracker/RecentActivitiesOrderTest.php` を参照）。
 
 `phpunit.xml` は `failOnWarning` / `failOnRisky` / `beStrictAboutOutputDuringTests` を有効にしている。
 テスト中の `echo` や未定義メソッドの警告もテスト失敗になる点に注意。

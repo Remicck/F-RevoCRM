@@ -142,4 +142,28 @@ if ($bootstrapActualDb !== '' && !preg_match('/_test$/', $bootstrapActualDb)) {
     fwrite(STDERR, "FATAL: テストの実接続先DB ({$bootstrapActualDb}) が _test suffix ではありません。中止します。\n");
     exit(1);
 }
+
+// FREVOCRM_REQUIRE_TEST_DB=1 のときは、テスト用DBに接続できない・dump が入っていない状態を
+// 失敗として扱う。結合テストは DB に接続できないと個別に skip するため、
+// CI (tests/ci/run-integration.sh) で DB の用意に失敗しても全件 skip の緑になるのを防ぐ。
+if (getenv('FREVOCRM_REQUIRE_TEST_DB') === '1') {
+    if ($bootstrapActualDb === '') {
+        fwrite(STDERR, "FATAL: FREVOCRM_REQUIRE_TEST_DB=1 ですがテスト用DBに接続できません。\n");
+        exit(1);
+    }
+    try {
+        $bootstrapDb = PearDatabase::getInstance();
+        $bootstrapRow = $bootstrapDb->pquery('SELECT COUNT(*) AS cnt FROM vtiger_users', []);
+        $bootstrapUserCount = ($bootstrapRow !== false && $bootstrapDb->num_rows($bootstrapRow) === 1)
+            ? (int)$bootstrapDb->query_result($bootstrapRow, 0, 'cnt')
+            : 0;
+    } catch (\Throwable $bootstrapEx) {
+        $bootstrapUserCount = 0;
+    }
+    if ($bootstrapUserCount === 0) {
+        fwrite(STDERR, "FATAL: FREVOCRM_REQUIRE_TEST_DB=1 ですがテスト用DB ({$bootstrapActualDb}) に初期データがありません。\n");
+        exit(1);
+    }
+    unset($bootstrapDb, $bootstrapRow, $bootstrapUserCount, $bootstrapEx);
+}
 unset($bootstrapDb, $bootstrapRow, $bootstrapActualDb, $bootstrapEx);
