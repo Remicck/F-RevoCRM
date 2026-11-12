@@ -584,4 +584,35 @@ class Settings_Picklist_Module_Model extends Vtiger_Module_Model {
 		return true;
 	}
 
+	/**
+	 * ピックリスト項目の表示方式設定を保存する（#1677）。
+	 * vtiger_picklist（項目名=name 単位）の input_style / threshold / columns を更新する。
+	 *
+	 * @param string   $pickListFieldName 項目名（vtiger_picklist.name）
+	 * @param ?string  $inputStyle        'auto'（自動＝選択肢が閾値以下で一覧表示）または NULL（既定＝従来ドロップダウン）
+	 * @param ?int     $threshold         正の整数 または NULL(=既定100)
+	 * @param int      $columns           項目の表示幅（1=標準/半幅、2=全幅）
+	 * @return bool
+	 */
+	public function updateDisplayConfig($pickListFieldName, $inputStyle, $threshold, $columns) {
+		$db = PearDatabase::getInstance();
+
+		// 存在しない項目名への UPDATE は 0 行一致で無害だが「保存しました」と誤通知してしまう。
+		// （UPDATE の影響行数は「値が変わらなかった場合」も 0 になり判定に使えないため）事前に
+		// vtiger_picklist に該当 name があるか確認し、無ければ false を返して呼び出し側でエラー応答する。
+		$check = $db->pquery('SELECT 1 FROM vtiger_picklist WHERE name = ? LIMIT 1', array($pickListFieldName));
+		if (!$check || $db->num_rows($check) === 0) {
+			return false;
+		}
+
+		// `columns` は MySQL 予約語のためバッククォート必須
+		$query = 'UPDATE vtiger_picklist SET input_style = ?, threshold = ?, `columns` = ? WHERE name = ?';
+		$db->pquery($query, array($inputStyle, $threshold, $columns, $pickListFieldName));
+
+		// ピックリスト関連キャッシュをフラッシュ（表示設定は PicklistDisplayConfig の
+		// リクエスト内キャッシュで読むため、別リクエストの次回ロードでは最新を読む）
+		Vtiger_Cache::flushPicklistCache($pickListFieldName);
+		return true;
+	}
+
 }

@@ -47,6 +47,18 @@ $languageStrings = array(
 	//F-RevoCRM
 	'Events' => 'Events',
 	'Faq' => 'FAQ',
+	// Display style settings (#1677)
+	'LBL_PICKLIST_DISPLAY_SETTINGS' => 'Display style for this field',
+	'LBL_PICKLIST_INPUT_STYLE' => 'Display style',
+	'LBL_PICKLIST_STYLE_DROPDOWN' => 'Dropdown',
+	'LBL_PICKLIST_STYLE_AUTO_CHECKBOX' => 'Auto (checkboxes when few options)',
+	'LBL_PICKLIST_STYLE_AUTO_RADIO' => 'Auto (radio buttons when few options)',
+	'LBL_PICKLIST_THRESHOLD_CHECKBOX' => 'Use checkboxes up to this many options',
+	'LBL_PICKLIST_THRESHOLD_RADIO' => 'Use radio buttons up to this many options',
+	'LBL_PICKLIST_COLUMNS' => 'Field width',
+	'LBL_PICKLIST_WIDTH_STANDARD' => 'Standard (1 column)',
+	'LBL_PICKLIST_WIDTH_FULL' => 'Full width (2 columns)',
+	'LBL_PICKLIST_DISPLAY_HELP' => 'With "Auto", options are shown as checkboxes (radio buttons for single-select) when they are within this number, and as a dropdown when over it. "Dropdown" keeps the classic behavior. To always use checkboxes (radio buttons), set this number high. Setting "Field width" to "Full width (2 columns)" makes the field span both columns of the edit view.',
 );
 $jsLanguageStrings = array(
 	//PickList 
@@ -63,4 +75,7 @@ $jsLanguageStrings = array(
     'JS_PLEASE_SELECT_MODULE' => 'Please select module',
 	'JS_SPECIAL_CHARACTERS' => 'Special Characters like',
 	'JS_NOT_ALLOWED' => 'are not allowed',
+	// Display style settings (#1677)
+	'JS_PICKLIST_DISPLAY_SAVED' => 'Display style saved',
+	'JS_PICKLIST_DISPLAY_SAVE_FAILED' => 'Could not save the display style (target field not found)',
 );	

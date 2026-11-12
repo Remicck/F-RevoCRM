@@ -19,6 +19,15 @@ class Vtiger_Base_UIType extends Vtiger_Base_Model {
 	}
 
 	/**
+	 * #1677: 項目をフォーム全幅（左右2カラムぶち抜き）で描画するか。既定は false。
+	 * 編集画面テンプレート(EditViewContents.tpl)が colspan 判定に使う。
+	 * @return bool
+	 */
+	public function isFullWidthField() {
+		return false;
+	}
+
+	/**
 	 * Function to get the DB Insert Value, for the current field type with given User Value
 	 * @param <Object> $value
 	 * @return <Object>

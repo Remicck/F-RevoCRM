@@ -18,6 +18,7 @@ class Settings_Picklist_SaveAjax_Action extends Settings_Vtiger_Basic_Action {
         $this->exposeMethod('saveOrder');
         $this->exposeMethod('enableOrDisable');
         $this->exposeMethod('edit');
+        $this->exposeMethod('saveDisplayConfig');
     }
 
     public function process(Vtiger_Request $request) {
@@ -269,6 +270,39 @@ class Settings_Picklist_SaveAjax_Action extends Settings_Vtiger_Basic_Action {
             }
         }
         
+        $response->emit();
+    }
+
+    /**
+     * ピックリスト項目の表示方式設定を保存する（#1677）。
+     * vtiger_picklist の input_style / threshold / columns を項目名(name)単位で更新。
+     */
+    public function saveDisplayConfig(Vtiger_Request $request) {
+        $pickListFieldName = $request->get('picklistName');
+
+        // 表示方式: 'auto' のみ許可。空/その他(ドロップダウン含む)は NULL(=既定＝従来ドロップダウン)
+        $inputStyle = ($request->get('inputStyle') === 'auto') ? 'auto' : null;
+
+        // しきい値: 正の整数のみ。空/非数は NULL(=既定)
+        $thresholdRaw = $request->get('threshold');
+        $threshold = (is_numeric($thresholdRaw) && (int) $thresholdRaw > 0) ? (int) $thresholdRaw : null;
+
+        // 列数: 2 のみ 2、それ以外は 1
+        $columns = ((int) $request->get('columns') === 2) ? 2 : 1;
+
+        $response = new Vtiger_Response();
+        try {
+            $moduleModel = new Settings_Picklist_Module_Model();
+            $status = $moduleModel->updateDisplayConfig($pickListFieldName, $inputStyle, $threshold, $columns);
+            if ($status) {
+                $response->setResult(array('success' => true));
+            } else {
+                // 対象の項目が存在しない等で更新できなかった場合はエラーとして返す（誤って成功通知しない）
+                $response->setError('400', vtranslate('JS_PICKLIST_DISPLAY_SAVE_FAILED', 'Settings:Picklist'));
+            }
+        } catch (Exception $e) {
+            $response->setError($e->getCode(), $e->getMessage());
+        }
         $response->emit();
     }
 }
