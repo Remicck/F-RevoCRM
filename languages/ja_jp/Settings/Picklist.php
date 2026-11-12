@@ -47,6 +47,18 @@ $languageStrings = array(
 	//F-RevoCRM
 	'Events' => '活動',
 	'Faq' => 'FAQ',
+	// 表示方式設定（#1677）
+	'LBL_PICKLIST_DISPLAY_SETTINGS' => 'この項目の表示方式',
+	'LBL_PICKLIST_INPUT_STYLE' => '表示方式',
+	'LBL_PICKLIST_STYLE_DROPDOWN' => 'ドロップダウン',
+	'LBL_PICKLIST_STYLE_AUTO_CHECKBOX' => '自動（選択肢が少なければチェックボックス）',
+	'LBL_PICKLIST_STYLE_AUTO_RADIO' => '自動（選択肢が少なければラジオ）',
+	'LBL_PICKLIST_THRESHOLD_CHECKBOX' => 'この数以下ならチェックボックス',
+	'LBL_PICKLIST_THRESHOLD_RADIO' => 'この数以下ならラジオ',
+	'LBL_PICKLIST_COLUMNS' => '項目の幅',
+	'LBL_PICKLIST_WIDTH_STANDARD' => '標準（1列）',
+	'LBL_PICKLIST_WIDTH_FULL' => '全幅（2列）',
+	'LBL_PICKLIST_DISPLAY_HELP' => '「自動」にすると、選択肢がこの数以下のときチェックボックス（単一選択はラジオ）で表示し、超えるとドロップダウンになります。「ドロップダウン」は従来どおりです。常にチェックボックス（ラジオ）にしたい場合は、この数を大きくしてください。「項目の幅」を「全幅（2列）」にすると、その項目が編集画面の左右2列をぶち抜いて横長に表示されます。',
 );
 $jsLanguageStrings = array(
 	//PickList 
@@ -63,4 +75,7 @@ $jsLanguageStrings = array(
     'JS_PLEASE_SELECT_MODULE' => 'モジュールを選択してください',
 	'JS_SPECIAL_CHARACTERS' => '特殊文字 (',
 	'JS_NOT_ALLOWED' => ') は許可されません',
+	// 表示方式設定（#1677）
+	'JS_PICKLIST_DISPLAY_SAVED' => '表示方式を保存しました',
+	'JS_PICKLIST_DISPLAY_SAVE_FAILED' => '表示方式を保存できませんでした（対象の項目が見つかりません）',
 );	
