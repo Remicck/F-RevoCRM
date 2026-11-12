@@ -3,6 +3,7 @@ import { FieldRenderer } from "../FieldRenderer";
 import { QuickCreateFormProps } from "../../types/quickcreate";
 import { FieldInfo, FieldValue } from "../../types/field";
 import { cn } from "../../lib/utils";
+import { isFullWidthFormField } from "../../lib/fieldLayout";
 import { useTranslation } from "../../hooks/useTranslation";
 
 /**
@@ -71,9 +72,8 @@ export const QuickCreateForm: React.FC<QuickCreateFormProps> = ({
                 key={field.name}
                 className={cn(
                   "quickcreate-field",
-                  // TextAreaは2カラム幅
-                  (field.uitype === "19" || field.uitype === "21") &&
-                    "md:col-span-2",
+                  // TextArea・picklist columns=2 は全幅（2カラムぶち抜き）
+                  isFullWidthFormField(field) && "md:col-span-2",
                 )}
               >
                 <FieldRenderer

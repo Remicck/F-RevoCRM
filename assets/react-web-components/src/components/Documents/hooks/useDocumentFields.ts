@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
+import type { PicklistDisplayMeta } from "../../../types/field";
 
 export interface DocFieldInfo {
   name: string;
@@ -9,7 +10,13 @@ export interface DocFieldInfo {
   displaytype: string;
   defaultvalue: string;
   type: string;
-  picklistValues?: Array<{ label: string; value: string }>;
+  picklistValues?: Array<{
+    label: string;
+    value: string;
+    color?: string | null;
+  }>;
+  /** ピックリスト表示設定（#1677） */
+  picklistDisplay?: PicklistDisplayMeta;
   referenceModules?: string[];
   referenceModuleLabels?: Record<string, string>;
   blockLabel: string;
@@ -71,8 +78,11 @@ export function useDocumentFields(
               ? f.picklistValues.map((pv: any) => ({
                   value: pv.value,
                   label: pv.label,
+                  color: pv.color ?? null,
                 }))
               : undefined,
+            // ピックリスト表示設定（#1677）
+            picklistDisplay: f.picklistDisplay,
             referenceModules: Array.isArray(f.referenceModules)
               ? f.referenceModules
               : undefined,

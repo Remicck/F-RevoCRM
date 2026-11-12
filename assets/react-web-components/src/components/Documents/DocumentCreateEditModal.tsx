@@ -25,6 +25,7 @@ function useIsMobile(breakpoint = 768) {
   return isMobile;
 }
 import { FieldRenderer } from "../FieldRenderer";
+import { isFullWidthFormField } from "../../lib/fieldLayout";
 import { isComplianceFieldVisible } from "./utils/complianceFields";
 import { toServerValue } from "./utils/serverValue";
 import { buildFolderOptions } from "./utils/folderOptions";
@@ -107,6 +108,8 @@ function convertToFieldInfo(docField: DocFieldInfo): FieldInfo {
       displaytype: docField.displaytype || "1",
     },
     picklistValues: docField.picklistValues,
+    // ピックリスト表示設定（#1677）を FieldRenderer へ引き継ぐ
+    picklistDisplay: docField.picklistDisplay,
     referenceModules: docField.referenceModules,
     referenceModuleLabels: docField.referenceModuleLabels,
   };
@@ -953,22 +956,30 @@ export const DocumentCreateEditModal: React.FC<
                 >
                   {blockFields.map((field) => {
                     const fieldInfo = convertToFieldInfo(field);
+                    // TextArea・picklist columns=2 は全幅（2カラムぶち抜き）
+                    const fullWidth = isFullWidthFormField(fieldInfo);
                     return (
-                      <FieldRenderer
+                      <div
                         key={field.name}
-                        field={fieldInfo}
-                        value={
-                          dynamicFields[field.name] ?? field.defaultvalue ?? ""
-                        }
-                        onChange={(name: string, val: FieldValue) =>
-                          handleDynamicFieldChange(name, val)
-                        }
-                        // 参照・ユーザー項目の表示名（<name>_display）を渡す
-                        formData={dynamicFields}
-                        // ユーザー追加項目は標準の編集画面と同じく案内文を出さない
-                        placeholder=""
-                        module="Documents"
-                      />
+                        style={fullWidth ? { gridColumn: "1 / -1" } : undefined}
+                      >
+                        <FieldRenderer
+                          field={fieldInfo}
+                          value={
+                            dynamicFields[field.name] ??
+                            field.defaultvalue ??
+                            ""
+                          }
+                          onChange={(name: string, val: FieldValue) =>
+                            handleDynamicFieldChange(name, val)
+                          }
+                          // 参照・ユーザー項目の表示名（<name>_display）を渡す
+                          formData={dynamicFields}
+                          // ユーザー追加項目は標準の編集画面と同じく案内文を出さない
+                          placeholder=""
+                          module="Documents"
+                        />
+                      </div>
                     );
                   })}
                 </div>
