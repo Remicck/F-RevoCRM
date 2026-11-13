@@ -44,6 +44,8 @@ export interface ReferenceFieldProps {
   className?: string;
   /** ラベルのカスタムクラス名（縦並び時の左寄せなどに使用） */
   labelClassName?: string;
+  /** 初期選択モジュール（編集時に既存値の参照先モジュールを選択するために使用） */
+  initialModule?: string;
 }
 
 /**
@@ -63,6 +65,7 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
   error,
   className,
   labelClassName,
+  initialModule,
 }) => {
   // 翻訳フック（TranslationProvider外でも安全に使用可能）
   const { t } = useOptionalTranslation();
@@ -74,9 +77,24 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
     return referenceModuleLabels[moduleName] || moduleName;
   };
   // 現在選択中のモジュール（複数参照の場合）
-  const [selectedModule, setSelectedModule] = useState<string>(
-    referenceModules.length > 0 ? referenceModules[0] : "",
-  );
+  // initialModule が参照先に含まれていればそれを、なければ先頭を選択する
+  const [selectedModule, setSelectedModule] = useState<string>(() => {
+    if (initialModule && referenceModules.includes(initialModule)) {
+      return initialModule;
+    }
+    return referenceModules.length > 0 ? referenceModules[0] : "";
+  });
+
+  // initialModule が後から渡された・変わった場合だけ追従する
+  // （ユーザーが手動で選んだモジュールを再描画のたびに上書きしないよう、変化時のみ反映）
+  const prevInitialModuleRef = useRef<string | undefined>(initialModule);
+  useEffect(() => {
+    if (prevInitialModuleRef.current === initialModule) return;
+    prevInitialModuleRef.current = initialModule;
+    if (initialModule && referenceModules.includes(initialModule)) {
+      setSelectedModule(initialModule);
+    }
+  }, [initialModule, referenceModules]);
 
   // 検索キーワード
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -128,6 +146,13 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
 
   // デバウンス用のタイマー
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // ドロップダウン内でマウス押下中かどうか。
+  // 押下→blur→(離す)→click の順でイベントが来るため、blur でドロップダウンを
+  // 閉じると押下が長いクリックで click 前に候補が消え、選択できなくなる
+  const isMouseDownInDropdownRef = useRef<boolean>(false);
+  // モジュール選択ドロップダウン用 (同上)
+  const isMouseDownInModuleDropdownRef = useRef<boolean>(false);
 
   // タッチスワイプ用のref
   const touchStartYRef = useRef<number | null>(null);
@@ -409,6 +434,7 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
    * フォーカス時に候補を表示
    */
   const handleFocus = () => {
+    isMouseDownInDropdownRef.current = false;
     updateDropdownPosition();
     setIsOpen(true);
     if (searchResults.length === 0 && !searchTerm) {
@@ -502,6 +528,9 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
           left: moduleDropdownPosition.left,
           width: moduleDropdownPosition.width,
         }}
+        onMouseDown={() => {
+          isMouseDownInModuleDropdownRef.current = true;
+        }}
         onWheel={(e) => {
           e.stopPropagation();
           // Radix UIのDialogがbodyのスクロールをブロックするため、手動でスクロール
@@ -546,6 +575,9 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
           top: dropdownPosition.top,
           left: dropdownPosition.left,
           width: dropdownPosition.width,
+        }}
+        onMouseDown={() => {
+          isMouseDownInDropdownRef.current = true;
         }}
         onWheel={(e) => {
           e.stopPropagation();
@@ -652,6 +684,7 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
                     disabled={disabled}
                     onClick={() => {
                       if (!disabled) {
+                        isMouseDownInModuleDropdownRef.current = false;
                         updateModuleDropdownPosition();
                         setIsModuleDropdownOpen(!isModuleDropdownOpen);
                       }
@@ -703,6 +736,11 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
                       }
                     }}
                     onBlur={() => {
+                      // ドロップダウン内の押下による blur では閉じない (選択時は選択処理側で閉じる)
+                      if (isMouseDownInModuleDropdownRef.current) {
+                        isMouseDownInModuleDropdownRef.current = false;
+                        return;
+                      }
                       // Tab離脱等の blur でモジュール選択ドロップダウンを閉じる
                       // 候補クリック時の選択処理を妨げないよう150ms遅延
                       setTimeout(() => setIsModuleDropdownOpen(false), 150);
@@ -737,6 +775,11 @@ export const ReferenceField: React.FC<ReferenceFieldProps> = ({
                     onFocus={handleFocus}
                     onKeyDown={handleSearchKeyDown}
                     onBlur={() => {
+                      // ドロップダウン内の押下による blur では閉じない (選択時は選択処理側で閉じる)
+                      if (isMouseDownInDropdownRef.current) {
+                        isMouseDownInDropdownRef.current = false;
+                        return;
+                      }
                       // Tab離脱等の blur でドロップダウンを閉じる
                       // 候補クリック時の選択処理を妨げないよう150ms遅延
                       setTimeout(() => setIsOpen(false), 150);

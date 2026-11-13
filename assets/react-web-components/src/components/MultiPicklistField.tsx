@@ -314,6 +314,13 @@ export const MultiPicklistField: React.FC<MultiPicklistFieldProps> = ({
           left: dropdownPosition.left,
           width: dropdownPosition.width,
         }}
+        onMouseDown={(e) => {
+          // 入力欄のフォーカスを外さない。
+          // 外れると選択後のキー操作が body 側に渡ってしまい、連続選択できない。
+          // また blur で閉じる処理により、押してから click までが長い操作
+          // (トラックパッドのタップ等) で click 前に候補が消える
+          e.preventDefault();
+        }}
         onWheel={(e) => {
           e.stopPropagation();
           const target = e.currentTarget;
